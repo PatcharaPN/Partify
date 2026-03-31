@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -11,12 +12,12 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
   async register(email: string, password: string) {
-    const hash = await bcrypt.hash(password, this.saltRate);
     const isExist = await this.prisma.user.findUnique({
       where: { email },
     });
+    if (isExist) throw new BadRequestException('User already exist');
 
-    if (isExist) throw new Error('User already exist');
+    const hash = await bcrypt.hash(password, this.saltRate);
 
     const user = await this.prisma.user.create({
       data: {
@@ -32,10 +33,10 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-    if (!user) throw new Error('User was not found');
+    if (!user) throw new UnauthorizedException('User was not found');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('Password Incorrect');
+    if (!isMatch) throw new UnauthorizedException('Password Incorrect');
 
     const payload = { sub: user.id, email: user.email };
     return { access_token: this.jwt.sign(payload) };

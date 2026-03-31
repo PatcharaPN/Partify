@@ -60,6 +60,7 @@ describe('AuthService - Login', () => {
       ).rejects.toThrow('Password Incorrect');
     });
   });
+
   // register test
 
   describe('AuthService - Register', () => {
