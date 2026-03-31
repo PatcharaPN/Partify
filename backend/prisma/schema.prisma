@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "commonjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CANDIDATE
+  EMPLOYER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  INTERVIEW
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  role        Role     @default(CANDIDATE)
+  createdAt   DateTime @default(now())
+
+  profile     Profile?
+  jobs        Job[]        @relation("EmployerJobs")
+  applications Application[]
+
+  @@map("users")
+}
+
+model Profile {
+  id         String  @id @default(uuid())
+  userId     String  @unique
+  name       String
+  phone      String?
+  skills     String?
+  resumeUrl  String?
+
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  salary      Int?
+  location    String?
+  createdAt   DateTime @default(now())
+
+  companyId   String
+  company     User     @relation("EmployerJobs", fields: [companyId], references: [id])
+
+  applications Application[]
+
+  @@map("jobs")
+}
+
+model Application {
+  id        String             @id @default(uuid())
+  jobId     String
+  userId    String
+  status    ApplicationStatus  @default(PENDING)
+  createdAt DateTime           @default(now())
+
+  job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, userId]) // กันสมัครซ้ำ
+  @@map("applications")
+}
