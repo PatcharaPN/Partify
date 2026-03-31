@@ -50,4 +50,9 @@ describe('AuthService - Login', () => {
       service.login('notfound@test.com', 'password123'),
     ).rejects.toThrow('User was not found');
   });
+  it('should throw error if password incorrect', async () => {
+    await expect(
+      service.login('test@test.com', 'password1234'),
+    ).rejects.toThrow('Password Incorrect');
+  });
 });
