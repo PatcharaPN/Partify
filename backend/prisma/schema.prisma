@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") 
 }
 
 enum Role {
@@ -49,6 +50,8 @@ model Profile {
   skills     String?
   resumeUrl  String?
 
+  avatarUrl   String?
+  birthDate   DateTime? 
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("profiles")
@@ -61,6 +64,10 @@ model Job {
   salary      Int?
   location    String?
   createdAt   DateTime @default(now())
+
+  workingHours String?
+  workingDays  String?
+  startDate   DateTime?
 
   companyId   String
   company     User     @relation("EmployerJobs", fields: [companyId], references: [id])
