@@ -15,12 +15,12 @@ export class AuthGuard implements CanActivate {
     // ดึง HTTP Request object ออกมาจาก context (เพื่อเข้าถึง headers, body ฯลฯ)
     const request = context.switchToHttp().getRequest<Request>();
     // ดึง token ออกจาก Authorization header
-    const token = this.exTractToken(request);
+    const token = this.extractToken(request);
     // ถ้าไม่มี token == 401
     if (!token) throw new UnauthorizedException('No token provided');
 
     try {
-      // ตรวจสอบว่า token ยังไม่หมดอายุ (verifyAsync จะ decode payload ออกมาให้ด้วย เช่น {id,email,role})
+      // verify token + decode payload
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET, //ใช้ SECRET เดียวกันกับตอน sign token
       });
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  private exTractToken(request: Request): string | null {
+  private extractToken(request: Request): string | null {
     // Authorization header มีรูปแบบ "Bearer <token>"
     //แยก Bearer มาเป็น Key และ Value เป็น Token
     //ถ้า Request ที่ส่งมาไม่มี Header เลย -> [] กัน Undefined
