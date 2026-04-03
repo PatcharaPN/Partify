@@ -3,6 +3,7 @@ type ButtonVariant = "primary" | "secondary" | "inverted" | "outlined";
 interface Buttonprops {
   variant?: ButtonVariant;
   children: React.ReactNode;
+
   onClick?: () => void;
 }
 
