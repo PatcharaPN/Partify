@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
+import { LineStrategy } from './strategies/line.strategy';
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -14,6 +15,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
 
   controllers: [AuthController],
-  providers: [AuthService, PrismaService],
+  providers: [AuthService, PrismaService, LineStrategy],
 })
 export class AuthModule {}

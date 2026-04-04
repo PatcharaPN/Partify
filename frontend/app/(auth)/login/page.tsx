@@ -1,3 +1,4 @@
+"use client";
 import Button from "@/app/components/ui/Button";
 import InputField from "@/app/components/ui/InputField";
 import PersonaCard from "@/app/components/ui/PersonaCard";
@@ -5,6 +6,9 @@ import SocialLoginButton from "@/app/components/ui/SocialLoginButton";
 import Link from "next/link";
 
 export default function LoginPage() {
+  const lineApiLogin = () => {
+    window.location.href = "http://localhost:3001/auth/line/callback";
+  };
   return (
     <div className="relative flex items-center justify-center min-h-screen">
       <main className="z-10 bg-white shadow-xl grid grid-cols-2 w-full max-w-5xl min-h-100 rounded-2xl overflow-hidden">
@@ -18,10 +22,10 @@ export default function LoginPage() {
               <p className="text-primary font-bold text-2xl">Partify</p>
               {/* {Persona Card} */}
               <div className="">
-                <span className="text-2xl font-bold">
-                  Your time
+                <span className="text-3xl font-bold">
+                  Your time,
                   <br />
-                  <span className="text-primary">Your terms.</span>
+                  <span className="text-primary">your terms.</span>
                 </span>
                 <p className="text-md w-2/3 text-neutral-500">
                   Join a community of high-caliber professionals and premium
@@ -50,11 +54,12 @@ export default function LoginPage() {
               Google
             </SocialLoginButton>
             <SocialLoginButton
-              className="w-full"
-              variant="grayed"
-              icon={"skill-icons:linkedin"}
+              onClick={lineApiLogin}
+              className="w-full bg-[#00B800] hover:bg-[#007200] text-white"
+              variant="custom"
+              icon={"simple-icons:line"}
             >
-              LinkedIn
+              Line
             </SocialLoginButton>
           </div>
           <div className="flex items-center gap-4 py-5">

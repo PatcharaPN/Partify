@@ -5,7 +5,8 @@ type ButtonVariant =
   | "secondary"
   | "inverted"
   | "outlined"
-  | "grayed";
+  | "grayed"
+  | "custom";
 
 interface Buttonprops {
   variant?: ButtonVariant;
@@ -23,16 +24,18 @@ export default function SocialLoginButton({
   className,
 }: Buttonprops) {
   const variants = {
-    primary: "bg-primary text-white",
-    secondary: "bg-secondary text-white",
-    inverted: "bg-neutral-800 text-white",
-    outlined: "bg-white text-neutral-800 border border-neutral-300",
-    grayed: "bg-[#F3F4F5] text-neutral-800",
+    primary: "bg-primary text-white hover:bg-primary/80",
+    secondary: "bg-secondary text-white hover:bg-secondary/80",
+    inverted: "bg-neutral-800 text-white hover:bg-neutral-700",
+    outlined:
+      "bg-white text-neutral-800 border border-neutral-300 hover:bg-neutral-50",
+    grayed: "bg-[#F3F4F5] text-neutral-800 hover:bg-neutral-200",
+    custom: "",
   };
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center gap-3 min-w-10 px-4 py-2 rounded-md font-medium ${variants[variant]} ${className}`}
+      className={`cursor-pointer flex items-center justify-center gap-3 min-w-10 px-4 py-2 rounded-md font-medium transition-colors ${variants[variant]} ${className}`}
     >
       {icon && <Icon icon={icon} />}
       {children}
