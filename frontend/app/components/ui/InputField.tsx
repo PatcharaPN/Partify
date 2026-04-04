@@ -21,7 +21,7 @@ export default function InputField({
       </div>
       <input
         type={type}
-        className="bg-[#F3F4F5] rounded-xl px-4 py-4 outline-none"
+        className="bg-[#F3F4F5] rounded-xl px-4 py-2 outline-none"
       />
     </div>
   );

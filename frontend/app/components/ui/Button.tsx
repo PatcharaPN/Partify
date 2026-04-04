@@ -3,7 +3,7 @@ type ButtonVariant = "primary" | "secondary" | "inverted" | "outlined";
 interface Buttonprops {
   variant?: ButtonVariant;
   children: React.ReactNode;
-
+  classname?: string;
   onClick?: () => void;
 }
 
@@ -11,6 +11,7 @@ export default function Button({
   variant = "primary",
   children,
   onClick,
+  classname,
 }: Buttonprops) {
   const variants = {
     primary: "bg-primary text-white",
@@ -21,7 +22,7 @@ export default function Button({
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 rounded-md font-medium ${variants[variant]}`}
+      className={`px-4 py-2 rounded-md font-medium ${variants[variant]} ${classname}`}
     >
       {children}
     </button>
