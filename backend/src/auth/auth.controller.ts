@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -20,9 +28,10 @@ export class AuthController {
 
   @Get('line/callback')
   @UseGuards(AuthGuard('line'))
-  lineCallback(@Req() req) {
-    console.log(req.user);
-
-    return req.user;
+  async lineCallback(@Req() req, @Res() res) {
+    const result = await this.authService.lineLogin(req.user);
+    res.redirect(
+      `http://localhost:3000/?token=${result.access_token}&isNew=${result.isNew}`,
+    );
   }
 }

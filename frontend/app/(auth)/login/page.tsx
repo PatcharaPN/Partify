@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function LoginPage() {
   const lineApiLogin = () => {
-    window.location.href = "http://localhost:3001/auth/line/callback";
+    window.location.href = "http://localhost:3001/auth/line";
   };
   return (
     <div className="relative flex items-center justify-center min-h-screen">

@@ -14,8 +14,11 @@ export class LineStrategy extends PassportStrategy(Strategy, 'line') {
   }
 
   async validate(accessToken, refreshToken, params, profile) {
-    console.log('profile:', profile);
-    console.log('params:', params);
-    return profile;
+    return {
+      lineId: params.id,
+      email: params.email ?? null,
+      displayName: params.displayName,
+      pictureUrl: params.pictureUrl,
+    };
   }
 }
