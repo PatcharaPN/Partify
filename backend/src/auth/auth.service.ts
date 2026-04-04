@@ -35,10 +35,40 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException('User was not found');
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch) throw new UnauthorizedException('Password Incorrect');
 
     const payload = { sub: user.id, email: user.email };
     return { access_token: this.jwt.sign(payload) };
+  }
+
+  async lineLogin(lineUser: {
+    lineId: string;
+    displayName: string;
+    pictureUrl: string;
+  }) {
+    let user = await this.prisma.user.findUnique({
+      where: { lineId: lineUser.lineId },
+    });
+    const isNew = !user;
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          lineId: lineUser.lineId,
+        },
+      });
+      await this.prisma.profile.create({
+        data: {
+          name: lineUser.displayName,
+          avatarUrl: lineUser.pictureUrl,
+          userId: user.id,
+        },
+      });
+    }
+    const token = this.jwt.sign({ sub: user.id });
+    return {
+      access_token: token,
+      isNew,
+    };
   }
 }
