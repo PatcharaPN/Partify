@@ -117,6 +117,19 @@ export default function Home() {
             </div>
           ))}
         </div>
+        <div className="relative rounded-2xl overflow-hidden cursor-pointer group my-5">
+          <img
+            src={"./images/bg/education.jpg"}
+            alt="Tutoring Language Coaching"
+            className="w-full h-64 object-cover brightness-60 group-hover:brightness-90 transition"
+          />{" "}
+          <div className="absolute bottom-0 left-0 p-5 text-white">
+            <h2 className="text-2xl font-bold">Education</h2>
+            <p className="text-sm text-gray-300">
+              Tutoring, Online Instruction, Language Coaching
+            </p>
+          </div>
+        </div>
       </div>
     </main>
   );
