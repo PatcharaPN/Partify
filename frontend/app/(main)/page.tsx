@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <div className="">
-      <main className="">Landing page here</main>
-    </div>
+    <main className="flex justify-center items-center min-h-[calc(100vh-56px)]">
+      <div>Landing page here</div>
+    </main>
   );
 }

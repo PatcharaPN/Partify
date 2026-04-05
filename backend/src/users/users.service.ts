@@ -14,6 +14,9 @@ export class UsersService {
       omit: {
         password: true,
       },
+      include: {
+        profile: true,
+      },
     });
     if (!user) throw new NotFoundException('User not found');
     return user;

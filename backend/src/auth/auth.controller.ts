@@ -30,8 +30,6 @@ export class AuthController {
   @UseGuards(AuthGuard('line'))
   async lineCallback(@Req() req, @Res() res) {
     const result = await this.authService.lineLogin(req.user);
-    res.redirect(
-      `http://localhost:3000/?token=${result.access_token}&isNew=${result.isNew}`,
-    );
+    res.redirect(`http://localhost:3000/callback?token=${result.access_token}`);
   }
 }
