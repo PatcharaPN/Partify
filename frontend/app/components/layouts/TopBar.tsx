@@ -25,7 +25,7 @@ export default function TopBar() {
         <nav className="flex items-center gap-4">
           <Link
             className="underline underline-offset-5 decoration-primary decoration-2 inline-block text-primary text-xl font-bold font-headline px-4 py-2"
-            href="/"
+            href="/jobs"
           >
             Find Jobs
           </Link>

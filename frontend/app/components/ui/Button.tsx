@@ -1,4 +1,9 @@
-type ButtonVariant = "primary" | "secondary" | "inverted" | "outlined";
+type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "inverted"
+  | "outlined"
+  | "custom";
 
 interface Buttonprops {
   variant?: ButtonVariant;
@@ -14,15 +19,17 @@ export default function Button({
   classname,
 }: Buttonprops) {
   const variants = {
-    primary: "bg-primary text-white",
-    secondary: "bg-secondary text-white",
-    inverted: "bg-neutral-800 text-white",
-    outlined: "bg-white text-neutral-800 border border-neutral-300",
+    primary: "bg-primary text-white font-medium px-4 py-2",
+    secondary: "bg-secondary text-white font-medium px-4 py-2",
+    inverted: "bg-neutral-800 text-white font-medium px-4 py-2",
+    outlined:
+      "bg-white text-neutral-800 border border-neutral-300 font-medium px-4 py-2",
+    custom: "",
   };
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 rounded-md font-medium ${variants[variant]} ${classname}`}
+      className={` rounded-md ${variants[variant]} ${classname}`}
     >
       {children}
     </button>

@@ -1,5 +1,7 @@
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import Button from "../components/ui/Button";
+import CountUp from "../components/ui/CountUp";
 
 export default function Home() {
   const categories = [
@@ -88,7 +90,10 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-md"> Profile Match</p>
-                  <p className="text-xl font-bold"> 98 % Fit Score</p>
+                  <p className="text-xl font-bold">
+                    {" "}
+                    <CountUp max={98}></CountUp>% Fit Score
+                  </p>
                 </div>{" "}
               </div>
             </div>{" "}
@@ -99,9 +104,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       {/* หมวดหมู่งานที่หาบ่อย */}
-
       <div className="pt-30 w-full max-w-350">
         <div className="flex w-full justify-between">
           {" "}
@@ -152,6 +155,18 @@ export default function Home() {
             </p>
           </div>
         </div>
+      </div>
+      {/* Explain Process ลูกจ้าง นายจ้าง */}
+      <div className="flex flex-col rounded-4xl w-full max-w-350 justify-center items-center bg-primary p-5 h-80">
+        <h1 className="text-white font-bold text-5xl w-160 text-center">
+          Ready to redefine your work-life harmony?
+        </h1>
+        <Button
+          variant="custom"
+          classname="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
+        >
+          Get Started Free
+        </Button>
       </div>
     </main>
   );
