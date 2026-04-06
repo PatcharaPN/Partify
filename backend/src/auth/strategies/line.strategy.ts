@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-line-auth';
-// auth/strategies/line.strategy.ts
+
 @Injectable()
 export class LineStrategy extends PassportStrategy(Strategy, 'line') {
   constructor() {
@@ -13,7 +13,12 @@ export class LineStrategy extends PassportStrategy(Strategy, 'line') {
     });
   }
 
-  async validate(accessToken, refreshToken, params, profile) {
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    params: any,
+    profile: any,
+  ) {
     return {
       lineId: params.id,
       email: params.email ?? null,
