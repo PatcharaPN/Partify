@@ -21,7 +21,7 @@ export default function Home() {
   ];
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
-      <div className="grid grid-cols-2 gap-10 py-20">
+      <div className="grid grid-cols-2 gap-10 py-50">
         <div className="flex flex-col gap-5">
           <h1 className="text-7xl font-bold">
             <span className="py-4 block">Find the best</span>
@@ -69,18 +69,40 @@ export default function Home() {
           </div>
         </div>
         {/* Working Pic */}
-        <div>
+        <div className="relative">
           <img
             src="./images/bg/workingPic.webp"
             className="rounded-4xl w-2xl rotate-4"
             alt="working-part-time-pic"
           />
+          <div className="absolute bottom-[-20] shadow-xl bg-white/40 border-2 border-white/40 backdrop-blur-xl rounded-2xl w-70 h-40 p-5">
+            <div>
+              {" "}
+              <div className="flex gap-5">
+                <div className="bg-primary w-12 h-12 rounded-full flex justify-center items-center">
+                  <Icon
+                    width={30}
+                    icon={"boxicons:seal-check"}
+                    color="#ffffff"
+                  />
+                </div>
+                <div>
+                  <p className="text-md"> Profile Match</p>
+                  <p className="text-xl font-bold"> 98 % Fit Score</p>
+                </div>{" "}
+              </div>
+            </div>{" "}
+            <p className="text-sm text-neutral-700 mt-3">
+              This Creative Director role matches your preferred 20h/week
+              schedule.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* หมวดหมู่งานที่หาบ่อย */}
 
-      <div className="pt-30 w-full px-55">
+      <div className="pt-30 w-full max-w-350">
         <div className="flex w-full justify-between">
           {" "}
           <div className="flex items-start flex-col gap-4">

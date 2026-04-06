@@ -1,3 +1,4 @@
+import Footer from "../components/layouts/Footer";
 import TopBar from "../components/layouts/TopBar";
 
 export default function MainLayout({
@@ -10,6 +11,7 @@ export default function MainLayout({
       {" "}
       <TopBar />
       {children}
+      <Footer />
     </div>
   );
 }
