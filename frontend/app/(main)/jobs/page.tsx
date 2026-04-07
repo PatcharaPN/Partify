@@ -34,14 +34,12 @@ export default function JobList() {
 
   return (
     <div className="flex justify-center items-center pt-10">
-      <main className="w-full max-w-7xl">
-        <h1 className="text-3xl font-bold">Curated Opportunities</h1>
+      <main className="w-full max-w-280">
+        <h1 className="text-3xl font-bold">งานที่คัดสรรมาเพื่อคุณ</h1>
         <p className="max-w-2xl pt-2 text-md text-neutral-500">
-          Discover premium part-time roles that fit your lifestyle, hand-picked
-          for professionals who value flexibility without compromising
-          excellence.
+          ค้นหางานพาร์ทไทม์คุณภาพที่เหมาะกับไลฟ์สไตล์ของคุณ
+          คัดสรรมาอย่างดีสำหรับคนที่อยากได้งานยืดหยุ่นโดยไม่ลดคุณภาพ
         </p>
-
         <div className="flex items-center shadow-md rounded-2xl bg-white p-2 gap-2 w-full mt-5">
           <div className="flex items-center gap-2 flex-2 px-3">
             <span className="text-gray-400">
@@ -49,7 +47,7 @@ export default function JobList() {
             </span>
             <input
               type="text"
-              placeholder="Job title or keyword"
+              placeholder="ชื่อตำแหน่งหรือคำค้นหา"
               className="w-full outline-none text-sm text-gray-600"
             />
           </div>
@@ -116,8 +114,8 @@ export default function JobList() {
                   "พาร์ทไทม์",
                   "วันหยุดเท่านั้น",
                   "ฟรีแลนซ์",
-                ].map((label, i) => (
-                  <li key={i}>
+                ].map((label) => (
+                  <li key={label}>
                     <label className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition">
                       <input
                         className="w-4 h-4 accent-blue-600"
@@ -159,7 +157,7 @@ export default function JobList() {
               {filteredJob.map((j) => (
                 <div
                   key={j.id}
-                  className="bg-white py-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
+                  className="bg-white py-5 mb-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
                 >
                   {/* Logo */}
                   <div className="flex items-center justify-center">

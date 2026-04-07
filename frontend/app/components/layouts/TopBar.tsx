@@ -27,13 +27,13 @@ export default function TopBar() {
             className="underline underline-offset-5 decoration-primary decoration-2 inline-block text-primary text-xl font-bold font-headline px-4 py-2"
             href="/jobs"
           >
-            Find Jobs
+            ค้นหางาน
           </Link>
           <Link
             className="inline-block text-neutral-600 font-headline px-4 py-2"
             href="/"
           >
-            Post a Job
+            สำหรับนายจ้าง
           </Link>
         </nav>
 

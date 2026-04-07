@@ -6,18 +6,18 @@ import CountUp from "../components/ui/CountUp";
 export default function Home() {
   const categories = [
     {
-      title: "Creative",
-      sub: "Design, Copywriting, Video Editing",
+      title: "สายครีเอทีฟ",
+      sub: "ดีไซน์, คอนเทนต์, ตัดต่อวิดีโอ",
       img: "./images/bg/creative.jpg",
     },
     {
-      title: "Retail",
-      sub: "Luxury Goods, Boutiques",
+      title: "ค้าปลีก",
+      sub: "สินค้าแบรนด์เนม, บูติก",
       img: "./images/bg/retail.jpg",
     },
     {
-      title: "Delivery",
-      sub: "Logistics, Local Fleet",
+      title: "ขนส่งและเดลิเวอรี่",
+      sub: "โลจิสติกส์, ส่งของในเมือง",
       img: "./images/bg/delivery.jpg",
     },
   ];
@@ -26,10 +26,11 @@ export default function Home() {
       <div className="grid grid-cols-2 gap-10 py-50">
         <div className="flex flex-col gap-5">
           <h1 className="text-7xl font-bold">
-            <span className="py-4 block">Find the best</span>
-            <span className="text-primary font-bold">part-time</span> jobs{" "}
-            <br />
-            for your lifestyle
+            <span className="py-4 block">ค้นหางาน</span>
+            <span className="text-primary font-bold">
+              พาร์ทไทม์
+            </span> ที่ใช่ <br />
+            สำหรับคุณ
           </h1>
           {/* Filter Box / Location */}
           <div className="flex items-center shadow-xl rounded-2xl bg-white p-5 gap-2 w-full">
@@ -39,7 +40,7 @@ export default function Home() {
               </span>
               <input
                 type="text"
-                placeholder="Job title or keyword"
+                placeholder="ชื่อตำแหน่งหรือคำค้นหา"
                 className="w-full outline-none text-sm text-gray-600"
               />
             </div>
@@ -50,7 +51,7 @@ export default function Home() {
               </span>
               <input
                 type="text"
-                placeholder="City or remote"
+                placeholder="เมืองหรือรีโมท"
                 className="w-full outline-none text-sm text-gray-600"
               />
             </div>
@@ -61,12 +62,12 @@ export default function Home() {
           <div className="flex gap-5 pt-5">
             <div>
               <h1 className="text-4xl font-bold">10,000+</h1>
-              <p className="text-neutral-400">ACTIVE JOBS</p>
+              <p className="text-neutral-400">งานที่เปิดรับ</p>
             </div>
             <div className="w-px h-15 bg-gray-200" />
             <div>
-              <h1 className="text-4xl font-bold">Verified</h1>
-              <p className="text-neutral-400">TOP EMPLOYERS</p>
+              <h1 className="text-4xl font-bold">ยืนยันแล้ว</h1>
+              <p className="text-neutral-400">นายจ้างคุณภาพ</p>
             </div>
           </div>
         </div>
@@ -89,7 +90,7 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <p className="text-md"> Profile Match</p>
+                  <p className="text-sm">โปรไฟล์ของคุณตรงกับงานนี้</p>
                   <p className="text-xl font-bold">
                     {" "}
                     <CountUp max={98}></CountUp>% Fit Score
@@ -98,8 +99,8 @@ export default function Home() {
               </div>
             </div>{" "}
             <p className="text-sm text-neutral-700 mt-3">
-              This Creative Director role matches your preferred 20h/week
-              schedule.
+              ตำแหน่ง Creative Director นี้ตรงกับตารางงาน 20
+              ชม./สัปดาห์ที่คุณต้องการ
             </p>
           </div>
         </div>
@@ -109,16 +110,16 @@ export default function Home() {
         <div className="flex w-full justify-between">
           {" "}
           <div className="flex items-start flex-col gap-4">
-            <h1 className="text-4xl font-bold">Curated Categories</h1>
+            <h1 className="text-4xl font-bold">หมวดหมู่งานคัดสรร</h1>
             <p className="w-md text-neutral-600">
-              We don't just list jobs; we curate the highest quality part-time
-              opportunities in these key sectors.
+              เราไม่ได้แค่ลิสต์งาน
+              แต่คัดสรรงานพาร์ทไทม์คุณภาพสูงในหมวดหมู่เหล่านี้
             </p>
           </div>{" "}
           <div className="text-md flex items-end gap-2 ">
             {" "}
             <Link className="text-primary font-bold" href={"/"}>
-              Browse all categories
+              ดูทุกหมวดหมู่
             </Link>
             <Icon color="004AC6" icon={"maki:arrow"} />
           </div>
@@ -149,23 +150,23 @@ export default function Home() {
             className="w-full h-64 object-cover brightness-60 group-hover:brightness-90 transition"
           />{" "}
           <div className="absolute bottom-0 left-0 p-5 text-white">
-            <h2 className="text-2xl font-bold">Education</h2>
+            <h2 className="text-2xl font-bold">การศึกษา</h2>
             <p className="text-sm text-gray-300">
-              Tutoring, Online Instruction, Language Coaching
+              ติวเตอร์, สอนออนไลน์, สอนภาษา
             </p>
           </div>
         </div>
       </div>
-      {/* Explain Process ลูกจ้าง นายจ้าง */}
+      {/* Explain Process ลูกจ้าง นายจ้าง CTA */}
       <div className="flex flex-col rounded-4xl w-full max-w-350 justify-center items-center bg-primary p-5 h-80">
         <h1 className="text-white font-bold text-5xl w-160 text-center">
-          Ready to redefine your work-life harmony?
+          พร้อมหางานที่เหมาะกับคุณแล้วหรือยัง?
         </h1>
         <Button
           variant="custom"
           classname="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
         >
-          Get Started Free
+          เริ่มต้นฟรี
         </Button>
       </div>
     </main>
