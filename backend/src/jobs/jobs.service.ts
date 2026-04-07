@@ -1,0 +1,30 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateJobDto } from './dto/create-job.dto';
+import { UpdateJobDto } from './dto/update-job.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+
+@Injectable()
+export class JobsService {
+  constructor(private readonly prisma: PrismaService) {}
+  async postJob(dto: CreateJobDto, companyId: string) {
+    const existing = await this.prisma.job.findFirst({
+      where: { title: dto.title, companyId },
+    });
+    if (existing) {
+      throw new BadRequestException('งานนี้มีอยู่ในระบบแล้ว');
+    }
+    return this.prisma.job.create({
+      data: { ...dto, companyId },
+    });
+  }
+  async getJobs() {
+    const jobs = await this.prisma.job.findMany({
+      omit: {
+        id: true,
+        startDate: true,
+        companyId: true,
+      },
+    });
+    return jobs;
+  }
+}

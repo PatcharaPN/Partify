@@ -66,14 +66,15 @@ model Job {
   salary      Int?
   location    String?
   createdAt   DateTime @default(now())
-
+  
   workingHours String?
   workingDays  String?
   startDate   DateTime?
 
   companyId   String
   company     User     @relation("EmployerJobs", fields: [companyId], references: [id])
-
+  companyImageURL String?
+  companyName String?
   applications Application[]
 
   @@map("jobs")

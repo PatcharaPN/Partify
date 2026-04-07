@@ -66,6 +66,8 @@ export class AuthService {
       });
     }
     const token = this.jwt.sign({ sub: user.id });
+    console.log('Bearer', token);
+
     return {
       access_token: token,
       isNew,

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { JobsService } from './jobs.service';
+import { JobsController } from './jobs.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
-import { LineStrategy } from './strategies/line.strategy';
+import { AuthGuard } from 'src/auth/auth.guard';
+
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -13,8 +14,7 @@ import { LineStrategy } from './strategies/line.strategy';
       }),
     }),
   ],
-
-  controllers: [AuthController],
-  providers: [AuthService, LineStrategy],
+  controllers: [JobsController],
+  providers: [JobsService],
 })
-export class AuthModule {}
+export class JobsModule {}
