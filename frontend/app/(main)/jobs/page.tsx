@@ -2,6 +2,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchJobs } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 export default function JobList() {
@@ -14,17 +15,22 @@ export default function JobList() {
   );
   useEffect(() => {
     dispatch(fetchJobs());
+    console.log(jobs);
   }, []);
 
   const filteredJob = useMemo(() => {
     let result =
-      salary === 0 ? jobs : jobs.filter((j) => Number(j.salary) >= salary);
+      salary === 0 ? jobs : jobs.filter((j) => Number(j.salaryMin) >= salary);
 
     if (sortedBy === "salary_desc")
-      return [...result].sort((a, b) => Number(b.salary) - Number(a.salary));
+      return [...result].sort(
+        (a, b) => Number(b.salaryMin) - Number(a.salaryMin),
+      );
 
     if (sortedBy === "salary_asc")
-      return [...result].sort((a, b) => Number(a.salary) - Number(b.salary));
+      return [...result].sort(
+        (a, b) => Number(a.salaryMin) - Number(b.salaryMin),
+      );
 
     return [...result].sort(
       (a, b) =>
@@ -34,7 +40,7 @@ export default function JobList() {
 
   return (
     <div className="flex justify-center items-center pt-10">
-      <main className="w-full max-w-280">
+      <main className="w-full max-w-290">
         <h1 className="text-3xl font-bold">งานที่คัดสรรมาเพื่อคุณ</h1>
         <p className="max-w-2xl pt-2 text-md text-neutral-500">
           ค้นหางานพาร์ทไทม์คุณภาพที่เหมาะกับไลฟ์สไตล์ของคุณ
@@ -155,56 +161,58 @@ export default function JobList() {
             </div>
             <div>
               {filteredJob.map((j) => (
-                <div
-                  key={j.id}
-                  className="bg-white py-5 mb-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
-                >
-                  {/* Logo */}
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={j.companyImageURL ?? ""}
-                      className="w-16 h-16 rounded-xl object-cover border border-neutral-200"
-                      alt={j.companyName ?? ""}
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex flex-col gap-1">
-                    <p className="font-bold text-lg">{j.title}</p>
-                    <div className="flex items-center gap-4 text-sm text-neutral-500">
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:building-2-line" />
-                        {j.companyName}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:location-line" />
-                        {j.location}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:time-line" />
-                        {j.workingHours}
-                      </span>
+                <Link href={`/jobs/${j.id}`} key={j.id}>
+                  <div
+                    key={j.id}
+                    className="bg-white py-5 mb-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
+                  >
+                    {/* Logo */}
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={j.companyImageURL ?? ""}
+                        className="w-16 h-16 rounded-xl object-cover border border-neutral-200"
+                        alt={j.companyName ?? ""}
+                      />
                     </div>
-                    <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
-                      {j.description}
-                    </p>
-                  </div>
 
-                  {/* Salary + Apply */}
-                  <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-primary">
-                        {j.salary} บ./ชม.
-                      </p>
-                      <p className="text-xs text-neutral-400">
-                        {j.workingDays}
+                    {/* Info */}
+                    <div className="flex flex-col gap-1">
+                      <p className="font-bold text-lg">{j.title}</p>
+                      <div className="flex items-center gap-4 text-sm text-neutral-500">
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:building-2-line" />
+                          {j.companyName}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:location-line" />
+                          {j.location}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:time-line" />
+                          {j.workingHours}
+                        </span>
+                      </div>
+                      <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                        {j.description}
                       </p>
                     </div>
-                    <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
-                      สมัครเลย
-                    </button>
+
+                    {/* Salary + Apply */}
+                    <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
+                      <div className="text-right">
+                        <p className="text-xl font-bold text-primary">
+                          {j.salaryMin} บ./ชม.
+                        </p>
+                        <p className="text-xs text-neutral-400">
+                          {j.workingDays}
+                        </p>
+                      </div>
+                      <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
+                        สมัครเลย
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

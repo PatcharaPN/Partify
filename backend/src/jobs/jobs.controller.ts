@@ -25,4 +25,9 @@ export class JobsController {
   getJobs(@Req() req) {
     return this.jobsService.getJobs();
   }
+
+  @Get('/:id')
+  getJobsByID(@Param('id') jobId) {
+    return this.jobsService.getJobsByID(jobId);
+  }
 }

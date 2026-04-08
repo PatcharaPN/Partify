@@ -60,24 +60,53 @@ model Profile {
 }
 
 model Job {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  salary      Int?
-  location    String?
-  createdAt   DateTime @default(now())
-  
-  workingHours String?
-  workingDays  String?
-  startDate   DateTime?
+  id                String    @id @default(uuid())
+  title             String
+  description       String
+  responsibilities  String?
+  qualifications    String?
 
-  companyId   String
-  company     User     @relation("EmployerJobs", fields: [companyId], references: [id])
-  companyImageURL String?
-  companyName String?
-  applications Application[]
+  salaryMin         Int?
+  salaryMax         Int?
+  salaryNegotiable  Boolean   @default(false)
+  currency          String?   @default("THB")
+
+  jobType           String?
+  workStyle         String?
+  experienceLevel   String?
+  experienceYears   Int?
+  educationLevel    String?
+  positions         Int?      @default(1)
+
+  workingHours      String?
+  workingDays       String?
+  startDate         DateTime?
+  closingDate       DateTime?
+
+  benefits          String[]
+
+  location          String?
+  urgency           String?
+  createdAt         DateTime  @default(now())
+
+  companyId         String
+  company           User      @relation("EmployerJobs", fields: [companyId], references: [id])
+  companyImageURL   String?
+  companyName       String?
+
+  applications      Application[]
+  skills            JobSkill[]    
 
   @@map("jobs")
+}
+
+model JobSkill {
+  id      String  @id @default(uuid())
+  jobId   String
+  job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name    String  // "React", "Node.js", "Python"
+
+  @@map("job_skills")
 }
 
 model Application {

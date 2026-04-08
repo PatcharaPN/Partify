@@ -13,16 +13,23 @@ export class JobsService {
     if (existing) {
       throw new BadRequestException('งานนี้มีอยู่ในระบบแล้ว');
     }
+    const { skills, ...jobData } = dto;
     return this.prisma.job.create({
-      data: { ...dto, companyId },
+      data: { ...jobData, companyId },
     });
   }
   async getJobs() {
-    const jobs = await this.prisma.job.findMany({
-      omit: {
-        id: true,
-        startDate: true,
-        companyId: true,
+    const jobs = await this.prisma.job.findMany();
+    console.log(jobs);
+
+    return jobs;
+  }
+
+  async getJobsByID(jobId: string) {
+    const jobs = await this.prisma.job.findUnique({
+      where: { id: jobId },
+      include: {
+        skills: true,
       },
     });
     return jobs;

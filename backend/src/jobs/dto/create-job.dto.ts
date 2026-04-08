@@ -1,4 +1,19 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsBoolean,
+  IsArray,
+  IsDate,
+  ValidateNested,
+  Min,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class SkillDto {
+  @IsString()
+  name!: string;
+}
 
 export class CreateJobDto {
   @IsString()
@@ -8,13 +23,58 @@ export class CreateJobDto {
   description!: string;
 
   @IsOptional()
-  @IsNumber()
-  salary?: number;
+  @IsString()
+  responsibilities?: string;
 
   @IsOptional()
   @IsString()
-  location?: string;
+  qualifications?: string;
 
+  // Salary
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  salaryMin?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  salaryMax?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  salaryNegotiable?: boolean;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  // Job Info
+  @IsOptional()
+  @IsString()
+  jobType?: string;
+
+  @IsOptional()
+  @IsString()
+  workStyle?: string;
+
+  @IsOptional()
+  @IsString()
+  experienceLevel?: string;
+
+  @IsOptional()
+  @IsNumber()
+  experienceYears?: number;
+
+  @IsOptional()
+  @IsString()
+  educationLevel?: string;
+
+  @IsOptional()
+  @IsNumber()
+  positions?: number;
+
+  // Schedule
   @IsOptional()
   @IsString()
   workingHours?: string;
@@ -24,5 +84,46 @@ export class CreateJobDto {
   workingDays?: string;
 
   @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   startDate?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  closingDate?: Date;
+
+  // Benefits
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  benefits?: string[];
+
+  // Location
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsString()
+  urgency?: string;
+
+  // Company
+  @IsString()
+  companyId!: string;
+
+  @IsOptional()
+  @IsString()
+  companyName?: string;
+
+  @IsOptional()
+  @IsString()
+  companyImageURL?: string;
+
+  // Skills
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SkillDto)
+  skills?: SkillDto[];
 }
