@@ -20,18 +20,6 @@ export class JobsService {
   }
   async getJobs() {
     const jobs = await this.prisma.job.findMany();
-    console.log(jobs);
-
-    return jobs;
-  }
-
-  async getJobsByID(jobId: string) {
-    const jobs = await this.prisma.job.findUnique({
-      where: { id: jobId },
-      include: {
-        skills: true,
-      },
-    });
     return jobs;
   }
 }
