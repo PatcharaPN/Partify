@@ -175,43 +175,44 @@ export default function JobList() {
                       />
                     </div>
 
-                  {/* Info */}
-                  <div className="flex flex-col gap-1">
-                    <p className="font-bold text-lg">{j.title}</p>
-                    <div className="flex items-center gap-4 text-sm text-neutral-500">
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:building-2-line" />
-                        {j.companyName}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:location-line" />
-                        {j.location}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Icon icon="mingcute:time-line" />
-                        {j.workingHours}
-                      </span>
+                    {/* Info */}
+                    <div className="flex flex-col gap-1">
+                      <p className="font-bold text-lg">{j.title}</p>
+                      <div className="flex items-center gap-4 text-sm text-neutral-500">
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:building-2-line" />
+                          {j.companyName}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:location-line" />
+                          {j.location}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Icon icon="mingcute:time-line" />
+                          {j.workingHours}
+                        </span>
+                      </div>
+                      <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                        {j.description}
+                      </p>
                     </div>
-                    <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
-                      {j.description}
-                    </p>
-                  </div>
 
-                  {/* Salary + Apply */}
-                  <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-primary">
-                        {j.salaryMin} บ./ชม.
-                      </p>
-                      <p className="text-xs text-neutral-400">
-                        {j.workingDays}
-                      </p>
+                    {/* Salary + Apply */}
+                    <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
+                      <div className="text-right">
+                        <p className="text-xl font-bold text-primary">
+                          {j.salaryMin} บ./ชม.
+                        </p>
+                        <p className="text-xs text-neutral-400">
+                          {j.workingDays}
+                        </p>
+                      </div>
+                      <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
+                        สมัครเลย
+                      </button>
                     </div>
-                    <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
-                      สมัครเลย
-                    </button>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

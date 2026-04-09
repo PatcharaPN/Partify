@@ -19,7 +19,19 @@ export class JobsService {
     });
   }
   async getJobs() {
-    const jobs = await this.prisma.job.findMany();
+    const jobs = await this.prisma.job.findMany({
+      include: {
+        skills: true,
+      },
+    });
+    return jobs;
+  }
+  async getJobsByID(jobId: string) {
+    const jobs = await this.prisma.job.findUnique({
+      where: {
+        id: jobId,
+      },
+    });
     return jobs;
   }
 }
