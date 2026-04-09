@@ -12,6 +12,8 @@ import { Type } from 'class-transformer';
 
 export class SkillDto {
   @IsString()
+  id!: string;
+  @IsString()
   name!: string;
 }
 

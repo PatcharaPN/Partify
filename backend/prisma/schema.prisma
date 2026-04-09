@@ -83,6 +83,8 @@ model Job {
   startDate         DateTime?
   closingDate       DateTime?
 
+  overviewPictureURL String[]
+
   benefits          String[]
 
   location          String?
@@ -104,7 +106,7 @@ model JobSkill {
   id      String  @id @default(uuid())
   jobId   String
   job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  name    String  // "React", "Node.js", "Python"
+  name    String  
 
   @@map("job_skills")
 }
@@ -119,6 +121,6 @@ model Application {
   job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
   user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([jobId, userId]) // กันสมัครซ้ำ
+  @@unique([jobId, userId])
   @@map("applications")
 }

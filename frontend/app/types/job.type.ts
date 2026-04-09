@@ -42,7 +42,7 @@ export interface Job {
   companyId: string;
   companyName?: string;
   companyImageURL?: string;
-
+  overviewPictureURL?: string[];
   // Relations
   skills: Skill[];
 
