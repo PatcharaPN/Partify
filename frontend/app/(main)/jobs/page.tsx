@@ -4,6 +4,7 @@ import { fetchJobs } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import JobListSkeleton from "./JobListSkeleton";
 
 export default function JobList() {
   const dispatch = useAppDispatch();
@@ -160,60 +161,64 @@ export default function JobList() {
               </span>
             </div>
             <div>
-              {filteredJob.map((j) => (
-                <Link href={`/jobs/${j.id}`} key={j.id}>
-                  <div
-                    key={j.id}
-                    className="bg-white py-5 mb-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
-                  >
-                    {/* Logo */}
-                    <div className="flex items-center justify-center">
-                      <img
-                        src={j.companyImageURL ?? ""}
-                        className="w-16 h-16 rounded-xl object-cover border border-neutral-200"
-                        alt={j.companyName ?? ""}
-                      />
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex flex-col gap-1">
-                      <p className="font-bold text-lg">{j.title}</p>
-                      <div className="flex items-center gap-4 text-sm text-neutral-500">
-                        <span className="flex items-center gap-1">
-                          <Icon icon="mingcute:building-2-line" />
-                          {j.companyName}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Icon icon="mingcute:location-line" />
-                          {j.location}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Icon icon="mingcute:time-line" />
-                          {j.workingHours}
-                        </span>
+              {isLoading ? (
+                <JobListSkeleton />
+              ) : (
+                filteredJob.map((j) => (
+                  <Link href={`/jobs/${j.id}`} key={j.id}>
+                    <div
+                      key={j.id}
+                      className="bg-white py-5 mb-5 px-6 grid grid-cols-[1.5fr_7fr_2fr] rounded-2xl shadow w-full border border-neutral-400/10 items-center"
+                    >
+                      {/* Logo */}
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={j.companyImageURL ?? ""}
+                          className="w-16 h-16 rounded-xl object-cover border border-neutral-200"
+                          alt={j.companyName ?? ""}
+                        />
                       </div>
-                      <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
-                        {j.description}
-                      </p>
-                    </div>
 
-                    {/* Salary + Apply */}
-                    <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
-                      <div className="text-right">
-                        <p className="text-xl font-bold text-primary">
-                          {j.salaryMin} บ./ชม.
-                        </p>
-                        <p className="text-xs text-neutral-400">
-                          {j.workingDays}
+                      {/* Info */}
+                      <div className="flex flex-col gap-1">
+                        <p className="font-bold text-lg">{j.title}</p>
+                        <div className="flex items-center gap-4 text-sm text-neutral-500">
+                          <span className="flex items-center gap-1">
+                            <Icon icon="mingcute:building-2-line" />
+                            {j.companyName}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Icon icon="mingcute:location-line" />
+                            {j.location}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Icon icon="mingcute:time-line" />
+                            {j.workingHours}
+                          </span>
+                        </div>
+                        <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                          {j.description}
                         </p>
                       </div>
-                      <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
-                        สมัครเลย
-                      </button>
+
+                      {/* Salary + Apply */}
+                      <div className="border-l border-neutral-100 flex flex-col items-end gap-3">
+                        <div className="text-right">
+                          <p className="text-xl font-bold text-primary">
+                            {j.salaryMin} บ./ชม.
+                          </p>
+                          <p className="text-xs text-neutral-400">
+                            {j.workingDays}
+                          </p>
+                        </div>
+                        <button className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
+                          สมัครเลย
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -57,6 +57,7 @@ const jobSlice = createSlice({
       })
       .addCase(fetchJobById.fulfilled, (state, action: PayloadAction<Job>) => {
         state.selectedJob = action.payload;
+        state.isLoading = false;
       })
       .addCase(fetchJobById.pending, (state) => {
         state.isLoading = true;
