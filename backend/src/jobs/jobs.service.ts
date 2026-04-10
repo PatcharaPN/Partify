@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -34,33 +38,47 @@ export class JobsService {
     });
     return jobs;
   }
-
   async upsertJobById(jobId: string, dto: UpdateJobDto) {
     const { skills, ...jobData } = dto;
-    const job = await this.prisma.job.upsert({
+
+    const existing = await this.prisma.job.findUnique({ where: { id: jobId } });
+
+    if (!existing) throw new NotFoundException(`Job ${jobId} not found`);
+
+    const job = await this.prisma.job.update({
       where: { id: jobId },
-      create: {
-        ...jobData,
-        skills: skills
-          ? {
-              create: skills.map((skill) => ({
-                name: skill.name,
-              })),
-            }
-          : undefined,
-      },
-      update: {
-        ...jobData,
-        skills: skills
-          ? {
-              deleteMany: {},
-              create: skills.map((skill) => ({
-                name: skill.name,
-              })),
-            }
-          : undefined,
-      },
+      data: jobData,
     });
+
     return job;
   }
+
+  // async upsertJobById(jobId: string, dto: UpdateJobDto) {
+  //   const { skills, ...jobData } = dto;
+  //   const job = await this.prisma.job.upsert({
+  //     where: { id: jobId },
+  //     create: {
+  //       ...jobData,
+  //       skills: skills
+  //         ? {
+  //             create: skills.map((skill) => ({
+  //               name: skill.name,
+  //             })),
+  //           }
+  //         : undefined,
+  //     },
+  //     update: {
+  //       ...jobData,
+  //       skills: skills
+  //         ? {
+  //             deleteMany: {},
+  //             create: skills.map((skill) => ({
+  //               name: skill.name,
+  //             })),
+  //           }
+  //         : undefined,
+  //     },
+  //   });
+  //   return job;
+  // }
 }

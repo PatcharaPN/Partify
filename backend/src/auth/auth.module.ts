@@ -16,5 +16,6 @@ import { LineStrategy } from './strategies/line.strategy';
 
   controllers: [AuthController],
   providers: [AuthService, LineStrategy],
+  exports: [JwtModule],
 })
 export class AuthModule {}

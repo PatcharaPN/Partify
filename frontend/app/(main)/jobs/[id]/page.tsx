@@ -137,13 +137,20 @@ export default function JobDetail() {
             {/* Overview Images */}
             {selectedJob.overviewPictureURL &&
               selectedJob.overviewPictureURL.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 h-64 rounded-2xl overflow-hidden">
+                <div className="grid grid-cols-2 gap-3 rounded-2xl overflow-hidden">
+                  {/* รูปซ้าย */}
                   <img
                     src={selectedJob.overviewPictureURL[0]}
-                    alt="Job overview 1"
-                    className="w-full h-full object-cover rounded-2xl"
+                    className="w-full h-full object-cover rounded-2xl "
                   />
-                  <div className="flex flex-col gap-3">
+
+                  {/* รูปขวา */}
+                  <div
+                    className="grid gap-3"
+                    style={{
+                      gridTemplateRows: `repeat(${selectedJob.overviewPictureURL.slice(1, 3).length}, 1fr)`,
+                    }}
+                  >
                     {selectedJob.overviewPictureURL
                       .slice(1, 3)
                       .map((url, i) => (
@@ -151,7 +158,7 @@ export default function JobDetail() {
                           key={i}
                           src={url}
                           alt={`Job overview ${i + 2}`}
-                          className="w-full flex-1 object-cover rounded-xl"
+                          className="w-full h-full object-cover rounded-xl"
                         />
                       ))}
                   </div>

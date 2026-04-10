@@ -38,6 +38,7 @@ model User {
   
 
   profile     Profile?
+  bookmarks   Bookmark[]  
   jobs        Job[]        @relation("EmployerJobs")
   applications Application[]
 
@@ -86,7 +87,7 @@ model Job {
   overviewPictureURL String[]
 
   benefits          String[]
-
+  bookmarks         Bookmark[]  
   location          String?
   urgency           String?
   createdAt         DateTime  @default(now())
@@ -100,6 +101,19 @@ model Job {
   skills            JobSkill[]    
 
   @@map("jobs")
+}
+
+model Bookmark {
+  id      String  @id @default(uuid())
+  userId  String
+  jobId   String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@map("bookmarks")
 }
 
 model JobSkill {

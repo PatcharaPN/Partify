@@ -30,4 +30,8 @@ export class JobsController {
   getJobsByID(@Param('id') jobId) {
     return this.jobsService.getJobsByID(jobId);
   }
+  @Patch('/:id')
+  upsertJobById(@Param('id') jobId, @Body() dto) {
+    return this.jobsService.upsertJobById(jobId, dto);
+  }
 }

@@ -122,6 +122,10 @@ export class CreateJobDto {
   @IsString()
   companyImageURL?: string;
 
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  overviewPictureURL?: string[];
   // Skills
   @IsOptional()
   @IsArray()
