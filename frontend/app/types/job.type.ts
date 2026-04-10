@@ -16,7 +16,7 @@ export interface Job {
   salaryMax?: number;
   salaryNegotiable: boolean;
   currency?: string;
-
+  isBookmarked?: boolean;
   // Job Info
   jobType?: string;
   workStyle?: string;

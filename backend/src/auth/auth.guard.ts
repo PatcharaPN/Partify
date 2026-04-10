@@ -17,8 +17,11 @@ export class AuthGuard implements CanActivate {
     // ดึง token ออกจาก Authorization header
     const token = this.extractToken(request);
     // ถ้าไม่มี token == 401
-    if (!token) throw new UnauthorizedException('No token provided');
 
+    if (!token) {
+      (request as any)['user'] = null;
+      return true;
+    }
     try {
       // verify token + decode payload
       const payload = await this.jwtService.verifyAsync(token, {
@@ -29,7 +32,7 @@ export class AuthGuard implements CanActivate {
       //เพื่อให้ Controller เรียกใช้ผ่าน @Request , req.user ได้
     } catch (error) {
       //token ผิด หรือหมดอายุ หรือมีการแก้ไข จะตีกลับ 401 ไป client
-      throw new UnauthorizedException('Invalid token');
+      request['user'] = null;
     }
     //ถ้าผ่านหมด Return True
     return true;

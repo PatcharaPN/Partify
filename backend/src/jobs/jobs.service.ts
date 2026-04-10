@@ -22,13 +22,19 @@ export class JobsService {
       data: { ...jobData, companyId },
     });
   }
-  async getJobs() {
+  async getJobs(userId?: string) {
     const jobs = await this.prisma.job.findMany({
       include: {
         skills: true,
+        bookmarks: userId ? { where: { userId }, select: { id: true } } : false,
       },
     });
-    return jobs;
+
+    return jobs.map((job) => ({
+      ...job,
+      isBookmarked: job.bookmarks.length > 0,
+      bookmarks: undefined,
+    }));
   }
   async getJobsByID(jobId: string) {
     const jobs = await this.prisma.job.findUnique({

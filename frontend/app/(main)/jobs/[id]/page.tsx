@@ -119,12 +119,22 @@ export default function JobDetail() {
                 />
               </button>
               <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-100 transition">
-                <Icon
-                  icon="mdi:bookmark-outline"
-                  width="20"
-                  height="20"
-                  className="text-gray-500"
-                />
+                {selectedJob.isBookmarked ? (
+                  <Icon
+                    icon="mdi:bookmark-outline"
+                    width="20"
+                    height="20"
+                    className="text-gray-500"
+                  />
+                ) : (
+                  <Icon
+                    color="004AC6"
+                    icon="mdi:bookmark"
+                    width="20"
+                    height="20"
+                    className="text-gray-500"
+                  />
+                )}
               </button>
             </div>
           </div>
@@ -392,7 +402,7 @@ export default function JobDetail() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold py-2.5 rounded-xl transition">
+                <button className="w-full bg-linear-to-b from-blue-600 to-blue-400 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold py-2.5 rounded-xl transition">
                   Apply Now
                 </button>
                 <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-semibold py-2.5 rounded-xl transition">
@@ -402,8 +412,8 @@ export default function JobDetail() {
             </section>
 
             {/* Profile Match */}
-            <section className="bg-blue-600 rounded-2xl p-5 shadow-sm text-white">
-              <p className="text-xs font-semibold uppercase tracking-widest text-blue-200 mb-1">
+            <section className="bg-linear-to-r from-blue-500 to-blue-300 rounded-2xl p-5 shadow-sm text-white">
+              <p className="text-xs font-extrabold uppercase tracking-widest text-blue-200 mb-1">
                 Profile Match
               </p>
               <p className="text-4xl font-bold mb-2">94%</p>
