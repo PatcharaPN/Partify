@@ -44,15 +44,4 @@ export class UsersService {
       data: dto,
     });
   }
-
-  async upsertProfile(userId: string, dto: UpdateProfileDto) {
-    return await this.prisma.profile.upsert({
-      where: { userId },
-      update: dto,
-      create: {
-        userId,
-        ...dto,
-      },
-    });
-  }
 }

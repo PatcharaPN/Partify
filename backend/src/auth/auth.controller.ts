@@ -29,7 +29,23 @@ export class AuthController {
   @Get('line/callback')
   @UseGuards(AuthGuard('line'))
   async lineCallback(@Req() req, @Res() res) {
-    const result = await this.authService.lineLogin(req.user);
-    res.redirect(`http://localhost:3000/callback?token=${result.access_token}`);
+    const result = await this.authService.oauthLogin(req.user);
+    res.redirect(
+      `http://localhost:3000/callback?token=${result.access_token}&isNew=${result.isNew}`,
+    );
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {}
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleCallback(@Req() req, @Res() res) {
+    const result = await this.authService.oauthLogin(req.user);
+
+    res.redirect(
+      `http://localhost:3000/callback?token=${result.access_token}&isNew=${result.isNew}`,
+    );
   }
 }

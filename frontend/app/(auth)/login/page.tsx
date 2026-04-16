@@ -16,18 +16,18 @@ export default function LoginPage() {
           className={`relative bg-cover p-10 bg-[url(/images/bg/office_BG.webp)]`}
         >
           {" "}
-          <div className="absolute inset-0 bg-linear-to-b from-white/95 to-gray-300/95" />
+          <div className="absolute inset-0 bg-linear-to-r from-blue-700 to-blue-600/95" />
           <div className="relative z-10 h-full">
             <div className="flex flex-col justify-between h-full gap-10">
-              <p className="text-primary font-bold text-2xl">Partify</p>
+              <p className="text-white font-bold text-2xl">Partify</p>
               {/* {Persona Card} */}
               <div className="">
-                <span className="text-3xl font-bold">
+                <span className="text-3xl font-bold text-blue-100">
                   Your time,
                   <br />
-                  <span className="text-primary">your terms.</span>
+                  <span className="text-white">your terms.</span>
                 </span>
-                <p className="text-md w-2/3 text-neutral-500">
+                <p className="text-md w-2/3 text-white">
                   Join a community of high-caliber professionals and premium
                   recruiters redefining part-time excellence.
                 </p>
@@ -80,7 +80,10 @@ export default function LoginPage() {
           </div>
           <span className="text-xs text-center mt-6 block">
             Don't have an account?{" "}
-            <Link className="text-primary" href={"/"}>
+            <Link
+              className="text-blue-600 font-semibold hover:underline"
+              href={"/register"}
+            >
               Sign Up
             </Link>
           </span>

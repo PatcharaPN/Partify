@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { User } from 'generated/prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -42,31 +43,77 @@ export class AuthService {
     return { access_token: this.jwt.sign(payload) };
   }
 
-  async lineLogin(lineUser: {
-    lineId: string;
-    displayName: string;
-    pictureUrl: string;
+  async oauthLogin(input: {
+    provider: 'google' | 'line';
+    providerId: string;
+    email?: string | null;
+    name?: string;
+    picture?: string;
   }) {
-    let user = await this.prisma.user.findUnique({
-      where: { lineId: lineUser.lineId },
+    // 1. หา account
+    let account = await this.prisma.account.findUnique({
+      where: {
+        provider_providerAccountId: {
+          provider: input.provider,
+          providerAccountId: input.providerId,
+        },
+      },
+      include: { user: true },
     });
-    const isNew = !user;
+
+    if (account) {
+      return this.generateToken(account.user, false);
+    }
+
+    // 2. หา user จาก email (merge)
+    let user: User | null = null;
+
+    if (input.email) {
+      user = await this.prisma.user.findUnique({
+        where: { email: input.email },
+      });
+    }
+
+    // 3. create user ถ้าไม่มี
+    let isNew = false;
+
     if (!user) {
       user = await this.prisma.user.create({
         data: {
-          lineId: lineUser.lineId,
+          email: input.email ?? null,
         },
       });
+
+      isNew = true;
+
+      // create profile
       await this.prisma.profile.create({
         data: {
-          name: lineUser.displayName,
-          avatarUrl: lineUser.pictureUrl,
+          name: input.name ?? 'Unknown',
+          avatarUrl: input.picture ?? null,
           userId: user.id,
         },
       });
     }
-    const token = this.jwt.sign({ sub: user.id });
-    console.log('Bearer', token);
+
+    // 4. create account link
+    await this.prisma.account.create({
+      data: {
+        provider: input.provider,
+        providerAccountId: input.providerId,
+        userId: user.id,
+      },
+    });
+
+    return this.generateToken(user, isNew);
+  }
+  private generateToken(user: any, isNew: boolean) {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+    };
+
+    const token = this.jwt.sign(payload);
 
     return {
       access_token: token,

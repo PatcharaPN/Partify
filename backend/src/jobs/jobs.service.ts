@@ -26,7 +26,9 @@ export class JobsService {
     const jobs = await this.prisma.job.findMany({
       include: {
         skills: true,
-        bookmarks: userId ? { where: { userId }, select: { id: true } } : false,
+        bookmarks: userId
+          ? { where: { userId }, select: { id: true } }
+          : { select: { id: true } },
       },
     });
 

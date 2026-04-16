@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JobsModule } from './jobs/jobs.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BookmarksModule } from './bookmarks/bookmarks.module';
     JobsModule,
     PrismaModule,
     BookmarksModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

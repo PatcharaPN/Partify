@@ -28,8 +28,4 @@ export class UsersController {
   updateUser(@Request() req, @Body() dto: UpdateUserDto) {
     return this.usersService.updateUser(req.user.sub, dto);
   }
-  @Put('/profile')
-  upsertProfile(@Request() req, @Body() dto: UpdateProfileDto) {
-    return this.usersService.upsertProfile(req.user.sub, dto);
-  }
 }

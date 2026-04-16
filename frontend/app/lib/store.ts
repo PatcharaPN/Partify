@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import AuthReducer from "../store/slices/authSlice";
 import jobReducer from "../store/slices/jobSlice";
+import profileReducer from "../store/slices/profileSlice";
 export const makeStore = () => {
   return configureStore({
-    reducer: { AuthReducer, jobReducer },
+    reducer: { AuthReducer, jobReducer, profileReducer },
   });
 };
 

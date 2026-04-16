@@ -1,14 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Profile {
-  id: string;
-  name: string;
-  phone: string | null;
-  skills: string | null;
-  resumeUrl: string | null;
-  avatarUrl: string | null;
-  birthDate: string | null;
-}
+import { Profile } from "./profileSlice";
 
 export interface User {
   id: string;

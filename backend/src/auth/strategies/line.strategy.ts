@@ -20,10 +20,11 @@ export class LineStrategy extends PassportStrategy(Strategy, 'line') {
     profile: any,
   ) {
     return {
-      lineId: params.id,
+      provider: 'line',
+      providerId: params.id,
       email: params.email ?? null,
-      displayName: params.displayName,
-      pictureUrl: params.pictureUrl,
+      name: params.displayName,
+      picture: params.pictureUrl,
     };
   }
 }

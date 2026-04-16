@@ -14,19 +14,25 @@ export default function CallbackPage() {
 
   useEffect(() => {
     const token = params.get("token");
-    console.log("token", token);
+    const isNew = params.get("isNew") === "true";
 
     if (token) {
       const decoded = jwtDecode<User>(token);
-      console.log("decoded:", decoded);
+
       localStorage.setItem("access_token", token);
+
       axiosInstance
         .get("/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           dispatch(setUser({ user: res.data, token }));
-          router.push("/");
+
+          if (isNew) {
+            router.push("/setup-profile");
+          } else {
+            router.push("/");
+          }
         });
     }
   }, []);

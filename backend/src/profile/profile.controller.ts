@@ -1,0 +1,22 @@
+import { Controller, Get, Patch, Body, UseGuards, Req } from '@nestjs/common';
+import { ProfileService } from './profile.service';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+@Controller('users/me/profile')
+@UseGuards(AuthGuard)
+export class ProfileController {
+  constructor(private readonly profileService: ProfileService) {}
+
+  @Get()
+  getMyProfile(@Req() req) {
+    const userId = req.user.sub;
+    return this.profileService.getMe(userId);
+  }
+
+  @Patch()
+  updateMyProfile(@Req() req, @Body() dto: UpdateProfileDto) {
+    const userId = req.user.sub;
+    return this.profileService.upsertProfile(userId, dto);
+  }
+}
