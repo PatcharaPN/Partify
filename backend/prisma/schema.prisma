@@ -71,7 +71,7 @@ model Profile {
   resumeUrl    String?
   avatarUrl    String?
   birthDate    DateTime?
-
+  reliabilityScore Int? @default(100)
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("profiles")

@@ -25,14 +25,13 @@ const initialState: ProfileState = {
   isLoading: false,
 };
 
-//
-// GET PROFILE
-//
 export const fetchProfile = createAsyncThunk(
   "profile/fetch",
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/users/me");
+      console.log(res.data.profile);
+
       return res.data.profile;
     } catch (err: any) {
       return rejectWithValue(err.response?.data);
@@ -40,9 +39,6 @@ export const fetchProfile = createAsyncThunk(
   },
 );
 
-//
-// UPSERT PROFILE
-//
 export const upsertProfile = createAsyncThunk(
   "profile/upsert",
   async (data: Partial<Profile>, { rejectWithValue }) => {
