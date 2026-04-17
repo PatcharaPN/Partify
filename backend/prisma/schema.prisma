@@ -67,6 +67,7 @@ model Profile {
   skills       String[]   
   shifts       String[]  
   availability String[]   
+  experience   String[]
 
   resumeUrl    String?
   avatarUrl    String?

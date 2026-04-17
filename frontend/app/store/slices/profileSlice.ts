@@ -7,6 +7,7 @@ export type Profile = {
   name: string;
   phone?: string;
   summary?: string;
+  experience?: string[];
   skills: string[];
   shifts: string[];
   availability: string[];
@@ -44,6 +45,8 @@ export const upsertProfile = createAsyncThunk(
   async (data: Partial<Profile>, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.patch("users/me/profile", data);
+      console.log("Sent");
+
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data);

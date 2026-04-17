@@ -44,25 +44,27 @@ export default function TopBar() {
             <div className="w-20 h-4 rounded bg-gray-200 animate-pulse" />
           </div>
         ) : isAuthenticated ? (
-          <div className="flex items-center gap-3">
-            <img
-              src={user?.profile?.avatarUrl ?? undefined}
-              alt="avatar"
-              className="w-9 h-9 rounded-full object-cover"
-            />
-            <span className="text-neutral-700 font-medium">
-              {user?.profile?.name}
-            </span>
-            <button
-              onClick={() => {
-                localStorage.removeItem("access_token");
-                dispatch(logout());
-              }}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Logout
-            </button>
-          </div>
+          <Link href={"/profile/edit"}>
+            <div className="flex items-center gap-3">
+              <img
+                src={user?.profile?.avatarUrl ?? undefined}
+                alt="avatar"
+                className="w-9 h-9 rounded-full object-cover"
+              />
+              <span className="text-neutral-700 font-medium">
+                {user?.profile?.name}
+              </span>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("access_token");
+                  dispatch(logout());
+                }}
+                className="text-sm text-red-500 hover:underline"
+              >
+                Logout
+              </button>
+            </div>
+          </Link>
         ) : (
           <a href="http://localhost:3001/auth/line">
             <Button>Sign In</Button>

@@ -1,5 +1,5 @@
 "use client";
-
+import { upsertProfile } from "@/app/store/slices/profileSlice";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
@@ -40,34 +40,27 @@ const EXPERIENCE_OPTIONS = [
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export default function BuildProfilePage() {
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([
-    "Copy Editing",
-    "SEO Strategy",
-    "Proofreading",
-  ]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [experienceSearch, setExperienceSearch] = useState("");
-  const [selectedExpereince, setSelectedExpereince] = useState<string[]>([
-    "Graphic Designer",
-    "Photographer",
-    "Podcast Producer",
-    "Interviewer",
-  ]);
+  const [selectedExpereince, setSelectedExpereince] = useState<string[]>([]);
   const [skillSearch, setSkillSearch] = useState("");
-  const [activeDays, setActiveDays] = useState<boolean[]>([
-    true,
-    true,
-    false,
-    true,
-    true,
-    false,
-    false,
-  ]);
+  const [activeDays, setActiveDays] = useState<string[]>([]);
   const [summary, setSummary] = useState("");
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { profile, isLoading } = useAppSelector(
     (state) => state.profileReducer,
   );
+
+  useEffect(() => {
+    if (profile) {
+      setSummary(profile.summary || "");
+      setActiveDays(profile.availability);
+      setSelectedExpereince(profile.experience || []);
+      setSelectedSkills(profile.skills);
+      setPhotoPreview(profile.avatarUrl || "");
+    }
+  }, [profile]);
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -89,10 +82,10 @@ export default function BuildProfilePage() {
     }
   };
 
-  const toggleDay = (i: number) => {
-    const updated = [...activeDays];
-    updated[i] = !updated[i];
-    setActiveDays(updated);
+  const toggleDay = (day: string) => {
+    setActiveDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
+    );
   };
 
   const filteredSkills = SKILLS_OPTIONS.filter(
@@ -112,6 +105,25 @@ export default function BuildProfilePage() {
     if (file) {
       const url = URL.createObjectURL(file);
       setPhotoPreview(url);
+    }
+  };
+
+  const handleSave = async () => {
+    const payload = {
+      summary,
+      skills: selectedSkills,
+      shifts: [],
+      experience: selectedExpereince,
+      availability: activeDays,
+      avatarUrl: photoPreview || profile?.avatarUrl,
+    };
+
+    const result = await dispatch(upsertProfile(payload));
+    if (upsertProfile.fulfilled.match(result)) {
+      console.log("Saved!");
+    } else {
+      console.error(result.payload);
+      alert("Failed to save profile");
     }
   };
 
@@ -205,8 +217,7 @@ export default function BuildProfilePage() {
                 rows={4}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
-                placeholder="e.g. Senior Copy Editor with 8+ years experience in lifestyle journalism..."
-                className="w-full text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+                placeholder="Write something about yourself..."
               />
             </div>
 
@@ -379,14 +390,14 @@ export default function BuildProfilePage() {
                       {day}
                     </span>
                     <button
-                      onClick={() => toggleDay(i)}
+                      onClick={() => toggleDay(day)}
                       className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm ${
-                        activeDays[i]
+                        activeDays.includes(day)
                           ? "bg-[#2563EB] text-white shadow-blue-200"
                           : "bg-gray-100 text-gray-300 hover:bg-gray-200"
                       }`}
                     >
-                      {activeDays[i] ? (
+                      {activeDays.includes(day) ? (
                         <Icon icon="mdi:check" className="text-base" />
                       ) : (
                         <div className="w-2 h-2 rounded-full bg-gray-300" />
@@ -430,7 +441,10 @@ export default function BuildProfilePage() {
 
         {/* Footer Navigation */}
         <div className="flex justify-end items-center mt-8">
-          <button className="bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition flex items-center gap-2 shadow-md shadow-blue-200">
+          <button
+            onClick={handleSave}
+            className="bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition flex items-center gap-2 shadow-md shadow-blue-200"
+          >
             Save
             <Icon icon="mdi:arrow-right" />
           </button>

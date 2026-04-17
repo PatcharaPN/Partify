@@ -11,6 +11,10 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsString()
+  experience?: string[];
+
+  @IsOptional()
+  @IsString()
   summary?: string;
 
   @IsOptional()
