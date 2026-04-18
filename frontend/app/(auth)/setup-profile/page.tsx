@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/app/lib/hooks";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { upsertProfile } from "@/app/store/slices/profileSlice";
+import SetupProfileSkeleton from "./skeletonProfileSetup";
 
 const SKILLS_OPTIONS = [
   "Technical Writing",
@@ -88,6 +89,9 @@ export default function SetupProfilePage() {
       router.push("/home");
     }
   };
+  if (isLoading || !user) {
+    return <SetupProfileSkeleton />;
+  }
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col mt-10">
       {/* Progress */}

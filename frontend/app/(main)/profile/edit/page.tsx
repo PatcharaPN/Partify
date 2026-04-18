@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
+import BuildProfileSkeleton from "./skeletonEditProfile";
 
 const SKILLS_OPTIONS = [
   "Copy Editing",
@@ -75,7 +76,7 @@ export default function BuildProfilePage() {
 
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "partify-upload"); // preset ของคุณ
+      formData.append("upload_preset", "partify-upload");
 
       const res = await fetch(
         "https://api.cloudinary.com/v1_1/dk094vv12/image/upload",
@@ -161,7 +162,9 @@ export default function BuildProfilePage() {
       alert("Failed to save profile");
     }
   };
-
+  if (isLoading) {
+    return <BuildProfileSkeleton />;
+  }
   return (
     <div className="min-h-screen bg-[#F5F6FA] font-sans">
       {/* Main Content */}
@@ -219,7 +222,6 @@ export default function BuildProfilePage() {
 
                     setFile(selectedFile);
 
-                    // 🔥 upload ทันที
                     await handleUploadImage(selectedFile);
                   }}
                 />
@@ -259,6 +261,7 @@ export default function BuildProfilePage() {
                 you're looking for in your next role.
               </p>
               <textarea
+                className="w-full"
                 rows={4}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
