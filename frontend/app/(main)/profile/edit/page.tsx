@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
+import { axiosInstance } from "@/app/lib/axiosInstance";
 
 const SKILLS_OPTIONS = [
   "Copy Editing",
@@ -46,6 +47,10 @@ export default function BuildProfilePage() {
   const [skillSearch, setSkillSearch] = useState("");
   const [activeDays, setActiveDays] = useState<string[]>([]);
   const [summary, setSummary] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { profile, isLoading } = useAppSelector(
@@ -62,6 +67,36 @@ export default function BuildProfilePage() {
     }
   }, [profile]);
 
+  const handleUploadImage = async (file: File) => {
+    if (!file) return;
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "partify-upload"); // preset ของคุณ
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dk094vv12/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      if (!res.ok) throw new Error("Upload failed");
+
+      const data = await res.json();
+      const imageUrl = data.secure_url;
+      console.log("Cloudinary response:", imageUrl);
+      setAvatarUrl(imageUrl);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     dispatch(fetchProfile());
   }, []);
@@ -115,7 +150,7 @@ export default function BuildProfilePage() {
       shifts: [],
       experience: selectedExpereince,
       availability: activeDays,
-      avatarUrl: photoPreview || profile?.avatarUrl,
+      avatarUrl: avatarUrl,
     };
 
     const result = await dispatch(upsertProfile(payload));
@@ -150,9 +185,8 @@ export default function BuildProfilePage() {
               <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-200">
                 {photoPreview ? (
                   <img
-                    src={photoPreview || ""}
+                    src={previewUrl || avatarUrl || profile?.avatarUrl}
                     alt="Profile"
-                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <img
@@ -176,7 +210,18 @@ export default function BuildProfilePage() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handlePhoto}
+                  onChange={async (e) => {
+                    const selectedFile = e.target.files?.[0];
+                    if (!selectedFile) return;
+
+                    const localUrl = URL.createObjectURL(selectedFile);
+                    setPreviewUrl(localUrl);
+
+                    setFile(selectedFile);
+
+                    // 🔥 upload ทันที
+                    await handleUploadImage(selectedFile);
+                  }}
                 />
                 <span className="block text-center text-sm font-medium text-gray-600 border border-gray-200 rounded-lg py-1.5 hover:bg-gray-50 transition">
                   Upload Photo
