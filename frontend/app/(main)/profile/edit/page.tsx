@@ -6,39 +6,8 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
 import BuildProfileSkeleton from "./skeletonEditProfile";
+import { EXPERIENCE_SKILL_MAP } from "@/app/constants/skillOption";
 
-const SKILLS_OPTIONS = [
-  "Copy Editing",
-  "SEO Strategy",
-  "Proofreading",
-  "Ghostwriting",
-  "CMS Management",
-  "Interviewing",
-  "Fact Checking",
-  "Content Strategy",
-  "Social Media",
-  "Copywriting",
-  "Video Editing",
-  "Podcast Production",
-];
-
-const EXPERIENCE_OPTIONS = [
-  "Barista",
-  "Content Writer",
-  "Copywriter",
-  "Social Media Admin",
-  "Video Editor",
-  "Graphic Designer",
-  "Photographer",
-  "Podcast Producer",
-  "Interviewer",
-  "Proofreader",
-  "Translator",
-  "Data Entry",
-  "Customer Service",
-  "Sales Assistant",
-  "Event Staff",
-];
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export default function BuildProfilePage() {
@@ -110,6 +79,7 @@ export default function BuildProfilePage() {
     }
   };
 
+  const EXPERIENCE_OPTIONS = Object.keys(EXPERIENCE_SKILL_MAP).sort();
   const toggleExperience = (skill: string) => {
     if (selectedExpereince.includes(skill)) {
       setSelectedExpereince(selectedExpereince.filter((s) => s !== skill));
@@ -124,7 +94,13 @@ export default function BuildProfilePage() {
     );
   };
 
-  const filteredSkills = SKILLS_OPTIONS.filter(
+  const availableSkills = Array.from(
+    new Set(
+      selectedExpereince.flatMap((exp) => EXPERIENCE_SKILL_MAP[exp] || []),
+    ),
+  );
+
+  const filteredSkills = availableSkills.filter(
     (s) =>
       !selectedSkills.includes(s) &&
       s.toLowerCase().includes(skillSearch.toLowerCase()),
@@ -151,7 +127,7 @@ export default function BuildProfilePage() {
       shifts: [],
       experience: selectedExpereince,
       availability: activeDays,
-      avatarUrl: avatarUrl,
+      avatarUrl: avatarUrl ? avatarUrl : profile?.avatarUrl,
     };
 
     const result = await dispatch(upsertProfile(payload));

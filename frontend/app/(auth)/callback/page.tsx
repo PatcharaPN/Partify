@@ -17,8 +17,6 @@ export default function CallbackPage() {
     const isNew = params.get("isNew") === "true";
 
     if (token) {
-      const decoded = jwtDecode<User>(token);
-
       localStorage.setItem("access_token", token);
 
       axiosInstance

@@ -3,8 +3,10 @@ import Link from "next/link";
 import Button from "../ui/Button";
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { logout } from "@/app/store/slices/authSlice";
+import { useRouter } from "next/dist/client/components/navigation";
 
 export default function TopBar() {
+  const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAppSelector(
     (state) => state.AuthReducer,
   );
@@ -37,38 +39,34 @@ export default function TopBar() {
           </Link>
         </nav>
 
-        {isLoading ? (
-          // skeleton ตรงนี้แทน flash
+        {isAuthenticated ? (
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse" />
-            <div className="w-20 h-4 rounded bg-gray-200 animate-pulse" />
-          </div>
-        ) : isAuthenticated ? (
-          <Link href={"/profile/edit"}>
-            <div className="flex items-center gap-3">
+            <Link href={"/profile/edit"} className="flex items-center gap-3">
               <img
-                src={user?.profile?.avatarUrl ?? undefined}
+                src={user?.profile?.avatarUrl || "/images/default-avatar.png"}
                 alt="avatar"
                 className="w-9 h-9 rounded-full object-cover"
               />
               <span className="text-neutral-700 font-medium">
                 {user?.profile?.name}
               </span>
-              <button
-                onClick={() => {
-                  localStorage.removeItem("access_token");
-                  dispatch(logout());
-                }}
-                className="text-sm text-red-500 hover:underline"
-              >
-                Logout
-              </button>
-            </div>
-          </Link>
+            </Link>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                dispatch(logout());
+                router.push("/login");
+              }}
+              className="text-sm text-red-500 hover:underline"
+            >
+              Logout
+            </button>
+          </div>
         ) : (
-          <a href="http://localhost:3001/auth/line">
-            <Button>Sign In</Button>
-          </a>
+          <Button onClick={() => router.push("/login")} variant={"primary"}>
+            Login
+          </Button>
         )}
       </div>
     </header>

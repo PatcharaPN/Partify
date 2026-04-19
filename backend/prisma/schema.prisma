@@ -63,6 +63,7 @@ model Profile {
   name         String
   phone        String?
   summary      String?   
+  workingHours      String?
 
   skills       String[]   
   shifts       String[]  
