@@ -43,22 +43,40 @@ export class JobsService {
       where: {
         id: jobId,
       },
+      include: {
+        skills: true,
+      },
     });
     return jobs;
   }
   async upsertJobById(jobId: string, dto: UpdateJobDto) {
     const { skills, ...jobData } = dto;
 
-    const existing = await this.prisma.job.findUnique({ where: { id: jobId } });
-
-    if (!existing) throw new NotFoundException(`Job ${jobId} not found`);
-
-    const job = await this.prisma.job.update({
+    const existing = await this.prisma.job.findUnique({
       where: { id: jobId },
-      data: jobData,
     });
 
-    return job;
+    if (!existing) {
+      throw new NotFoundException(`Job ${jobId} not found`);
+    }
+
+    return this.prisma.job.update({
+      where: { id: jobId },
+      data: {
+        ...jobData,
+        skills: skills
+          ? {
+              deleteMany: {},
+              create: skills.map((skill) => ({
+                name: skill.name,
+              })),
+            }
+          : undefined,
+      },
+      include: {
+        skills: true,
+      },
+    });
   }
 
   // async upsertJobById(jobId: string, dto: UpdateJobDto) {

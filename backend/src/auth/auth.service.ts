@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { User } from 'generated/prisma/client';
+import { Role, User } from 'generated/prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
-  async register(email: string, password: string) {
+  async register(email: string, password: string, role: Role) {
     const isExist = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -24,6 +24,7 @@ export class AuthService {
       data: {
         email,
         password: hash,
+        role,
       },
     });
 

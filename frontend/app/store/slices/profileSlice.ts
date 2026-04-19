@@ -18,12 +18,13 @@ export type Profile = {
 
 type ProfileState = {
   profile: Profile | null;
-  isLoading: boolean;
+  fetchLoading: boolean;
+  upsertLoading: boolean;
 };
-
 const initialState: ProfileState = {
   profile: null,
-  isLoading: false,
+  fetchLoading: false,
+  upsertLoading: false,
 };
 
 export const fetchProfile = createAsyncThunk(
@@ -64,25 +65,25 @@ const profileSlice = createSlice({
 
       // fetch
       .addCase(fetchProfile.pending, (state) => {
-        state.isLoading = true;
+        state.fetchLoading = true;
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
-        state.isLoading = false;
+        state.fetchLoading = false;
       })
       .addCase(fetchProfile.rejected, (state) => {
-        state.isLoading = false;
+        state.fetchLoading = false;
       })
 
       .addCase(upsertProfile.pending, (state) => {
-        state.isLoading = true;
+        state.upsertLoading = true;
       })
       .addCase(upsertProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
-        state.isLoading = false;
+        state.upsertLoading = false;
       })
       .addCase(upsertProfile.rejected, (state) => {
-        state.isLoading = false;
+        state.upsertLoading = false;
       });
   },
 });

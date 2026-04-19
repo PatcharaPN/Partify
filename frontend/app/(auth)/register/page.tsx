@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/app/lib/hooks";
+import { register } from "@/app/store/slices/authSlice";
 
-type Role = "jobseeker" | "employer" | null;
+type Role = "CANDIDATE" | "EMPLOYER" | null;
 
 export default function SetupProfilePage() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [role, setRole] = useState<Role>(null);
   const [fullName, setFullName] = useState("");
@@ -14,15 +17,19 @@ export default function SetupProfilePage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isValid = role && fullName && email && password;
+  const isValid = role && email && password;
 
   const handleSubmit = async () => {
     if (!isValid) return;
-    setLoading(true);
-    // TODO: เรียก API
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    router.push("/");
+
+    try {
+      setLoading(true);
+      await dispatch(register({ email, password, role })).unwrap();
+      router.push("/setup-profile");
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,7 +155,6 @@ export default function SetupProfilePage() {
             <p className="text-sm text-slate-500 mb-7">
               Join our community of professionals and employers.
             </p>
-
             {/* Role */}
             <div className="mb-5">
               <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2.5">
@@ -158,19 +164,19 @@ export default function SetupProfilePage() {
                 {/* Job Seeker */}
                 <button
                   type="button"
-                  onClick={() => setRole("jobseeker")}
+                  onClick={() => setRole("CANDIDATE")}
                   className={`flex-1 relative text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer
                   ${
-                    role === "jobseeker"
+                    role === "CANDIDATE"
                       ? "border-blue-600 bg-white ring-2 ring-blue-100"
                       : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/40"
                   }`}
                 >
                   <span
                     className={`absolute top-3 right-3 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all
-                  ${role === "jobseeker" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
+                  ${role === "CANDIDATE" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
                   >
-                    {role === "jobseeker" && (
+                    {role === "CANDIDATE" && (
                       <span className="w-1.5 h-1.5 rounded-full bg-white block" />
                     )}
                   </span>
@@ -192,19 +198,19 @@ export default function SetupProfilePage() {
                 {/* Employer */}
                 <button
                   type="button"
-                  onClick={() => setRole("employer")}
+                  onClick={() => setRole("EMPLOYER")}
                   className={`flex-1 relative text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer
                   ${
-                    role === "employer"
+                    role === "EMPLOYER"
                       ? "border-blue-600 bg-white ring-2 ring-blue-100"
                       : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/40"
                   }`}
                 >
                   <span
                     className={`absolute top-3 right-3 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all
-                  ${role === "employer" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
+                  ${role === "EMPLOYER" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
                   >
-                    {role === "employer" && (
+                    {role === "EMPLOYER" && (
                       <span className="w-1.5 h-1.5 rounded-full bg-white block" />
                     )}
                   </span>
@@ -224,8 +230,7 @@ export default function SetupProfilePage() {
                 </button>
               </div>
             </div>
-
-            {/* Full Name */}
+            {/* Full Name
             <div className="mb-4">
               <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
                 FULL NAME
@@ -237,8 +242,7 @@ export default function SetupProfilePage() {
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
               />
-            </div>
-
+            </div> */}
             {/* Email */}
             <div className="mb-4">
               <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
@@ -252,7 +256,6 @@ export default function SetupProfilePage() {
                 className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
               />
             </div>
-
             {/* Password */}
             <div className="mb-6">
               <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
@@ -298,7 +301,6 @@ export default function SetupProfilePage() {
                 </button>
               </div>
             </div>
-
             {/* Submit */}
             <button
               type="button"
@@ -329,7 +331,6 @@ export default function SetupProfilePage() {
               )}
               {loading ? "Creating account..." : "Create Account"}
             </button>
-
             <p className="text-center text-sm text-slate-400 mt-4">
               Already have an account?{" "}
               <a

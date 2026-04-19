@@ -1,178 +1,178 @@
 export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
-  Barista: [
-    "Customer Service",
-    "Cash Handling",
-    "POS System",
-    "Coffee Brewing",
-    "Espresso Preparation",
-    "Latte Art",
-    "Inventory Management",
-    "Cleaning",
-    "Upselling",
-    "Teamwork",
+  บาริสต้า: [
+    "การบริการลูกค้า",
+    "การจัดการเงินสด",
+    "ระบบ POS",
+    "การชงกาแฟ",
+    "การเตรียมเอสเปรสโซ",
+    "ลาเต้อาร์ต",
+    "การจัดการสินค้าคงคลัง",
+    "การทำความสะอาด",
+    "การเพิ่มยอดขาย",
+    "การทำงานเป็นทีม",
   ],
 
-  Waiter: [
-    "Customer Service",
-    "Order Taking",
-    "POS System",
-    "Cash Handling",
-    "Communication",
-    "Food Service",
-    "Teamwork",
-    "Problem Solving",
+  พนักงานเสิร์ฟ: [
+    "การบริการลูกค้า",
+    "การรับออเดอร์",
+    "ระบบ POS",
+    "การจัดการเงินสด",
+    "การสื่อสาร",
+    "การบริการอาหาร",
+    "การทำงานเป็นทีม",
+    "การแก้ไขปัญหา",
   ],
 
-  Cashier: [
-    "Cash Handling",
-    "POS System",
-    "Customer Service",
-    "Attention to Detail",
-    "Communication",
-    "Inventory Management",
+  แคชเชียร์: [
+    "การจัดการเงินสด",
+    "ระบบ POS",
+    "การบริการลูกค้า",
+    "ความใส่ใจในรายละเอียด",
+    "การสื่อสาร",
+    "การจัดการสินค้าคงคลัง",
   ],
 
-  Chef: [
-    "Cooking",
-    "Food Preparation",
-    "Knife Skills",
-    "Food Safety",
-    "Time Management",
-    "Menu Planning",
-    "Teamwork",
+  เชฟ: [
+    "การทำอาหาร",
+    "การเตรียมอาหาร",
+    "ทักษะการใช้มีด",
+    "ความปลอดภัยด้านอาหาร",
+    "การบริหารเวลา",
+    "การวางแผนเมนู",
+    "การทำงานเป็นทีม",
   ],
 
-  Baker: [
-    "Baking",
-    "Pastry",
-    "Food Preparation",
-    "Recipe Development",
-    "Time Management",
-    "Attention to Detail",
+  เบเกอร์: [
+    "การอบขนม",
+    "เพสตรี้",
+    "การเตรียมอาหาร",
+    "การพัฒนาสูตรอาหาร",
+    "การบริหารเวลา",
+    "ความใส่ใจในรายละเอียด",
   ],
 
-  Receptionist: [
-    "Customer Service",
-    "Phone Support",
-    "Scheduling",
+  พนักงานต้อนรับ: [
+    "การบริการลูกค้า",
+    "การรับสาย",
+    "การจัดตารางเวลา",
     "Microsoft Office",
-    "Communication",
-    "Administrative Support",
+    "การสื่อสาร",
+    "งานธุรการ",
   ],
 
-  "Customer Service": [
-    "Customer Service",
-    "Communication",
-    "Problem Solving",
-    "Conflict Resolution",
-    "POS System",
-    "Phone Support",
-    "Email Support",
-    "Teamwork",
+  บริการลูกค้า: [
+    "การบริการลูกค้า",
+    "การสื่อสาร",
+    "การแก้ไขปัญหา",
+    "การจัดการข้อร้องเรียน",
+    "ระบบ POS",
+    "การรับสาย",
+    "การตอบอีเมล",
+    "การทำงานเป็นทีม",
   ],
 
-  "Sales Assistant": [
-    "Sales",
-    "Upselling",
-    "Customer Service",
-    "Cash Handling",
-    "Communication",
-    "Inventory Management",
-    "Product Knowledge",
+  พนักงานขาย: [
+    "การขาย",
+    "การเพิ่มยอดขาย",
+    "การบริการลูกค้า",
+    "การจัดการเงินสด",
+    "การสื่อสาร",
+    "การจัดการสินค้าคงคลัง",
+    "ความรู้เกี่ยวกับสินค้า",
   ],
 
-  "Data Entry": [
-    "Typing",
+  การป้อนข้อมูล: [
+    "การพิมพ์",
     "Microsoft Excel",
     "Google Sheets",
-    "Attention to Detail",
-    "Data Cleaning",
-    "Organization",
-    "Time Management",
+    "ความใส่ใจในรายละเอียด",
+    "การทำความสะอาดข้อมูล",
+    "การจัดระเบียบ",
+    "การบริหารเวลา",
   ],
 
-  "Admin Assistant": [
+  ผู้ช่วยธุรการ: [
     "Microsoft Office",
-    "Scheduling",
-    "Administrative Support",
-    "Communication",
-    "Document Management",
-    "Organization",
+    "การจัดตารางเวลา",
+    "งานธุรการ",
+    "การสื่อสาร",
+    "การจัดการเอกสาร",
+    "การจัดระเบียบ",
   ],
 
-  Accountant: [
-    "Bookkeeping",
+  นักบัญชี: [
+    "การทำบัญชี",
     "Microsoft Excel",
-    "Financial Reporting",
-    "Tax Filing",
-    "Budgeting",
-    "Attention to Detail",
+    "การรายงานทางการเงิน",
+    "การยื่นภาษี",
+    "การจัดทำงบประมาณ",
+    "ความใส่ใจในรายละเอียด",
   ],
 
-  HR: [
-    "Recruitment",
-    "Interviewing",
-    "Onboarding",
-    "Payroll",
-    "Employee Relations",
-    "Communication",
+  ฝ่ายทรัพยากรบุคคล: [
+    "การสรรหาพนักงาน",
+    "การสัมภาษณ์งาน",
+    "การปฐมนิเทศ",
+    "การจัดการเงินเดือน",
+    "การดูแลพนักงาน",
+    "การสื่อสาร",
   ],
 
-  Recruiter: [
-    "Recruitment",
-    "Interviewing",
-    "Sourcing",
-    "Communication",
+  นักสรรหา: [
+    "การสรรหาพนักงาน",
+    "การสัมภาษณ์งาน",
+    "การค้นหาผู้สมัคร",
+    "การสื่อสาร",
     "LinkedIn",
-    "Talent Acquisition",
+    "การจัดหาบุคลากร",
   ],
 
-  "Project Manager": [
-    "Project Planning",
-    "Leadership",
-    "Communication",
-    "Risk Management",
+  ผู้จัดการโครงการ: [
+    "การวางแผนโครงการ",
+    "ภาวะผู้นำ",
+    "การสื่อสาร",
+    "การบริหารความเสี่ยง",
     "Agile",
     "Scrum",
-    "Time Management",
+    "การบริหารเวลา",
   ],
 
-  "Business Analyst": [
-    "Requirements Gathering",
-    "Data Analysis",
-    "Communication",
-    "Documentation",
-    "Process Improvement",
+  นักวิเคราะห์ธุรกิจ: [
+    "การรวบรวมความต้องการ",
+    "การวิเคราะห์ข้อมูล",
+    "การสื่อสาร",
+    "การจัดทำเอกสาร",
+    "การปรับปรุงกระบวนการ",
     "Microsoft Excel",
   ],
 
-  "Content Writer": [
-    "Copy Editing",
+  นักเขียนคอนเทนต์: [
+    "การตรวจแก้ไขงานเขียน",
     "SEO Strategy",
-    "Proofreading",
-    "Ghostwriting",
+    "การพิสูจน์อักษร",
+    "การเขียนแทน",
     "CMS Management",
-    "Fact Checking",
+    "การตรวจสอบข้อเท็จจริง",
     "Content Strategy",
     "Copywriting",
     "Keyword Research",
-    "Blog Writing",
+    "การเขียนบล็อก",
   ],
 
-  Copywriter: [
+  คอปปี้ไรเตอร์: [
     "Copywriting",
     "SEO Strategy",
     "Brand Voice",
-    "Creative Writing",
-    "Headline Writing",
+    "การเขียนเชิงสร้างสรรค์",
+    "การเขียนพาดหัว",
     "Email Marketing",
-    "Research",
+    "การวิจัย",
   ],
 
-  "Social Media Admin": [
+  แอดมินโซเชียลมีเดีย: [
     "Social Media",
     "Content Strategy",
-    "Scheduling",
+    "การจัดตารางโพสต์",
     "Community Management",
     "Analytics",
     "Facebook Ads",
@@ -180,7 +180,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "TikTok",
   ],
 
-  "Graphic Designer": [
+  นักออกแบบกราฟิก: [
     "Adobe Photoshop",
     "Adobe Illustrator",
     "Canva",
@@ -191,7 +191,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Figma",
   ],
 
-  "UI Designer": [
+  "นักออกแบบ UI": [
     "Figma",
     "Wireframing",
     "Typography",
@@ -200,7 +200,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Prototyping",
   ],
 
-  "UX Designer": [
+  "นักออกแบบ UX": [
     "User Research",
     "Wireframing",
     "Prototyping",
@@ -209,7 +209,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Information Architecture",
   ],
 
-  "Video Editor": [
+  นักตัดต่อวิดีโอ: [
     "Video Editing",
     "Motion Graphics",
     "Color Grading",
@@ -219,7 +219,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "YouTube Editing",
   ],
 
-  Photographer: [
+  ช่างภาพ: [
     "Photography",
     "Photo Editing",
     "Adobe Lightroom",
@@ -228,7 +228,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Composition",
   ],
 
-  Videographer: [
+  วิดีโอกราเฟอร์: [
     "Videography",
     "Camera Operation",
     "Lighting",
@@ -237,67 +237,67 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Audio Recording",
   ],
 
-  Translator: [
+  นักแปล: [
     "Translation",
-    "Proofreading",
+    "การพิสูจน์อักษร",
     "Localization",
-    "Grammar",
-    "Writing",
-    "Research",
+    "ไวยากรณ์",
+    "การเขียน",
+    "การวิจัย",
   ],
 
-  Teacher: [
-    "Teaching",
-    "Lesson Planning",
-    "Classroom Management",
-    "Communication",
-    "Presentation",
-    "Patience",
+  ครู: [
+    "การสอน",
+    "การวางแผนบทเรียน",
+    "การบริหารจัดการชั้นเรียน",
+    "การสื่อสาร",
+    "การนำเสนอ",
+    "ความอดทน",
   ],
 
-  Tutor: [
-    "Teaching",
-    "Lesson Planning",
-    "Communication",
-    "Patience",
-    "Subject Knowledge",
+  ติวเตอร์: [
+    "การสอน",
+    "การวางแผนบทเรียน",
+    "การสื่อสาร",
+    "ความอดทน",
+    "ความรู้ในวิชา",
   ],
 
-  Nurse: [
-    "Patient Care",
+  พยาบาล: [
+    "การดูแลผู้ป่วย",
     "Medical Records",
-    "Communication",
+    "การสื่อสาร",
     "Medication Administration",
-    "Teamwork",
+    "การทำงานเป็นทีม",
   ],
 
-  Pharmacist: [
+  เภสัชกร: [
     "Medication Knowledge",
-    "Customer Service",
-    "Inventory Management",
-    "Attention to Detail",
+    "การบริการลูกค้า",
+    "การจัดการสินค้าคงคลัง",
+    "ความใส่ใจในรายละเอียด",
   ],
 
-  Engineer: [
-    "Problem Solving",
-    "Project Planning",
+  วิศวกร: [
+    "การแก้ไขปัญหา",
+    "การวางแผนโครงการ",
     "CAD",
     "Technical Documentation",
-    "Mathematics",
+    "คณิตศาสตร์",
   ],
 
-  "Mechanical Engineer": [
+  วิศวกรเครื่องกล: [
     "AutoCAD",
     "SolidWorks",
     "Technical Drawing",
-    "Problem Solving",
+    "การแก้ไขปัญหา",
     "Manufacturing",
   ],
 
-  "Civil Engineer": [
+  วิศวกรโยธา: [
     "AutoCAD",
-    "Project Planning",
-    "Construction",
+    "การวางแผนโครงการ",
+    "การก่อสร้าง",
     "Site Inspection",
     "Structural Analysis",
   ],
@@ -309,7 +309,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "React",
     "Git",
     "REST API",
-    "Problem Solving",
+    "การแก้ไขปัญหา",
   ],
 
   "Frontend Developer": [
@@ -341,7 +341,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "API Integration",
   ],
 
-  QA: [
+  "QA (ทดสอบซอฟต์แวร์)": [
     "Manual Testing",
     "Automation Testing",
     "Bug Tracking",
@@ -352,7 +352,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
 
   DevOps: ["Docker", "Kubernetes", "CI/CD", "AWS", "Linux", "Monitoring"],
 
-  "Digital Marketer": [
+  นักการตลาดดิจิทัล: [
     "SEO",
     "Google Ads",
     "Facebook Ads",
@@ -361,7 +361,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Email Marketing",
   ],
 
-  "SEO Specialist": [
+  "ผู้เชี่ยวชาญด้าน SEO": [
     "SEO Strategy",
     "Keyword Research",
     "Google Analytics",
@@ -369,28 +369,42 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Backlink Building",
   ],
 
-  "Event Staff": [
-    "Customer Service",
-    "Coordination",
-    "Communication",
-    "Setup",
+  พนักงานอีเวนต์: [
+    "การบริการลูกค้า",
+    "การประสานงาน",
+    "การสื่อสาร",
+    "การติดตั้งจัดเตรียม",
     "Crowd Management",
-    "Problem Solving",
+    "การแก้ไขปัญหา",
   ],
 
-  Driver: [
-    "Driving",
-    "Route Planning",
-    "Navigation",
-    "Time Management",
-    "Vehicle Maintenance",
+  คนขับรถ: [
+    "การขับรถ",
+    "การวางแผนเส้นทาง",
+    "การนำทาง",
+    "การบริหารเวลา",
+    "การดูแลรักษายานพาหนะ",
   ],
 
-  Delivery: [
-    "Driving",
-    "Route Planning",
-    "Navigation",
-    "Customer Service",
-    "Time Management",
+  พนักงานส่งของ: [
+    "การขับรถ",
+    "การวางแผนเส้นทาง",
+    "การนำทาง",
+    "การบริการลูกค้า",
+    "การบริหารเวลา",
+  ],
+  "Fullstack Developer": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "NestJS",
+    "REST API",
+    "PostgreSQL",
+    "MongoDB",
+    "Git",
+    "Docker",
+    "การแก้ไขปัญหา",
   ],
 };

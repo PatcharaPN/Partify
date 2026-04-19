@@ -3,9 +3,25 @@ import Button from "@/app/components/ui/Button";
 import InputField from "@/app/components/ui/InputField";
 import PersonaCard from "@/app/components/ui/PersonaCard";
 import SocialLoginButton from "@/app/components/ui/SocialLoginButton";
+import { useAppDispatch } from "@/app/lib/hooks";
+import { login } from "@/app/store/slices/authSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const navigate = useRouter();
+  const dispatch = useAppDispatch();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async () => {
+    try {
+      await dispatch(login({ email, password })).unwrap();
+      navigate.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const lineApiLogin = () => {
     window.location.href = "http://localhost:3001/auth/line";
   };
@@ -70,10 +86,21 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-gray-200"></div>
           </div>
           <div className="py-5 flex flex-col gap-5">
-            <InputField label={"Email Address"} />
-            <InputField label={"Password"} forgotPassword />
+            <InputField
+              label="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <InputField
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          <Button classname="w-full py-3">Sign In</Button>
+          <Button onClick={handleLogin} classname="w-full py-3">
+            Sign In
+          </Button>
           <div className="flex items-center justify-start gap-2 mt-4">
             <input type="checkbox" />
             <p className="text-xs">Remember this account for 30 days</p>
