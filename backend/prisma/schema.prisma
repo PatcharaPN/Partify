@@ -110,7 +110,7 @@ model Job {
   location          String?
   urgency           String?
   createdAt         DateTime  @default(now())
-
+  
   companyId         String
   company           User      @relation("EmployerJobs", fields: [companyId], references: [id])
   companyImageURL   String?
@@ -150,7 +150,6 @@ model Application {
   userId    String
   status    ApplicationStatus  @default(PENDING)
   createdAt DateTime           @default(now())
-
   job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
   user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 

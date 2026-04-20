@@ -7,13 +7,20 @@ import { useAppDispatch } from "@/app/lib/hooks";
 import { login } from "@/app/store/slices/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const navigate = useRouter();
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      navigate.push("/");
+    }
+  });
   const handleLogin = async () => {
     try {
       await dispatch(login({ email, password })).unwrap();

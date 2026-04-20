@@ -139,9 +139,9 @@ export default function EmployerDashboard() {
   return (
     <div className="flex h-screen bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-52 flex flex-col bg-white border-r border-gray-100 shrink-0">
+      <aside className="w-60 flex flex-col bg-white border-r border-gray-100 shrink-0">
         {/* Nav */}
-        <nav className="flex-1 px-3 space-y-0.5">
+        <nav className="flex-1 px-6 space-y-0.5 py-4">
           {navItems.map((item) => {
             const isActive = activeNav === item.label;
             return (

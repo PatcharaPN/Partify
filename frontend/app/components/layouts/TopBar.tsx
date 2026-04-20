@@ -40,11 +40,11 @@ export default function TopBar() {
           </Link>
           <Link
             className={`${
-              isActive("/dashboard/employer")
+              isActive("/dashboard")
                 ? "decoration-primary underline underline-offset-2 text-primary"
                 : ""
             } decoration-2 font-headline px-4 py-2`}
-            href="/dashboard/employer"
+            href="/dashboard"
           >
             แดชบอร์ด
           </Link>
