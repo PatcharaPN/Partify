@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/lib/hooks";
-import { register } from "@/app/store/slices/authSlice";
+import { register, setUser } from "@/app/store/slices/authSlice";
 
 type Role = "CANDIDATE" | "EMPLOYER" | null;
 
@@ -11,7 +11,6 @@ export default function SetupProfilePage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [role, setRole] = useState<Role>(null);
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

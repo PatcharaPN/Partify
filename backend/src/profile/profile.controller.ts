@@ -9,7 +9,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get()
+  @Get('me')
   getMyProfile(@Req() req) {
     const userId = req.user.sub;
     return this.profileService.getMe(userId);

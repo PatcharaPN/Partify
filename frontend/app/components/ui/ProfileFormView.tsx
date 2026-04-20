@@ -478,7 +478,10 @@ export default function ProfileForm({
         {/* Footer Navigation */}
         <div className="flex justify-end items-center mt-8">
           <button
-            onClick={actions.save}
+            onClick={() => {
+              actions.save;
+              window.location.reload();
+            }}
             className="bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition flex items-center gap-2 shadow-md shadow-blue-200"
           >
             Save

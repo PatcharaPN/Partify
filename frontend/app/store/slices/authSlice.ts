@@ -49,6 +49,11 @@ export const register = createAsyncThunk(
   },
 );
 
+export const fetchCurrentUser = createAsyncThunk("/auth/me", async () => {
+  const res = await axiosInstance.get("/me");
+  return res.data;
+});
+
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }: RegisterPayload) => {
@@ -112,6 +117,21 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message ?? "Login failed";
+      })
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = action.error.message ?? "Fetch user failed";
       });
   },
 });
