@@ -7,6 +7,7 @@ export interface Skill {
 export interface Job {
   id: string;
   title: string;
+  status: string;
   description: string;
   responsibilities?: string;
   qualifications?: string;
@@ -45,10 +46,19 @@ export interface Job {
   overviewPictureURL?: string[];
   // Relations
   skills: Skill[];
+  applications: Application[];
 
   createdAt: string;
 }
+export interface Application {
+  id: string;
+  jobId: string;
+  userId: string;
+  createdAt: Date;
 
+  job?: Job;
+  user?: User;
+}
 // Redux Slice
 export interface JobState {
   jobs: Job[];
@@ -56,3 +66,24 @@ export interface JobState {
   isLoading: boolean;
   error: string | null;
 }
+export interface User {
+  id: string;
+  email: string | null;
+  lineId: string | null;
+  role: "CANDIDATE" | "EMPLOYER" | "ADMIN";
+  profile: Profile | null;
+}
+export type Profile = {
+  id: string;
+  userId: string;
+  name: string;
+  phone?: string;
+  summary?: string;
+  experience?: string[];
+  skills: string[];
+  shifts: string[];
+  availability: string[];
+  resumeUrl?: string;
+  avatarUrl?: string;
+  birthDate?: string;
+};

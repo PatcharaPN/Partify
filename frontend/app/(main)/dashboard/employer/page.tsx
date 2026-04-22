@@ -3,42 +3,9 @@
 import AvatarStack from "@/app/components/ui/AvatarStack";
 import { useEffect, useState } from "react";
 import SkeletonDashboard from "./skeletonDashboard";
-
-const jobs = [
-  {
-    id: 1,
-    title: "Senior UX Curator",
-    type: "Part-time",
-    department: "Design",
-    location: "Remote",
-    status: "active",
-    applicants: 22,
-    postedDate: "Oct 12, 2024",
-    avatarColors: ["bg-violet-400", "bg-pink-400", "bg-sky-400"],
-  },
-  {
-    id: 2,
-    title: "Freelance Backend Specialist",
-    type: "Contract",
-    department: "Engineering",
-    location: "London",
-    status: "active",
-    applicants: 8,
-    postedDate: "Oct 15, 2024",
-    avatarColors: ["bg-amber-400", "bg-emerald-400"],
-  },
-  {
-    id: 3,
-    title: "Growth Strategist",
-    type: "Hybrid",
-    department: "Marketing",
-    location: "Hybrid",
-    status: "closed",
-    applicants: 42,
-    postedDate: "Sept 28, 2024",
-    avatarColors: [],
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { RootState } from "@/app/lib/store";
+import { fetchOwnerRelatedJobs } from "@/app/store/slices/jobSlice";
 
 const navItems = [
   {
@@ -117,14 +84,22 @@ const navItems = [
 ];
 
 export default function EmployerDashboard() {
+  const dispatch = useAppDispatch();
+  const { employeeJob, isLoading } = useAppSelector(
+    (state: RootState) => state.jobReducer,
+  );
+  const { user } = useAppSelector((state: RootState) => state.AuthReducer);
   const [activeNav, setActiveNav] = useState("Dashboard");
   const [search, setSearch] = useState("");
+
   const [loading, setLoading] = useState(true);
-  const filtered = jobs.filter(
-    (j) =>
-      j.title.toLowerCase().includes(search.toLowerCase()) ||
-      j.department.toLowerCase().includes(search.toLowerCase()),
-  );
+  useEffect(() => {
+    dispatch(fetchOwnerRelatedJobs(user?.id || ""));
+  }, [dispatch]);
+  console.log(employeeJob);
+  const safeEmployeeJob = Array.isArray(employeeJob) ? employeeJob : [];
+  const employeeJobs = Array.isArray(employeeJob) ? employeeJob : [];
+  const filtered = employeeJobs.filter((j) => j.title);
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -132,7 +107,11 @@ export default function EmployerDashboard() {
 
     return () => clearTimeout(timer);
   }, []);
-
+  const avatars = safeEmployeeJob
+    .flatMap((job) =>
+      job.applications.map((app) => app.user?.profile?.avatarUrl),
+    )
+    .filter(Boolean);
   if (loading) {
     return <SkeletonDashboard />;
   }
@@ -426,11 +405,10 @@ export default function EmployerDashboard() {
                       {job.title}
                     </p>
                     <p className="text-[11px] text-gray-400 mt-0.5">
-                      {job.department} · {job.location}
+                      {job.companyName} · {job.location}
                     </p>
                   </div>
                 </div>
-
                 {/* Status */}
                 <div>
                   {job.status === "active" ? (
@@ -445,10 +423,14 @@ export default function EmployerDashboard() {
                     </span>
                   )}
                 </div>
-
-                {/* Applicants */}
+                {/* Applicants */}{" "}
                 <div>
-                  {job.avatarColors.length > 0 ? (
+                  {/* {job.applications.map((a) => (
+                    <AvatarStack count={job.applications.length} />
+                  ))} */}
+                </div>
+                {/* <div>
+                  {job.applications.length > 0 ? (
                     <AvatarStack
                       colors={job.avatarColors}
                       count={job.applicants}
@@ -458,11 +440,9 @@ export default function EmployerDashboard() {
                       {job.applicants} Applicants
                     </span>
                   )}
-                </div>
-
+                </div> */}
                 {/* Date */}
-                <p className="text-sm text-gray-400">{job.postedDate}</p>
-
+                <p className="text-sm text-gray-400">{job.createdAt}</p>
                 {/* Action */}
                 <div>
                   {job.status === "active" ? (

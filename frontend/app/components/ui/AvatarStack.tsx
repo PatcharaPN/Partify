@@ -1,20 +1,24 @@
 export default function AvatarStack({
-  colors,
+  avatars,
   count,
 }: {
-  colors: string[];
+  avatars: string[];
   count: number;
 }) {
-  const shown = colors.slice(0, 3);
+  const shown = avatars.slice(0, 3);
   const extra = count - shown.length;
+
   return (
     <div className="flex items-center">
-      {shown.map((color, i) => (
-        <div
+      {shown.map((url, i) => (
+        <img
           key={i}
-          className={`w-7 h-7 rounded-full border-2 border-white ${color} -ml-2 first:ml-0 flex items-center justify-center text-white text-[9px] font-semibold shadow-sm`}
+          src={url}
+          alt="avatar"
+          className="w-7 h-7 rounded-full border-2 border-white -ml-2 first:ml-0 object-cover"
         />
       ))}
+
       {extra > 0 && (
         <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-100 -ml-2 flex items-center justify-center text-gray-500 text-[9px] font-medium">
           +{extra}

@@ -26,6 +26,11 @@ export class JobsController {
     return this.jobsService.getJobs();
   }
 
+  @Get('/owner/:id')
+  getRelatedJobs(@Param('id') ownerId) {
+    return this.jobsService.getJobsByOwnerId(ownerId);
+  }
+
   @Get('/:id')
   getJobsByID(@Param('id') jobId) {
     return this.jobsService.getJobsByID(jobId);

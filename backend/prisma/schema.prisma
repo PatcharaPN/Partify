@@ -90,7 +90,7 @@ model Job {
   salaryMax         Int?
   salaryNegotiable  Boolean   @default(false)
   currency          String?   @default("THB")
-
+  status            String?
   jobType           String?
   workStyle         String?
   experienceLevel   String?

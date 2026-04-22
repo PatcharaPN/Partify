@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface JobState {
   jobs: Job[];
+  employeeJob: Job[];
   isLoading: boolean;
   selectedJob: Job | null;
   error: string | null;
@@ -12,6 +13,7 @@ interface JobState {
 
 const initialState: JobState = {
   jobs: [],
+  employeeJob: [],
   selectedJob: null,
   isLoading: false,
   error: null,
@@ -36,6 +38,14 @@ export const fetchJobById = createAsyncThunk("", async (jobId: string) => {
   });
   return res.data;
 });
+
+export const fetchOwnerRelatedJobs = createAsyncThunk(
+  "jobs/fetchOwner",
+  async (ownerId: string): Promise<Job[]> => {
+    const res = await axiosInstance.get(`/jobs/owner/${ownerId}`);
+    return res.data as Job[];
+  },
+);
 
 const jobSlice = createSlice({
   name: "jobs",
@@ -64,6 +74,21 @@ const jobSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchJobById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? "เกิดข้อผิดพลาด";
+      })
+      .addCase(fetchOwnerRelatedJobs.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchOwnerRelatedJobs.fulfilled,
+        (state, action: PayloadAction<Job[]>) => {
+          state.isLoading = false;
+          state.employeeJob = action.payload;
+        },
+      )
+      .addCase(fetchOwnerRelatedJobs.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message ?? "เกิดข้อผิดพลาด";
       });

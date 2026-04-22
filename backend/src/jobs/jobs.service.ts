@@ -49,6 +49,16 @@ export class JobsService {
     });
     return jobs;
   }
+  async getJobsByOwnerId(ownerId: string) {
+    const jobs = await this.prisma.job.findMany({
+      where: {
+        company: {
+          id: ownerId,
+        },
+      },
+    });
+    return jobs;
+  }
   async upsertJobById(jobId: string, dto: UpdateJobDto) {
     const { skills, ...jobData } = dto;
 

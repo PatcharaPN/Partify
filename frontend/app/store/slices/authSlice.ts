@@ -1,14 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Profile } from "./profileSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
-
-export interface User {
-  id: string;
-  email: string | null;
-  lineId: string | null;
-  role: "CANDIDATE" | "EMPLOYER" | "ADMIN";
-  profile: Profile | null;
-}
+import { User } from "@/app/types/job.type";
 
 interface AuthState {
   user: User | null;

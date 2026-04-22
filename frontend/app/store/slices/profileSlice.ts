@@ -1,20 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/app/lib/axiosInstance";
-
-export type Profile = {
-  id: string;
-  userId: string;
-  name: string;
-  phone?: string;
-  summary?: string;
-  experience?: string[];
-  skills: string[];
-  shifts: string[];
-  availability: string[];
-  resumeUrl?: string;
-  avatarUrl?: string;
-  birthDate?: string;
-};
+import { Profile } from "@/app/types/job.type";
 
 type ProfileState = {
   profile: Profile | null;
