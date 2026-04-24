@@ -42,7 +42,7 @@ export const register = createAsyncThunk(
 );
 
 export const fetchCurrentUser = createAsyncThunk("/auth/me", async () => {
-  const res = await axiosInstance.get("/me");
+  const res = await axiosInstance.get("/users/me");
   return res.data;
 });
 

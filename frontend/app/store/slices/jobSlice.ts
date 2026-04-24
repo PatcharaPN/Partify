@@ -43,6 +43,7 @@ export const fetchOwnerRelatedJobs = createAsyncThunk(
   "jobs/fetchOwner",
   async (ownerId: string): Promise<Job[]> => {
     const res = await axiosInstance.get(`/jobs/owner/${ownerId}`);
+    console.log("Fetched owner-related jobs:", res.data);
     return res.data as Job[];
   },
 );

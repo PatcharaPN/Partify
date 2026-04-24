@@ -6,6 +6,7 @@ import SkeletonDashboard from "./skeletonDashboard";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
 import { fetchOwnerRelatedJobs } from "@/app/store/slices/jobSlice";
+import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 
 const navItems = [
   {
@@ -93,11 +94,18 @@ export default function EmployerDashboard() {
   const [search, setSearch] = useState("");
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    dispatch(fetchOwnerRelatedJobs(user?.id || ""));
+    dispatch(fetchCurrentUser());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchOwnerRelatedJobs(user.id));
+    }
+  }, [user?.id, dispatch]);
   console.log(employeeJob);
-  const safeEmployeeJob = Array.isArray(employeeJob) ? employeeJob : [];
+
   const employeeJobs = Array.isArray(employeeJob) ? employeeJob : [];
   const filtered = employeeJobs.filter((j) => j.title);
   useEffect(() => {
@@ -107,11 +115,7 @@ export default function EmployerDashboard() {
 
     return () => clearTimeout(timer);
   }, []);
-  const avatars = safeEmployeeJob
-    .flatMap((job) =>
-      job.applications.map((app) => app.user?.profile?.avatarUrl),
-    )
-    .filter(Boolean);
+
   if (loading) {
     return <SkeletonDashboard />;
   }
