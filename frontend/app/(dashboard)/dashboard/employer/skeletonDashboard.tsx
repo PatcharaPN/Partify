@@ -1,8 +1,8 @@
 "use client";
 
+import { Bone } from "@/app/(main)/jobs/JobListSkeleton";
 import AvatarStack from "@/app/components/ui/AvatarStack";
 import { useState } from "react";
-import { Bone } from "../../jobs/JobListSkeleton";
 
 const jobs = [
   {

@@ -120,9 +120,9 @@ export default function EmployerDashboard() {
     return <SkeletonDashboard />;
   }
   return (
-    <div className="flex h-screen bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
+    <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-60 flex flex-col bg-white border-r border-gray-100 shrink-0">
+      <aside className="w-60 flex flex-col bg-white border-gray-100 shrink-0">
         {/* Nav */}
         <nav className="flex-1 px-6 space-y-0.5 py-4">
           {navItems.map((item) => {
@@ -446,7 +446,13 @@ export default function EmployerDashboard() {
                   )}
                 </div> */}
                 {/* Date */}
-                <p className="text-sm text-gray-400">{job.createdAt}</p>
+                <p className="text-sm text-gray-400">
+                  {new Date(job.createdAt).toLocaleDateString("th-TH", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
                 {/* Action */}
                 <div>
                   {job.status === "active" ? (

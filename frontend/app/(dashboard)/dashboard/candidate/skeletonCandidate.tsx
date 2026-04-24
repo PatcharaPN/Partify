@@ -1,10 +1,10 @@
 "use client";
 
+import { Bone } from "@/app/(main)/jobs/JobListSkeleton";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
-import { Bone } from "../../jobs/JobListSkeleton";
 
 export default function SkeletonCandidate() {
   return (
