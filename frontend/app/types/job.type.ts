@@ -6,6 +6,7 @@ export interface Skill {
 
 export interface Job {
   id: string;
+  isOwner: boolean;
   title: string;
   status: string;
   description: string;

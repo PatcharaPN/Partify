@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -38,7 +39,7 @@ export class JobsService {
       bookmarks: undefined,
     }));
   }
-  async getJobsByID(jobId: string) {
+  async getJobsByID(jobId: string, user: any) {
     const jobs = await this.prisma.job.findUnique({
       where: {
         id: jobId,
@@ -47,7 +48,14 @@ export class JobsService {
         skills: true,
       },
     });
-    return jobs;
+    if (!jobs) {
+      throw new NotFoundException();
+    }
+    console.log('user:', user);
+    return {
+      ...jobs,
+      isOwner: user ? jobs.companyId === user.sub : false,
+    };
   }
   async getJobsByOwnerId(ownerId: string) {
     const jobs = await this.prisma.job.findMany({

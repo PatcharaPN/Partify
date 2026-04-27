@@ -384,11 +384,8 @@ export default function EmployerDashboard() {
 
             {/* Rows */}
             {filtered.map((job) => (
-              <Link href={`/jobs/${job.id}`}>
-                <div
-                  key={job.id}
-                  className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group"
-                >
+              <Link key={job.id} href={`/jobs/${job.id}`}>
+                <div className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group">
                   {/* Title */}
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 shrink-0 group-hover:border-gray-200 transition-colors">

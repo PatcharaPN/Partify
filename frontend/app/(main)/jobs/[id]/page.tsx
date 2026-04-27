@@ -68,6 +68,13 @@ export default function JobDetail() {
                 New Position
               </span>
             )}
+            {selectedJob.status ? (
+              <span className="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full uppercase tracking-wide">
+                {selectedJob.status}
+              </span>
+            ) : (
+              <div></div>
+            )}
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900">
@@ -140,11 +147,8 @@ export default function JobDetail() {
           </div>
         </div>
 
-        {/* ── Body ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ── Left Column ── */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            {/* Overview Images */}
             {selectedJob.overviewPictureURL &&
               selectedJob.overviewPictureURL.length > 0 && (
                 <div className="grid grid-cols-2 gap-3 rounded-2xl overflow-hidden">
@@ -400,15 +404,37 @@ export default function JobDetail() {
                   </span>
                 </div>
               </div>
-
-              <div className="flex flex-col gap-2">
-                <button className="w-full bg-linear-to-b from-blue-600 to-blue-400 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold py-2.5 rounded-xl transition">
-                  Apply Now
-                </button>
-                <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-semibold py-2.5 rounded-xl transition">
-                  View Company Profile
-                </button>
-              </div>
+              {selectedJob.isOwner === true ? (
+                <div className="flex flex-col gap-2.5">
+                  <div className="relative w-full">
+                    <select className="w-full appearance-none bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium py-2.5 pl-4 pr-9 rounded-xl border border-blue-600 transition cursor-pointer outline-none">
+                      <option value="">Manage job</option>
+                      <option value="applicants">View applicants</option>
+                      <option value="close">Close job</option>
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white text-xs">
+                      ▾
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-px bg-gray-200" />
+                    <span className="text-xs text-gray-400">or</span>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-medium py-2.5 rounded-xl transition">
+                    View company profile
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2.5">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium py-2.5 rounded-xl transition">
+                    Apply now
+                  </button>
+                  <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-medium py-2.5 rounded-xl transition">
+                    View company profile
+                  </button>
+                </div>
+              )}
             </section>
 
             {/* Profile Match */}

@@ -36,6 +36,7 @@ export const fetchJobById = createAsyncThunk("", async (jobId: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(res.data);
   return res.data;
 });
 
