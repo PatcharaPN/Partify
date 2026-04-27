@@ -1,6 +1,6 @@
 "use client";
 import { upsertProfile } from "@/app/store/slices/profileSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
@@ -34,7 +34,7 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [birthDate, setBirthDate] = useState("");
-
+  const avatarUrlRef = useRef("");
   const dispatch = useAppDispatch();
   const { profile, fetchLoading, upsertLoading } = useAppSelector(
     (state) => state.profileReducer,
@@ -55,10 +55,8 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
 
   const handleUploadImage = async (file: File) => {
     if (!file) return;
-
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "partify-upload");
@@ -71,12 +69,11 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
         },
       );
 
-      if (!res.ok) throw new Error("Upload failed");
-
       const data = await res.json();
       const imageUrl = data.secure_url;
-      console.log("Cloudinary response:", imageUrl);
+
       setAvatarUrl(imageUrl);
+      avatarUrlRef.current = imageUrl;
     } catch (error) {
       console.error(error);
     } finally {
@@ -110,6 +107,8 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
   };
 
   const handleSave = async () => {
+    const finalAvatarUrl = avatarUrlRef.current || profile?.avatarUrl || "";
+
     const payload = {
       name,
       phone,
@@ -118,15 +117,13 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
       skills: selectedSkills,
       experience: selectedExpereince,
       availability: activeDays,
-      avatarUrl: avatarUrl ? avatarUrl : profile?.avatarUrl,
+      avatarUrl: finalAvatarUrl,
     };
 
     const result = await dispatch(upsertProfile(payload));
     if (upsertProfile.fulfilled.match(result)) {
-      console.log("Saved!");
     } else {
-      console.error(result.payload);
-      alert("Failed to save profile");
+      console.error("❌ Failed:", result.payload);
     }
   };
   if (fetchLoading) {

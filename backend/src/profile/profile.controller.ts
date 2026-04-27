@@ -9,15 +9,14 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get('me')
+  @Get()
   getMyProfile(@Req() req) {
     const userId = req.user.sub;
     return this.profileService.getMe(userId);
   }
 
   @Patch()
-  updateMyProfile(@Req() req, @Body() dto: UpdateProfileDto) {
-    const userId = req.user.sub;
-    return this.profileService.upsertProfile(userId, dto);
+  async upsertProfile(@Body() dto: UpdateProfileDto, @Req() req) {
+    return this.profileService.upsertProfile(req.user.sub, dto);
   }
 }

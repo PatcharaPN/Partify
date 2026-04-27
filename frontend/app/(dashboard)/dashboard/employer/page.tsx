@@ -382,7 +382,6 @@ export default function EmployerDashboard() {
               ))}
             </div>
 
-            {/* Rows */}
             {filtered.map((job) => (
               <Link key={job.id} href={`/jobs/${job.id}`}>
                 <div className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group">
@@ -412,7 +411,6 @@ export default function EmployerDashboard() {
                       </p>
                     </div>
                   </div>
-                  {/* Status */}
                   <div>
                     {job.status === "active" ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100">
@@ -428,9 +426,12 @@ export default function EmployerDashboard() {
                   </div>
                   {/* Applicants */}{" "}
                   <div>
-                    {/* {job.applications.map((a) => (
-                    <AvatarStack count={job.applications.length} />
-                  ))} */}
+                    <AvatarStack
+                      count={job.applications.length}
+                      avatars={job.applications
+                        .map((a) => a.user!.profile?.avatarUrl)
+                        .filter((url): url is string => Boolean(url))}
+                    />
                   </div>
                   {/* <div>
                   {job.applications.length > 0 ? (

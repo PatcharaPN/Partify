@@ -1,7 +1,8 @@
 "use client";
 
 import { EXPERIENCE_SKILL_MAP } from "@/app/constants/skillOption";
-import { Profile } from "@/app/store/slices/profileSlice";
+import { Profile } from "@/app/types/job.type";
+
 import { Icon } from "@iconify/react";
 
 type ProfileFormActions = {
@@ -475,12 +476,12 @@ export default function ProfileForm({
           </div>
         </div>
 
-        {/* Footer Navigation */}
         <div className="flex justify-end items-center mt-8">
           <button
             onClick={() => {
-              actions.save;
-              window.location.reload();
+              actions.save().then(() => {
+                if (onSuccess) onSuccess();
+              });
             }}
             className="bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition flex items-center gap-2 shadow-md shadow-blue-200"
           >

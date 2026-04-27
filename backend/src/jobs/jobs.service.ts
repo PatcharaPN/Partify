@@ -64,6 +64,17 @@ export class JobsService {
           id: ownerId,
         },
       },
+      include: {
+        applications: {
+          include: {
+            user: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        },
+      },
     });
     return jobs;
   }
