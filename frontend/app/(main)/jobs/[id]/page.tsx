@@ -3,11 +3,17 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchJobById } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import JobDetailSkeleton from "./JobDetailSkeleton";
+import QuickApplyModal from "@/app/components/ui/ApplyModal";
+import { fetchCurrentUser } from "@/app/store/slices/authSlice";
+import { fetchApplicationStatus } from "@/app/store/slices/applicationSlice";
 
 export default function JobDetail() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
+  const { appliedStatus } = useAppSelector((state) => state.ApplicationReducer);
+  const { user } = useAppSelector((state) => state.AuthReducer);
   const { selectedJob, isLoading, error } = useAppSelector(
     (state) => state.jobReducer,
   );
@@ -17,8 +23,18 @@ export default function JobDetail() {
     if (id) {
       dispatch(fetchJobById(id as string));
     }
+    dispatch(fetchCurrentUser());
   }, [id]);
-
+  useEffect(() => {
+    if (id && user?.id) {
+      dispatch(
+        fetchApplicationStatus({
+          jobId: id as string,
+          userId: user.id,
+        }),
+      );
+    }
+  }, [id, user]);
   if (isLoading) {
     return <JobDetailSkeleton />;
   }
@@ -50,11 +66,10 @@ export default function JobDetail() {
           day: "numeric",
         })
       : null;
-
+  const hasCompanyProfile = !!selectedJob.companyProfileURL;
   return (
     <div className="flex justify-center bg-gray-50 min-h-screen">
       <main className="w-full max-w-5xl mt-10 mb-20 px-4">
-        {/* ── Header ── */}
         <div className="mb-6">
           <div className="flex gap-2 mb-3 flex-wrap">
             {selectedJob.jobType && (
@@ -421,18 +436,50 @@ export default function JobDetail() {
                     <span className="text-xs text-gray-400">or</span>
                     <div className="flex-1 h-px bg-gray-200" />
                   </div>
-                  <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-medium py-2.5 rounded-xl transition">
+                  <button
+                    disabled={!hasCompanyProfile}
+                    className={`w-full text-sm font-medium py-2.5 rounded-xl transition
+    ${
+      hasCompanyProfile
+        ? "border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100"
+        : "border border-gray-200 text-gray-400 bg-gray-100 cursor-not-allowed"
+    }
+  `}
+                  >
                     View company profile
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2.5">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium py-2.5 rounded-xl transition">
-                    Apply now
-                  </button>
-                  <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 text-sm font-medium py-2.5 rounded-xl transition">
-                    View company profile
-                  </button>
+                  {appliedStatus === "PENDING" ? (
+                    <button
+                      disabled
+                      className="w-full bg-yellow-500 text-white py-2.5 rounded-xl"
+                    >
+                      Pending review
+                    </button>
+                  ) : appliedStatus === "ACCEPTED" ? (
+                    <button
+                      disabled
+                      className="w-full bg-green-600 text-white py-2.5 rounded-xl"
+                    >
+                      Accepted
+                    </button>
+                  ) : appliedStatus === "REJECTED" ? (
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="w-full bg-red-500 text-white py-2.5 rounded-xl"
+                    >
+                      Apply again
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="w-full bg-blue-600 text-white py-2.5 rounded-xl"
+                    >
+                      Apply now
+                    </button>
+                  )}
                 </div>
               )}
             </section>
@@ -456,7 +503,17 @@ export default function JobDetail() {
             </section>
           </div>
         </div>
-      </main>
+      </main>{" "}
+      {isModalOpen && (
+        <QuickApplyModal
+          jobId={selectedJob.id}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

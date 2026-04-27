@@ -9,6 +9,7 @@ import { JobsModule } from './jobs/jobs.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { ProfileModule } from './profile/profile.module';
+import { ApplicationModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProfileModule } from './profile/profile.module';
     PrismaModule,
     BookmarksModule,
     ProfileModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

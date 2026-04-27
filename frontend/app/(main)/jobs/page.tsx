@@ -10,7 +10,6 @@ export default function JobList() {
   const dispatch = useAppDispatch();
   const [sortedBy, setSortedBy] = useState("newest");
   const [salary, setSalary] = useState(0);
-
   const { jobs, isLoading, error } = useAppSelector(
     (state) => state.jobReducer,
   );

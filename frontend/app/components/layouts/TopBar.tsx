@@ -15,8 +15,6 @@ export default function TopBar() {
   );
   const dispatch = useAppDispatch();
 
-  console.log("Param", path);
-
   return (
     <header className="w-full shadow-md bg-white px-2 py-3">
       <div className="mx-auto flex items-center justify-between">

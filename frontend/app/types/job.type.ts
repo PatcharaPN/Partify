@@ -45,6 +45,7 @@ export interface Job {
   companyName?: string;
   companyImageURL?: string;
   overviewPictureURL?: string[];
+  companyProfileURL: string;
   // Relations
   skills: Skill[];
   applications: Application[];
