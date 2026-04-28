@@ -9,6 +9,7 @@ import { fetchCandidateApplication } from "@/app/store/slices/applicationSlice";
 import { formatDate } from "@/app/lib/formatDate";
 import StatusBadge from "@/app/components/ui/StatusBadge";
 import Link from "next/link";
+import { fetchRecomandJob } from "@/app/store/slices/jobSlice";
 
 const navItems = [
   { label: "Dashboard", icon: "mdi:view-dashboard" },
@@ -62,17 +63,22 @@ export default function DashboardPage() {
   const { candidateApplication } = useAppSelector(
     (state) => state.ApplicationReducer,
   );
+  const { recomandJobs } = useAppSelector((state) => state.jobReducer);
   const [activeNav, setActiveNav] = useState("Dashboard");
   const { profile, fetchLoading } = useAppSelector(
     (state) => state.profileReducer,
   );
   const dispatch = useAppDispatch();
 
-  console.log(candidateApplication);
+  console.log(recomandJobs);
+
   useEffect(() => {
     dispatch(fetchCandidateApplication());
   }, [dispatch, candidateApplication]);
 
+  useEffect(() => {
+    dispatch(fetchRecomandJob());
+  }, [dispatch, recomandJobs]);
   useEffect(() => {
     if (!profile) {
       dispatch(fetchProfile());
@@ -230,17 +236,22 @@ export default function DashboardPage() {
 
             <div>
               <h2 className="text-sm font-semibold text-gray-900 mb-3">
-                Recommended for You
+                แนะนำสำหรับคุณ
               </h2>
               <div className="grid grid-cols-4 gap-3">
-                {recommended.map((job) => (
+                {recomandJobs.map((job) => (
                   <div
                     key={job.id}
                     className="bg-white rounded-2xl border border-gray-100 overflow-hidden"
                   >
-                    <div className={`h-24 ${job.bgClass} relative`}>
+                    <div className={`h-24 relative`}>
+                      <img
+                        src={job.overviewPictureURL?.[0]}
+                        className="absolute w-full h-full object-cover"
+                        alt=""
+                      />
                       <span className="absolute top-2 right-2 bg-black/50 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
-                        {job.match}% Match
+                        {/* {job.match}% Match */} 90 % Match
                       </span>
                     </div>
                     <div className="p-3">
@@ -249,25 +260,28 @@ export default function DashboardPage() {
                           {job.title}
                         </span>
                         <span className="text-xs font-semibold text-green-600">
-                          {job.rate}
+                          {/* {job.rate} */} 5
                         </span>
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">
-                        {job.company} • {job.location}
+                        {job.companyName} • {job.location}
                       </div>
                       <div className="flex gap-1.5 mt-2 mb-3">
-                        {job.tags.map((tag) => (
+                        {/* {job.tags.map((tag) => (
                           <span
                             key={tag}
                             className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-100"
                           >
                             {tag}
                           </span>
-                        ))}
+                        ))} */}
                       </div>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 rounded-lg transition-colors">
-                        Apply Now
-                      </button>
+                      <Link href={`/jobs/${job.id}`}>
+                        {" "}
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 rounded-lg transition-colors">
+                          Apply Now
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -372,19 +386,19 @@ export default function DashboardPage() {
   );
 }
 
-function Avatar({ initials, color }: { initials: string; color: string }) {
-  const colors: Record<string, string> = {
-    blue: "bg-blue-50 text-blue-600",
-    amber: "bg-amber-50 text-amber-600",
-    green: "bg-green-50 text-green-600",
-  };
-  return (
-    <div
-      className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-semibold flex-shrink-0 ${
-        colors[color] || colors.blue
-      }`}
-    >
-      {initials}
-    </div>
-  );
-}
+// function Avatar({ initials, color }: { initials: string; color: string }) {
+//   const colors: Record<string, string> = {
+//     blue: "bg-blue-50 text-blue-600",
+//     amber: "bg-amber-50 text-amber-600",
+//     green: "bg-green-50 text-green-600",
+//   };
+//   return (
+//     <div
+//       className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-semibold flex-shrink-0 ${
+//         colors[color] || colors.blue
+//       }`}
+//     >
+//       {initials}
+//     </div>
+//   );
+// }

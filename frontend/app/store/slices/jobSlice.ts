@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface JobState {
   jobs: Job[];
+  recomandJobs: Job[];
   employeeJob: Job[];
   isLoading: boolean;
   selectedJob: Job | null;
@@ -14,10 +15,19 @@ interface JobState {
 const initialState: JobState = {
   jobs: [],
   employeeJob: [],
+  recomandJobs: [],
   selectedJob: null,
   isLoading: false,
   error: null,
 };
+
+export const fetchRecomandJob = createAsyncThunk(
+  "jobs/fetchRecomand",
+  async () => {
+    const res = await axiosInstance.get("/jobs/recommend");
+    return res.data;
+  },
+);
 
 export const fetchJobs = createAsyncThunk("jobs/fetchAll", async () => {
   const token = localStorage.getItem("access_token");
@@ -93,6 +103,21 @@ const jobSlice = createSlice({
       .addCase(fetchOwnerRelatedJobs.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message ?? "เกิดข้อผิดพลาด";
+      })
+      .addCase(fetchRecomandJob.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+
+      .addCase(fetchRecomandJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.recomandJobs = action.payload;
+      })
+
+      .addCase(fetchRecomandJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          action.error.message || "Failed to fetch recommended jobs";
       });
   },
 });

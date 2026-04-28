@@ -31,11 +31,19 @@ export class JobsController {
   getRelatedJobs(@Param('id') ownerId) {
     return this.jobsService.getJobsByOwnerId(ownerId);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/recommend')
+  recomandJobsBySkills(@Req() req) {
+    return this.jobsService.recomandJobsBySkills(req.user.sub);
+  }
+
   @UseGuards(AuthGuard)
   @Get('/:id')
   getJobsByID(@Param('id') jobId, @Req() req) {
     return this.jobsService.getJobsByID(jobId, req.user);
   }
+
   @UseGuards(JobOwnerGuard)
   @Patch('/:id')
   upsertJobById(@Param('id') jobId, @Body() dto) {

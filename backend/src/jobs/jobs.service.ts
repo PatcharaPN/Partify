@@ -20,7 +20,20 @@ export class JobsService {
     }
     const { skills, ...jobData } = dto;
     return this.prisma.job.create({
-      data: { ...jobData, companyId },
+      data: {
+        ...jobData,
+        companyId,
+        skills: skills?.length
+          ? {
+              create: skills.map((skill) => ({
+                name: skill.name,
+              })),
+            }
+          : undefined,
+      },
+      include: {
+        skills: true,
+      },
     });
   }
   async getJobs(userId?: string) {
@@ -106,6 +119,40 @@ export class JobsService {
         skills: true,
       },
     });
+  }
+
+  async recomandJobsBySkills(userId: string) {
+    const skills = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        profile: true,
+      },
+    });
+    const userSkills = skills?.profile?.skills || [];
+
+    const jobs = await this.prisma.job.findMany({
+      where: {
+        skills: {
+          some: {
+            name: {
+              in: userSkills,
+            },
+          },
+        },
+        applications: {
+          none: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        skills: true,
+      },
+      take: 10,
+    });
+    return jobs;
   }
 
   // async upsertJobById(jobId: string, dto: UpdateJobDto) {
