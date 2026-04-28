@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApplicationService } from './application.service';
 import { ApplyJobDto } from './dto/apply-job.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('application')
 export class ApplicationController {
@@ -16,5 +26,10 @@ export class ApplicationController {
   @Get('status')
   getStatus(@Query('jobId') jobId: string, @Query('userId') userId: string) {
     return this.applicationService.getStatus(jobId, userId);
+  }
+  @UseGuards(AuthGuard)
+  @Get('list-application')
+  candidateApplication(@Req() req) {
+    return this.applicationService.candidateApplication(req.user.sub);
   }
 }

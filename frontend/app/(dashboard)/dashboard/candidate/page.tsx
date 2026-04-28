@@ -5,111 +5,21 @@ import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import SkeletonCandidate from "./skeletonCandidate";
+import { fetchCandidateApplication } from "@/app/store/slices/applicationSlice";
+import { formatDate } from "@/app/lib/formatDate";
+import StatusBadge from "@/app/components/ui/StatusBadge";
+import Link from "next/link";
 
-const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 const navItems = [
-  {
-    label: "Dashboard",
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-        <rect x="1" y="1" width="6" height="6" rx="1.5" />
-        <rect x="9" y="1" width="6" height="6" rx="1.5" />
-        <rect x="1" y="9" width="6" height="6" rx="1.5" />
-        <rect x="9" y="9" width="6" height="6" rx="1.5" />
-      </svg>
-    ),
-  },
-  {
-    label: "My Jobs",
-    icon: (
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 16 16"
-      >
-        <rect x="2" y="3" width="12" height="10" rx="1.5" />
-        <line x1="5" y1="6.5" x2="11" y2="6.5" />
-        <line x1="5" y1="9.5" x2="9" y2="9.5" />
-      </svg>
-    ),
-  },
+  { label: "Dashboard", icon: "material-symbols:grid-view-rounded" },
+  { label: "My Jobs", icon: "material-symbols:work-outline-rounded" },
   {
     label: "Applicants",
     badge: 12,
-    icon: (
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 16 16"
-      >
-        <circle cx="8" cy="6" r="3" />
-        <path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" />
-      </svg>
-    ),
+    icon: "material-symbols:people-outline-rounded",
   },
-  {
-    label: "Messages",
-    icon: (
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 16 16"
-      >
-        <rect x="2" y="2" width="12" height="9" rx="1.5" />
-        <path d="M5 11l-2 3h10l-2-3" />
-      </svg>
-    ),
-  },
-  {
-    label: "Billing",
-    icon: (
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 16 16"
-      >
-        <rect x="2" y="4" width="12" height="9" rx="1.5" />
-        <path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" />
-      </svg>
-    ),
-  },
-];
-const applications = [
-  {
-    id: "1",
-    initials: "DS",
-    company: "Design Studio Co.",
-    role: "Senior UI Curator",
-    status: "Interviewing",
-    statusColor: "blue",
-    appliedDate: "Applied 2 days ago",
-  },
-  {
-    id: "2",
-    initials: "LV",
-    company: "Luxe Ventures",
-    role: "Editorial Assistant",
-    status: "In Review",
-    statusColor: "amber",
-    appliedDate: "Applied 5 days ago",
-  },
-  {
-    id: "3",
-    initials: "NT",
-    company: "Nova Tech",
-    role: "Content Strategist",
-    status: "Interviewing",
-    statusColor: "blue",
-    appliedDate: "Applied 1 week ago",
-  },
+  { label: "Messages", icon: "material-symbols:chat-bubble-outline-rounded" },
+  { label: "Billing", icon: "material-symbols:credit-card-outline-rounded" },
 ];
 
 const recommended = [
@@ -150,11 +60,19 @@ const checklist = [
 ];
 
 export default function DashboardPage() {
+  const { candidateApplication } = useAppSelector(
+    (state) => state.ApplicationReducer,
+  );
   const [activeNav, setActiveNav] = useState("Dashboard");
   const { profile, fetchLoading } = useAppSelector(
     (state) => state.profileReducer,
   );
   const dispatch = useAppDispatch();
+
+  console.log(candidateApplication);
+  useEffect(() => {
+    dispatch(fetchCandidateApplication());
+  }, [dispatch, candidateApplication]);
 
   useEffect(() => {
     if (!profile) {
@@ -162,11 +80,12 @@ export default function DashboardPage() {
     }
   }, [dispatch, profile]);
 
-  if (fetchLoading || !profile) {
+  if (fetchLoading || !profile || !candidateApplication) {
     return <SkeletonCandidate />;
   }
+
   return (
-    <div className="flex h-screen bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
+    <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Sidebar */}
       <aside className="w-60 shrink-0 bg-white border-r border-gray-100 flex flex-col py-4 px-3">
         <nav className="flex-1 px-3 space-y-0.5">
@@ -182,8 +101,13 @@ export default function DashboardPage() {
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                 }`}
               >
-                {item.icon}
+                <Icon icon={item.icon} width="16" height="16" />
                 <span>{item.label}</span>
+                {item.badge && (
+                  <span className="ml-auto bg-blue-100 text-blue-600 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -209,34 +133,39 @@ export default function DashboardPage() {
             <div className="flex items-start justify-between mb-3">
               <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
                 <Icon
-                  color="004AC6"
                   icon="material-symbols:send-outline"
                   width="24"
                   height="24"
+                  color="#004AC6"
                 />
               </div>
             </div>
             <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">
               Applied
             </p>
-            <p className="text-3xl font-bold text-gray-900 tabular-nums">1</p>
+            <p className="text-3xl font-bold text-gray-900 tabular-nums">
+              {candidateApplication.length}
+            </p>
           </div>
 
-          {/* Applicants */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl" />
             <div className="flex items-start justify-between mb-3">
               <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center">
-                <Icon icon="bx:chat" width="24" height="24" color="004AC6" />
+                <Icon icon="bx:chat" width="24" height="24" color="#004AC6" />
               </div>
             </div>
             <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">
               Interviewing
             </p>
-            <p className="text-3xl font-bold text-gray-900 tabular-nums">156</p>
+            <p className="text-3xl font-bold text-gray-900 tabular-nums">
+              {
+                candidateApplication.filter((j) => j.status === "INTERVIEW")
+                  .length
+              }
+            </p>
           </div>
 
-          {/* Hires */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-orange-400 rounded-l-2xl" />
             <div className="flex items-start justify-between mb-3">
@@ -245,7 +174,7 @@ export default function DashboardPage() {
                   icon="material-symbols:bookmark-outline"
                   width="24"
                   height="24"
-                  color="F97316"
+                  color="#F97316"
                 />
               </div>
             </div>
@@ -263,33 +192,43 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold text-gray-900">
-                  Application Progress
+                  รายการการสมัคร
                 </h2>
                 <button className="text-xs text-blue-600">View all</button>
               </div>
               <div className="flex flex-col divide-y divide-gray-50">
-                {applications.map((app) => (
-                  <div key={app.id} className="flex items-center gap-3 py-3">
-                    <Avatar initials={app.initials} color={app.statusColor} />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900">
-                        {app.company}
+                {candidateApplication.map((app) => (
+                  <Link key={app.id} href={`/jobs/${app.job?.id}`}>
+                    <div className="flex items-center gap-3 py-3">
+                      <img
+                        src={app.job?.companyImageURL}
+                        className="w-15 h-15"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900">
+                          {app.job?.companyName}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {app.job?.title}
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500">{app.role}</div>
+                      <StatusBadge status={app.status} />
+                      <span className="text-xs text-gray-400 whitespace-nowrap">
+                        {formatDate(app.createdAt)}
+                      </span>
+                      <button className="text-gray-300 hover:text-gray-500">
+                        <Icon
+                          icon="material-symbols:more-horiz"
+                          width="18"
+                          height="18"
+                        />
+                      </button>
                     </div>
-                    <StatusBadge status={app.status} color={app.statusColor} />
-                    <span className="text-xs text-gray-400 whitespace-nowrap">
-                      {app.appliedDate}
-                    </span>
-                    <button className="text-gray-300 hover:text-gray-500 text-base leading-none">
-                      ···
-                    </button>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
 
-            {/* Recommended */}
             <div>
               <h2 className="text-sm font-semibold text-gray-900 mb-3">
                 Recommended for You
@@ -365,16 +304,12 @@ export default function DashboardPage() {
                       }`}
                     >
                       {item.done ? (
-                        <svg
-                          width="8"
-                          height="8"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#16A34A"
-                          strokeWidth="3"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
+                        <Icon
+                          icon="material-symbols:check-rounded"
+                          width="10"
+                          height="10"
+                          color="#16A34A"
+                        />
                       ) : (
                         <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
                       )}
@@ -395,19 +330,12 @@ export default function DashboardPage() {
             {/* Next Interview */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4">
               <div className="flex items-center gap-1.5 mb-2 text-[11px] text-gray-400 uppercase tracking-wider">
-                <svg
+                <Icon
+                  icon="material-symbols:calendar-month-outline-rounded"
                   width="12"
                   height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#2563EB"
-                  strokeWidth="2"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+                  color="#2563EB"
+                />
                 Next Interview
               </div>
               <p className="text-[11px] text-gray-400 uppercase tracking-wide">
@@ -422,63 +350,25 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* Editorial Tip */}
+            {/* Editorial Tip
             <div className="bg-blue-600 rounded-2xl p-4 text-white">
               <div className="flex items-center gap-1.5 mb-1.5 text-[11px] uppercase tracking-wider opacity-75">
-                <svg
+                <Icon
+                  icon="material-symbols:info-outline-rounded"
                   width="12"
                   height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                  color="white"
+                />
                 Editorial Tip
               </div>
               <p className="text-xs opacity-90 leading-relaxed">
                 Personalize your cover message for every curation. It increases
                 your match score by up to 25%!
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  icon: React.ReactNode;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`bg-white rounded-2xl border p-4 ${
-        highlight
-          ? "border-t-2 border-t-blue-600 border-x-gray-100 border-b-gray-100"
-          : "border-gray-100"
-      }`}
-    >
-      <div className="flex items-center gap-1.5 text-[11px] text-gray-400 uppercase tracking-wider mb-2">
-        <span className="w-3.5 h-3.5">{icon}</span>
-        {label}
-      </div>
-      <div
-        className={`text-3xl font-semibold ${highlight ? "text-blue-600" : "text-gray-900"}`}
-      >
-        {value}
-      </div>
     </div>
   );
 }
@@ -497,63 +387,5 @@ function Avatar({ initials, color }: { initials: string; color: string }) {
     >
       {initials}
     </div>
-  );
-}
-
-function StatusBadge({ status, color }: { status: string; color: string }) {
-  const colors: Record<string, string> = {
-    blue: "bg-blue-50 text-blue-600",
-    amber: "bg-amber-50 text-amber-700",
-  };
-  return (
-    <span
-      className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${colors[color] || colors.blue}`}
-    >
-      {status}
-    </span>
-  );
-}
-
-function TrendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2563EB"
-      strokeWidth="2"
-      width="14"
-      height="14"
-    >
-      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-      <polyline points="16 7 22 7 22 13" />
-    </svg>
-  );
-}
-function ChatIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2563EB"
-      strokeWidth="2"
-      width="14"
-      height="14"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-function BookmarkIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2563EB"
-      strokeWidth="2"
-      width="14"
-      height="14"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
   );
 }

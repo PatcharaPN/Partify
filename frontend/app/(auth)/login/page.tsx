@@ -3,14 +3,15 @@ import Button from "@/app/components/ui/Button";
 import InputField from "@/app/components/ui/InputField";
 import PersonaCard from "@/app/components/ui/PersonaCard";
 import SocialLoginButton from "@/app/components/ui/SocialLoginButton";
-import { useAppDispatch } from "@/app/lib/hooks";
-import { login } from "@/app/store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { fetchCurrentUser, login } from "@/app/store/slices/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const navigate = useRouter();
+  const { isAuthenticated } = useAppSelector((state) => state.AuthReducer);
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,11 +21,18 @@ export default function LoginPage() {
     if (token) {
       navigate.push("/");
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate.push("/");
+    }
+  }, [isAuthenticated]);
+
   const handleLogin = async () => {
     try {
       await dispatch(login({ email, password })).unwrap();
-      navigate.push("/");
+      await dispatch(fetchCurrentUser());
     } catch (error) {
       console.log(error);
     }

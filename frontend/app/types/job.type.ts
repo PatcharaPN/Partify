@@ -57,7 +57,7 @@ export interface Application {
   jobId: string;
   userId: string;
   createdAt: Date;
-
+  status: ApplicationStatus;
   job?: Job;
   user?: User;
 }
@@ -89,3 +89,9 @@ export type Profile = {
   avatarUrl?: string;
   birthDate?: string;
 };
+
+export type ApplicationStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "INTERVIEW";

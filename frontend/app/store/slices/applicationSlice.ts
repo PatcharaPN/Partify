@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type ApplicationState = {
   applications: Application[];
+  candidateApplication: Application[];
   appliedStatus: "PENDING" | "ACCEPTED" | "REJECTED" | null;
   total: number;
   pending: number;
@@ -14,6 +15,7 @@ type ApplicationState = {
 
 const initialState: ApplicationState = {
   applications: [],
+  candidateApplication: [],
   appliedStatus: null,
   total: 0,
   pending: 0,
@@ -21,6 +23,15 @@ const initialState: ApplicationState = {
   rejected: 0,
   loading: false,
 };
+
+export const fetchCandidateApplication = createAsyncThunk(
+  "application/candidate",
+  async () => {
+    const res = await axiosInstance.get("/application/list-application");
+    return res.data;
+  },
+);
+
 export const fetchApplicationStatus = createAsyncThunk(
   "application/status",
   async ({ jobId, userId }: { jobId: string; userId: string }) => {
@@ -89,6 +100,17 @@ const applicationSlice = createSlice({
       })
       .addCase(fetchApplicationStatus.fulfilled, (state, action) => {
         state.appliedStatus = action.payload;
+      })
+      .addCase(fetchCandidateApplication.fulfilled, (state, action) => {
+        state.loading = false;
+        state.candidateApplication = action.payload;
+      })
+      .addCase(fetchCandidateApplication.rejected, (state) => {
+        state.candidateApplication = [];
+        state.loading = false;
+      })
+      .addCase(fetchCandidateApplication.pending, (state) => {
+        state.loading = true;
       });
   },
 });
