@@ -11,15 +11,14 @@ import StatusBadge from "@/app/components/ui/StatusBadge";
 import Link from "next/link";
 
 const navItems = [
-  { label: "Dashboard", icon: "material-symbols:grid-view-rounded" },
-  { label: "My Jobs", icon: "material-symbols:work-outline-rounded" },
+  { label: "Dashboard", icon: "mdi:view-dashboard" },
+  { label: "My Jobs", icon: "mdi:briefcase-outline" },
   {
     label: "Applicants",
     badge: 12,
-    icon: "material-symbols:people-outline-rounded",
+    icon: "mdi:account-group-outline",
   },
-  { label: "Messages", icon: "material-symbols:chat-bubble-outline-rounded" },
-  { label: "Billing", icon: "material-symbols:credit-card-outline-rounded" },
+  { label: "Messages", icon: "mdi:message-outline" },
 ];
 
 const recommended = [
