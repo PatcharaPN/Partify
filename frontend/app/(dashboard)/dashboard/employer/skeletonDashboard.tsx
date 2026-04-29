@@ -128,13 +128,6 @@ export default function EmployerDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
-      {/* Sidebar */}
-      <div className="w-52 bg-white border-r p-3 space-y-2">
-        {[...Array(5)].map((_, i) => (
-          <Bone key={i} className="h-8 w-full rounded-lg" />
-        ))}
-      </div>
-
       {/* Main */}
       <main className="flex-1 overflow-auto">
         {/* Topbar */}

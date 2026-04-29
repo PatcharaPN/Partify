@@ -22,6 +22,7 @@ export class JobsController {
   postJob(@Body() dto: CreateJobDto, @Req() req) {
     return this.jobsService.postJob(dto, req.user.sub);
   }
+
   @Get()
   getJobs(@Req() req) {
     return this.jobsService.getJobs();

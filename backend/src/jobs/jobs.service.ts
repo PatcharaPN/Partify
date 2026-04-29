@@ -91,6 +91,7 @@ export class JobsService {
     });
     return jobs;
   }
+
   async upsertJobById(jobId: string, dto: UpdateJobDto) {
     const { skills, ...jobData } = dto;
 
@@ -154,33 +155,4 @@ export class JobsService {
     });
     return jobs;
   }
-
-  // async upsertJobById(jobId: string, dto: UpdateJobDto) {
-  //   const { skills, ...jobData } = dto;
-  //   const job = await this.prisma.job.upsert({
-  //     where: { id: jobId },
-  //     create: {
-  //       ...jobData,
-  //       skills: skills
-  //         ? {
-  //             create: skills.map((skill) => ({
-  //               name: skill.name,
-  //             })),
-  //           }
-  //         : undefined,
-  //     },
-  //     update: {
-  //       ...jobData,
-  //       skills: skills
-  //         ? {
-  //             deleteMany: {},
-  //             create: skills.map((skill) => ({
-  //               name: skill.name,
-  //             })),
-  //           }
-  //         : undefined,
-  //     },
-  //   });
-  //   return job;
-  // }
 }

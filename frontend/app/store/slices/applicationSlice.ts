@@ -1,29 +1,58 @@
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { Application } from "@/app/types/job.type";
+import { Application, Job } from "@/app/types/job.type";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type ApplicationState = {
   applications: Application[];
+  ownerApplications: Application[];
   candidateApplication: Application[];
+  jobDetail: Job | null;
   appliedStatus: "PENDING" | "ACCEPTED" | "REJECTED" | null;
   total: number;
   pending: number;
   accepted: number;
   rejected: number;
   loading: boolean;
+  error: string | null;
 };
 
 const initialState: ApplicationState = {
   applications: [],
+  jobDetail: null,
+  ownerApplications: [],
   candidateApplication: [],
   appliedStatus: null,
   total: 0,
   pending: 0,
   accepted: 0,
   rejected: 0,
+  error: null,
   loading: false,
 };
-
+export const fetchOwnerApplications = createAsyncThunk(
+  "application/fetchOwnerApplications",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/applications/owner");
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data || "Something went wrong");
+    }
+  },
+);
+export const fetchApplicationsByJob = createAsyncThunk(
+  "application/fetchByJob",
+  async (jobId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(`/applications/jobs/${jobId}`);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data || "Failed to fetch applications",
+      );
+    }
+  },
+);
 export const fetchCandidateApplication = createAsyncThunk(
   "application/candidate",
   async () => {
@@ -111,6 +140,30 @@ const applicationSlice = createSlice({
       })
       .addCase(fetchCandidateApplication.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(fetchOwnerApplications.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOwnerApplications.fulfilled, (state, action) => {
+        state.loading = false;
+        state.ownerApplications = action.payload;
+      })
+      .addCase(fetchOwnerApplications.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchApplicationsByJob.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchApplicationsByJob.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jobDetail = action.payload;
+      })
+      .addCase(fetchApplicationsByJob.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

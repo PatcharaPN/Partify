@@ -19,7 +19,7 @@ export default function DashboardPage() {
       navigate.replace("/dashboard/candidate");
     }
     if (user?.role === "EMPLOYER") {
-      navigate.replace("/dashboard/employer");
+      navigate.replace("/dashboard/employer/overviews");
     }
   }, [user, isAuthenticated, isLoading, navigate]);
   return <div className="">Redirecting...</div>;

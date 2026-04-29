@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -47,13 +51,43 @@ export class ApplicationService {
             email: true,
             password: true,
           },
-          include: { profile: true },
+          include: { profile: true, jobs: true },
         },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
+  }
+  async getJobWithApplications(jobId: string, userId: string) {
+    const job = await this.prisma.job.findUnique({
+      where: { id: jobId },
+      include: {
+        applications: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                profile: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+    });
+
+    if (!job) {
+      throw new NotFoundException('Job not found');
+    }
+
+    if (job.companyId !== userId) {
+      throw new ForbiddenException('You are not the owner');
+    }
+
+    return job;
   }
   async candidateApplication(userId: string) {
     return this.prisma.application.findMany({
@@ -62,6 +96,26 @@ export class ApplicationService {
       },
       include: {
         job: true,
+      },
+    });
+  }
+  async getApplicationsByOwner(ownerId: string) {
+    return this.prisma.application.findMany({
+      where: {
+        job: {
+          companyId: ownerId,
+        },
+      },
+      include: {
+        user: {
+          include: {
+            profile: true,
+          },
+        },
+        job: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
