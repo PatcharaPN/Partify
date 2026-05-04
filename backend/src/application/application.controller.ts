@@ -20,11 +20,28 @@ export class ApplicationController {
   applyJob(@Req() req, @Body() dto: ApplyJobDto) {
     return this.applicationService.applyJob(dto.jobId, req.user.sub);
   }
+
+  @UseGuards(AuthGuard)
+  @Post(':id/approve')
+  approveApplication(@Param('id') applicationId: string, @Req() req: any) {
+    const employerId = req.user.id;
+
+    return this.applicationService.approveApplication(
+      applicationId,
+      employerId,
+    );
+  }
+
   @UseGuards(AuthGuard)
   @Get('/owner')
   getApplicationsByOwner(@Req() req) {
     return this.applicationService.getApplicationsByOwner(req.user.sub);
   }
+  @Get()
+  application(@Query('jobId') jobId: string) {
+    return this.applicationService.application(jobId);
+  }
+
   @UseGuards(AuthGuard)
   @Get('/jobs/:jobId')
   getApplication(@Param('jobId') jobId: string, @Req() req) {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -25,6 +26,49 @@ export class ApplicationService {
         jobId,
         userId,
       },
+    });
+  }
+
+  async approveApplication(applicationId: string, employerId: string) {
+    return await this.prisma.$transaction(async (tx) => {
+      const application = await tx.application.findUnique({
+        where: { id: applicationId },
+        include: { job: true },
+      });
+
+      if (!application) {
+        throw new NotFoundException('Application not found');
+      }
+
+      if (application.job.companyId !== employerId) {
+        throw new BadRequestException('Not your job');
+      }
+
+      if (application.status === 'ACCEPTED') {
+        throw new BadRequestException('Already accepted');
+      }
+
+      await tx.application.update({
+        where: { id: applicationId },
+        data: { status: 'ACCEPTED' },
+      });
+
+      try {
+        const employee = await tx.employee.create({
+          data: {
+            userId: application.userId,
+            companyId: application.job.companyId,
+            jobId: application.jobId,
+          },
+        });
+
+        return employee;
+      } catch (error: any) {
+        if (error.code === 'P2002') {
+          throw new BadRequestException('User already hired');
+        }
+        throw error;
+      }
     });
   }
   async getStatus(jobId: string, userId: string) {

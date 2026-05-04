@@ -10,6 +10,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { ProfileModule } from './profile/profile.module';
 import { ApplicationModule } from './application/application.module';
+import { EmployeeModule } from './employee/employee.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ApplicationModule } from './application/application.module';
     BookmarksModule,
     ProfileModule,
     ApplicationModule,
+    EmployeeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -40,7 +40,8 @@ model User {
   bookmarks   Bookmark[]  
   jobs        Job[]        @relation("EmployerJobs")
   applications Application[]
-
+  employees    Employee[] @relation("CompanyEmployees")
+  employed  Employee[] @relation("UserEmployment")
   @@map("users")
 }
 
@@ -115,10 +116,9 @@ model Job {
   company           User      @relation("EmployerJobs", fields: [companyId], references: [id])
   companyImageURL   String?
   companyName       String?
-
+  employees Employee[]
   applications      Application[]
   skills            JobSkill[]    
-
   @@map("jobs")
 }
 
@@ -142,6 +142,23 @@ model JobSkill {
   name    String  
 
   @@map("job_skills")
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  userId    String
+  companyId String
+  jobId     String?
+
+  hiredAt   DateTime @default(now())
+  status    String?  // ACTIVE / RESIGNED / TERMINATED
+
+  user      User @relation("UserEmployment",fields: [userId], references: [id], onDelete: Cascade)
+  company   User @relation("CompanyEmployees", fields: [companyId], references: [id])
+  job       Job? @relation(fields: [jobId], references: [id])
+
+  @@unique([userId, companyId])
+  @@map("employees")
 }
 
 model Application {
