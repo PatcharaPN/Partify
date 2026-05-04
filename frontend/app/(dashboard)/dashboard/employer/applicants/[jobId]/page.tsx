@@ -1,61 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useJobApplications } from "@/app/hooks/useJobApplications";
 import { useParams } from "next/navigation";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
-
-const candidates = [
-  {
-    id: 1,
-    name: "Sarah Chen",
-    role: "Lead Designer @ Studio X",
-    initials: "SC",
-    avatar: null,
-    avatarImg: "https://i.pravatar.cc/150?img=47",
-    priority: "HIGH PRIORITY",
-    priorityColor: "blue",
-    match: "Perfect Match",
-    matchType: "perfect",
-    skills: ["Art Direction", "Figma"],
-    score: 98,
-    timeAgo: "2d ago",
-    status: "INTERVIEWING",
-    statusColor: "blue",
-    isNew: false,
-  },
-];
-
-const matchConfig: Record<
-  string,
-  { icon: string; color: string; text: string }
-> = {
-  perfect: {
-    icon: "material-symbols:check-circle-rounded",
-    color: "text-emerald-500",
-    text: "Perfect Match",
-  },
-  partial: {
-    icon: "material-symbols:check-circle-outline-rounded",
-    color: "text-orange-400",
-    text: "Partial Match",
-  },
-  mismatch: {
-    icon: "material-symbols:cancel-rounded",
-    color: "text-red-400",
-    text: "Mismatch",
-  },
-};
-
-const scoreColor = (s: number) =>
-  s >= 95
-    ? "from-blue-500 to-blue-400"
-    : s >= 88
-      ? "from-violet-500 to-blue-400"
-      : s >= 80
-        ? "from-amber-400 to-orange-400"
-        : "from-gray-400 to-gray-300";
+import ApplicantDetailModal from "@/app/components/ui/ApplicantDetailModal";
+import { Application } from "@/app/types/job.type";
 
 export default function ApplicantsPage() {
   const params = useParams();
@@ -63,7 +14,48 @@ export default function ApplicantsPage() {
   const { jobDetail } = useJobApplications(jobId);
   const [view, setView] = useState<"list" | "grid">("list");
   const [activeFilter, setActiveFilter] = useState("All Statuses");
-  console.log(jobDetail);
+  const totalApplicants = jobDetail?.applications.length ?? 0;
+  const [selectedApplicant, setSelectedApplicant] =
+    useState<Application | null>(null);
+  const [currentApplicant, setCurrentApplicant] = useState<Application>();
+  const now = new Date();
+  const last24hr = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 8;
+  const totalPages = Math.max(1, Math.ceil(totalApplicants / pageSize));
+  const start = (currentPage - 1) * pageSize + 1;
+  const end = Math.min(currentPage * pageSize, totalApplicants);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+  const applications = jobDetail?.applications ?? [];
+  const sorted = [...applications].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  const paginatedApplicants = sorted.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages]);
+
+  const newCandidate = applications.filter(
+    (c) => new Date(c.createdAt) >= last24hr,
+  ).length;
+
+  const interviews = applications.filter(
+    (i) => i.status === "INTERVIEW",
+  ).length;
+
   return (
     <div className="h-[calc(100vh-70px)] bg-[#F4F6FA] font-sans">
       <div className="   mx-auto px-6 py-8">
@@ -81,7 +73,6 @@ export default function ApplicantsPage() {
             Senior Creative Director
           </span>
         </div> */}
-
         {/* Header */}
         <div className="flex items-start justify-between gap-6 mb-8">
           <div>
@@ -89,37 +80,46 @@ export default function ApplicantsPage() {
               {jobDetail?.title}
             </h1>
             <div className="flex items-center gap-3 text-sm text-gray-500">
-              <span>Active Hiring Campaign • New York, NY</span>
-              <span className="flex items-center gap-1.5 text-emerald-500 font-semibold text-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-                LIVE
+              <span>
+                {jobDetail?.status === "active" ? (
+                  <span className="text-emerald-500">Active</span>
+                ) : (
+                  <span className="text-gray-500">Unactive</span>
+                )}
               </span>
+              <span>{jobDetail?.location}</span>
             </div>
           </div>
 
           {/* Stats */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="text-center px-5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm">
-              <div className="text-2xl font-bold text-blue-600">48</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {" "}
+                {totalApplicants}
+              </div>
               <div className="text-[10px] text-gray-400 uppercase tracking-widest font-medium mt-0.5">
                 Total Applicants
               </div>
             </div>
             <div className="text-center px-5 py-3 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200">
-              <div className="text-2xl font-bold text-white">12</div>
+              <div className="text-2xl font-bold text-white">
+                {newCandidate}
+              </div>
               <div className="text-[10px] text-blue-200 uppercase tracking-widest font-medium mt-0.5">
                 New Candidates
               </div>
             </div>
             <div className="text-center px-5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm">
-              <div className="text-2xl font-bold text-orange-500">5</div>
+              <div className="text-2xl font-bold text-orange-500">
+                {interviews}
+              </div>
               <div className="text-[10px] text-gray-400 uppercase tracking-widest font-medium mt-0.5">
                 Interviewing
               </div>
             </div>
           </div>
         </div>
-
         {/* Filters */}
         <div className="flex items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-2">
@@ -175,28 +175,20 @@ export default function ApplicantsPage() {
             </button>
           </div>
         </div>
-
         {/* Table header */}
         <div className="grid grid-cols-[2fr_1fr_1fr_1.2fr_auto] gap-4 px-5 mb-2">
-          {[
-            "ผู้สมัคร",
-            "ทักษะ",
-            "ลงสมัครเมื่อ",
-            "SCORE & TIMELINE",
-            "ACTIONS",
-          ].map((h) => (
+          {["ผู้สมัคร", "ทักษะ", "ลงสมัครเมื่อ", "ACTIONS"].map((h) => (
             <div
               key={h}
-              className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase"
+              className="text-[10px] flex justify-center items-center font-semibold tracking-widest text-gray-400 uppercase"
             >
               {h}
             </div>
           ))}
         </div>
-
         {/* Candidate rows */}
         <div className="flex flex-col gap-2.5">
-          {jobDetail?.applications.map((c) => {
+          {paginatedApplicants.map((c) => {
             const skills = c.user?.profile?.skills || [];
             const shown = skills.slice(0, 2);
             const remaining = skills.length - 2;
@@ -246,7 +238,6 @@ export default function ApplicantsPage() {
                       </div>
                     </div>
                   </div>
-
                   {/* Skills */}
                   <div className="flex flex-wrap gap-1.5">
                     {shown.map((s) => (
@@ -265,17 +256,14 @@ export default function ApplicantsPage() {
                     )}
                   </div>
 
-                  {/* Score + timeline */}
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="text-xs font-semibold text-gray-700">
-                        {formatTimeAgo(c.createdAt)}
-                      </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="text-xs font-semibold text-gray-700">
+                      {formatTimeAgo(c.createdAt)}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5"></div>
+
                   {/* Actions */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <button className="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:border-blue-200 transition-all">
                       <Icon
                         icon="material-symbols:chat-bubble-outline-rounded"
@@ -283,7 +271,10 @@ export default function ApplicantsPage() {
                         height="17"
                       />
                     </button>
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm shadow-blue-200 hover:shadow-blue-300">
+                    <button
+                      onClick={() => setSelectedApplicant(c)}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm shadow-blue-200 hover:shadow-blue-300"
+                    >
                       Profile
                     </button>
                   </div>
@@ -291,35 +282,60 @@ export default function ApplicantsPage() {
               </div>
             );
           })}
-        </div>
-
+        </div>{" "}
+        {selectedApplicant && (
+          <ApplicantDetailModal
+            applicants={selectedApplicant}
+            onClose={() => setSelectedApplicant(null)}
+          />
+        )}
         {/* Footer */}
         <div className="flex items-center justify-between mt-6">
           <span className="text-sm text-gray-400">
-            Showing <span className="font-semibold text-gray-600">1-12</span> of{" "}
-            <span className="font-semibold text-gray-600">48</span> applicants
+            Showing{" "}
+            <span className="font-semibold text-gray-600">
+              {start}-{end}
+            </span>
+            of{" "}
+            <span className="font-semibold text-gray-600">
+              {totalApplicants}
+            </span>{" "}
+            applicants
           </span>
           <div className="flex items-center gap-1.5">
-            <button className="w-9 h-9 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-blue-600 hover:border-blue-200 transition-all">
+            <button
+              disabled={currentPage === 1}
+              onClick={handlePrev}
+              className="w-9 h-9 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-blue-600 hover:border-blue-200 transition-all"
+            >
               <Icon
                 icon="material-symbols:chevron-left-rounded"
                 width="18"
                 height="18"
               />
             </button>
-            {[1, 2, 3].map((p) => (
-              <button
-                key={p}
-                className={`w-9 h-9 rounded-xl text-sm font-semibold transition-all ${
-                  p === 1
-                    ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-                    : "bg-white border border-gray-200 text-gray-500 hover:border-blue-200 hover:text-blue-600"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-            <button className="w-9 h-9 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-blue-600 hover:border-blue-200 transition-all">
+            {Array.from({ length: totalPages }, (_, i) => {
+              const page = i + 1;
+
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-9 h-9 rounded-xl text-sm font-semibold transition-all ${
+                    page === currentPage
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+                      : "bg-white border border-gray-200 text-gray-500 hover:border-blue-200 hover:text-blue-600"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={handleNext}
+              className="w-9 h-9 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-blue-600 hover:border-blue-200 transition-all"
+            >
               <Icon
                 icon="material-symbols:chevron-right-rounded"
                 width="18"

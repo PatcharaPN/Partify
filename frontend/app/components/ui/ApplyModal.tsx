@@ -68,7 +68,7 @@ export default function QuickApplyModal({
         <div className="mx-6 mb-4 flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3.5">
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            <div className="relative flex-shrink-0">
+            <div className="relative shrink-0">
               <div className="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
                 {/* Simple avatar illustration */}
                 <img src={user?.profile?.avatarUrl} alt="" />
