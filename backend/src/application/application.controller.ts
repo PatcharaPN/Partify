@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApplicationService } from './application.service';
 import { ApplyJobDto } from './dto/apply-job.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('applications')
 export class ApplicationController {

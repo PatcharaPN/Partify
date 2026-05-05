@@ -1,5 +1,6 @@
 "use client";
 import { useEmployerJobs } from "@/app/hooks/useEmployerJobs";
+import { useJobApplications } from "@/app/hooks/useJobApplications";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -11,7 +12,7 @@ const getNavItems = (total: number) => [
     icon: <Icon icon="mdi:view-dashboard" className="w-4 h-4" />,
   },
   {
-    path: "",
+    path: "/dashboard/employer/job",
     label: "My Jobs",
     icon: <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />,
   },
@@ -29,7 +30,7 @@ const getNavItems = (total: number) => [
 ];
 
 const Sidebar = () => {
-  const { totalApplicants } = useEmployerJobs();
+  const { totalApplicants } = useJobApplications();
   const [activeNav, setActiveNav] = useState("Dashboard");
   const navItems = getNavItems(totalApplicants);
   return (
