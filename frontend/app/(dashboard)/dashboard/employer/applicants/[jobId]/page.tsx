@@ -6,18 +6,18 @@ import { useJobApplications } from "@/app/hooks/useJobApplications";
 import { useParams } from "next/navigation";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
 import ApplicantDetailModal from "@/app/components/ui/ApplicantDetailModal";
-import { Application } from "@/app/types/job.type";
+import { Application, ApplicationStatus } from "@/app/types/job.type";
+import { axiosInstance } from "@/app/lib/axiosInstance";
 
 export default function ApplicantsPage() {
   const params = useParams();
   const jobId = params.jobId as string;
-  const { jobDetail } = useJobApplications(jobId);
+  const { jobDetail, approveApplication } = useJobApplications(jobId);
   const [view, setView] = useState<"list" | "grid">("list");
   const [activeFilter, setActiveFilter] = useState("All Statuses");
   const totalApplicants = jobDetail?.applications.length ?? 0;
   const [selectedApplicant, setSelectedApplicant] =
     useState<Application | null>(null);
-  const [currentApplicant, setCurrentApplicant] = useState<Application>();
   const now = new Date();
   const last24hr = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,9 +34,12 @@ export default function ApplicantsPage() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
   const applications = jobDetail?.applications ?? [];
-  const sorted = [...applications].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  const sorted = [...applications]
+    .filter((a) => a.status === "PENDING")
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
   const paginatedApplicants = sorted.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
@@ -56,6 +59,17 @@ export default function ApplicantsPage() {
     (i) => i.status === "INTERVIEW",
   ).length;
 
+  const handleApproveApps = async (id: string, status: ApplicationStatus) => {
+    try {
+      if (status === "ACCEPTED") {
+        await approveApplication(id);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSelectedApplicant(null);
+    }
+  };
   return (
     <div className="h-[calc(100vh-70px)] bg-[#F4F6FA] font-sans">
       <div className="   mx-auto px-6 py-8">
@@ -285,6 +299,7 @@ export default function ApplicantsPage() {
         </div>{" "}
         {selectedApplicant && (
           <ApplicantDetailModal
+            onStatusChange={handleApproveApps}
             applicants={selectedApplicant}
             onClose={() => setSelectedApplicant(null)}
           />

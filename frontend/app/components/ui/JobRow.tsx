@@ -10,6 +10,8 @@ type JobRowProps = {
 };
 
 const JobRow = ({ href, job }: JobRowProps) => {
+  const pendingApps = job.applications.filter((a) => a.status === "PENDING");
+
   const content = (
     <div className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group">
       {/* Title */}
@@ -40,8 +42,9 @@ const JobRow = ({ href, job }: JobRowProps) => {
       {/* Applicants */}
       <div>
         <AvatarStack
-          count={job.applications.length}
+          count={pendingApps.length}
           avatars={job.applications
+            .filter((a) => a.status === "PENDING")
             .slice()
             .sort(
               (a, b) =>

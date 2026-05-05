@@ -15,6 +15,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('applications')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
+
+  // ── POST ──────────────────────────────────────────────────
+
   @UseGuards(AuthGuard)
   @Post()
   applyJob(@Req() req, @Body() dto: ApplyJobDto) {
@@ -24,40 +27,41 @@ export class ApplicationController {
   @UseGuards(AuthGuard)
   @Post(':id/approve')
   approveApplication(@Param('id') applicationId: string, @Req() req: any) {
-    const employerId = req.user.id;
-
     return this.applicationService.approveApplication(
       applicationId,
-      employerId,
+      req.user.sub,
     );
   }
 
+  // ── GET static ────────────────────────────────────────────
+
   @UseGuards(AuthGuard)
-  @Get('/owner')
+  @Get('owner')
   getApplicationsByOwner(@Req() req) {
     return this.applicationService.getApplicationsByOwner(req.user.sub);
   }
-  @Get()
-  application(@Query('jobId') jobId: string) {
-    return this.applicationService.application(jobId);
-  }
 
-  @UseGuards(AuthGuard)
-  @Get('/jobs/:jobId')
-  getApplication(@Param('jobId') jobId: string, @Req() req) {
-    return this.applicationService.getJobWithApplications(jobId, req.user.sub);
-  }
-  // @Get('/:jobId/applications')
-  // application(@Param('jobId') jobId: string) {
-  //   return this.applicationService.application(jobId);
-  // }
   @Get('status')
   getStatus(@Query('jobId') jobId: string, @Query('userId') userId: string) {
     return this.applicationService.getStatus(jobId, userId);
   }
+
   @UseGuards(AuthGuard)
   @Get('list-application')
   candidateApplication(@Req() req) {
     return this.applicationService.candidateApplication(req.user.sub);
+  }
+
+  // ── GET dynamic ───────────────────────────────────────────
+
+  @UseGuards(AuthGuard)
+  @Get('jobs/:jobId')
+  getApplication(@Param('jobId') jobId: string, @Req() req) {
+    return this.applicationService.getJobWithApplications(jobId, req.user.sub);
+  }
+
+  @Get()
+  application(@Query('jobId') jobId: string) {
+    return this.applicationService.application(jobId);
   }
 }

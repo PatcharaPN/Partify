@@ -66,9 +66,12 @@ export default function ApplicantDetailModal({
   function handleStatusChange(next: ApplicationStatus) {
     setStatus(next);
     onStatusChange?.(applicants.id, next);
+    onClose();
   }
 
   const cfg = STATUS_CONFIG[status];
+
+  console.log(applicants);
 
   return (
     <div

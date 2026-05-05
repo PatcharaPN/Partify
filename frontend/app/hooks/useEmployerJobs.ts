@@ -23,10 +23,10 @@ export const useEmployerJobs = () => {
 
   const jobs = Array.isArray(employeeJob) ? employeeJob : [];
 
-  const totalApplicants = jobs.reduce(
-    (sum, job) => sum + (job.applications?.length ?? 0),
-    0,
-  );
+  const applicant = jobs.flatMap((applicants) => applicants.applications);
+  const totalApplicants =
+    applicant.filter((a) => a.status === "PENDING").length ?? 0;
+
   return {
     jobs,
     user,
