@@ -5,11 +5,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class ApplicationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationService: NotificationService,
+  ) {}
   async applyJob(jobId: string, userId: string) {
     const existing = await this.prisma.application.findUnique({
       where: {
@@ -151,6 +155,12 @@ export class ApplicationService {
           },
         }),
       ]);
+    await this.notificationService.pushNotification(
+      `คุณผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.companyName} กรุณาตรวจสอบรายละเอียดเพิ่มเติม`,
+      'ACCEPTED',
+      application.userId,
+      application.jobId,
+    );
     return { application: updatedApplication, employee: createdEmployee };
   }
 

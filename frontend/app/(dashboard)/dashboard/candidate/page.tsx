@@ -22,29 +22,6 @@ const navItems = [
   { label: "Messages", icon: "mdi:message-outline" },
 ];
 
-const recommended = [
-  {
-    id: "1",
-    title: "Visual Storyteller",
-    rate: "$45/hr",
-    company: "CreativHaus",
-    location: "Remote",
-    tags: ["Contract", "Part-time"],
-    match: 98,
-    bgClass: "bg-slate-300",
-  },
-  {
-    id: "2",
-    title: "Marketing Analyst",
-    rate: "$38/hr",
-    company: "DataPeak",
-    location: "London",
-    tags: ["On-site", "Flexible"],
-    match: 92,
-    bgClass: "bg-blue-300",
-  },
-];
-
 const checklist = [
   {
     label: "Add a portfolio link",
@@ -58,11 +35,17 @@ const checklist = [
   },
   { label: "Upload video intro", sub: "Stand out to curators", done: false },
 ];
-
+const statusMap = {
+  PENDING: "รอดำเนินการ",
+  ACCEPTED: "ผ่านการคัดเลือก",
+  REJECTED: "ไม่ผ่าน",
+  INTERVIEW: "สัมภาษณ์",
+};
 export default function DashboardPage() {
   const { candidateApplication } = useAppSelector(
     (state) => state.ApplicationReducer,
   );
+
   const { recomandJobs } = useAppSelector((state) => state.jobReducer);
   const [activeNav, setActiveNav] = useState("Dashboard");
   const { profile, fetchLoading } = useAppSelector(
@@ -70,15 +53,13 @@ export default function DashboardPage() {
   );
   const dispatch = useAppDispatch();
 
-  console.log(recomandJobs);
-
   useEffect(() => {
     dispatch(fetchCandidateApplication());
-  }, [dispatch, candidateApplication]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchRecomandJob());
-  }, [dispatch, recomandJobs]);
+  }, [dispatch]);
   useEffect(() => {
     if (!profile) {
       dispatch(fetchProfile());

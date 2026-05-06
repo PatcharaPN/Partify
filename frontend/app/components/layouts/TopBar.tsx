@@ -5,10 +5,15 @@ import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { logout } from "@/app/store/slices/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
+import NotificationContainer from "../ui/NotificationContainer";
+import { useState } from "react";
+import { useNotification } from "@/app/hooks/useNotification";
 
 export default function TopBar() {
   const router = useRouter();
   const path = usePathname();
+  const [openNotification, setOpenNotification] = useState(false);
+  const { data } = useNotification(openNotification);
   const isActive = (route: string) => path.startsWith(route);
   const { user, isAuthenticated, isLoading } = useAppSelector(
     (state) => state.AuthReducer,
@@ -16,7 +21,7 @@ export default function TopBar() {
   const dispatch = useAppDispatch();
 
   return (
-    <header className="w-full shadow-md bg-white px-2 py-3">
+    <header className="sticky top-0 z-50 w-full shadow-md bg-white px-2 py-3">
       <div className="mx-auto flex items-center justify-between">
         <Link
           className="inline-block text-primary text-xl font-bold font-headline px-4 py-2"
@@ -49,10 +54,20 @@ export default function TopBar() {
         </nav>
         <div className="flex items-center gap-5">
           {" "}
-          <button className="relative p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors">
-            <Icon icon="heroicons:bell" className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
-          </button>{" "}
+          <div className="relative">
+            <button
+              onClick={() => setOpenNotification(!openNotification)}
+              className="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <Icon icon="heroicons:bell" className="w-5 h-5" />
+
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+            </button>
+
+            {openNotification && (
+              <NotificationContainer notifications={data || []} />
+            )}
+          </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <Link href={"/profile/edit"} className="flex items-center gap-3">

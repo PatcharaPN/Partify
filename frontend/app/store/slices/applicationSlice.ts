@@ -56,7 +56,7 @@ export const fetchApplicationsByJob = createAsyncThunk(
 export const fetchCandidateApplication = createAsyncThunk(
   "application/candidate",
   async () => {
-    const res = await axiosInstance.get("/application/list-application");
+    const res = await axiosInstance.get("/applications/list-application");
     return res.data;
   },
 );
@@ -75,7 +75,7 @@ export const applyJob = createAsyncThunk(
   "application/apply",
   async ({ jobId, userId }: { jobId: string; userId: string }, thunkAPI) => {
     try {
-      const res = await axiosInstance.post("/application", {
+      const res = await axiosInstance.post("/applications", {
         jobId,
         userId,
       });

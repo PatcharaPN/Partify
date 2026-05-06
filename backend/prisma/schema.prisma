@@ -119,6 +119,7 @@ model Job {
   companyName       String?
   employees Employee[]
   applications      Application[]
+  notifications Notification[]
   skills            JobSkill[]    
   @@map("jobs")
 }
@@ -186,6 +187,9 @@ model Notification {
   message    String
   type       ApplicationStatus
 
+
+  jobId String?
+  job   Job? @relation(fields: [jobId], references: [id])
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
 }

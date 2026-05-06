@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Kanit, Mitr } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import Providers from "./provider";
 
 const kanit = Kanit({
   weight: ["200", "400"],
@@ -37,7 +38,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${kanit.variable} h-full antialiased`}
     >
       <body className="min-h-screen">
-        <StoreProvider>{children}</StoreProvider>
+        <Providers>
+          <StoreProvider>{children}</StoreProvider>
+        </Providers>
       </body>
     </html>
   );

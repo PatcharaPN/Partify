@@ -1,8 +1,7 @@
 import { Controller, Get, Patch, Body, UseGuards, Req } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users/me/profile')
 @UseGuards(JwtAuthGuard)

@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { JobOwnerGuard } from './jobs-owner.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('jobs')
 export class JobsController {

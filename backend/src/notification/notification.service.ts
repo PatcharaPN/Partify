@@ -9,9 +9,35 @@ export class NotificationService {
     msgContext: string,
     applicationType: any,
     userId: string,
+    jobId?: string,
   ) {
     await this.validateReceiverAndThrowError(userId);
-    return this.addNotification(msgContext, applicationType, userId);
+    return this.addNotification(msgContext, applicationType, userId, jobId);
+  }
+
+  async getUserNotification(userId: string) {
+    return await this.prisma.notification.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        message: true,
+        isRead: true,
+        createdAt: true,
+        jobId: true,
+        type: true,
+        job: {
+          select: {
+            companyName: true,
+            companyImageURL: true,
+          },
+        },
+      },
+    });
   }
 
   private async validateReceiverAndThrowError(userId: string) {
@@ -28,12 +54,14 @@ export class NotificationService {
     msgContext: string,
     applicationType: ApplicationStatus,
     userId: string,
+    jobId?: string,
   ) {
     const notification = await this.prisma.notification.create({
       data: {
         message: msgContext,
         type: applicationType,
         userId: userId,
+        jobId: jobId,
       },
     });
     return notification;

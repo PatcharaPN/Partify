@@ -8,11 +8,18 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
     INTERVIEW: "bg-blue-50 text-blue-600",
   };
 
+  const labels: Record<ApplicationStatus, string> = {
+    PENDING: "รอดำเนินการ",
+    ACCEPTED: "ผ่านการคัดเลือก",
+    REJECTED: "ไม่ผ่าน",
+    INTERVIEW: "สัมภาษณ์",
+  };
+
   return (
     <span
       className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${styles[status]}`}
     >
-      {status}
+      {labels[status]}
     </span>
   );
 }
