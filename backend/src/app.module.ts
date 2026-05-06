@@ -11,6 +11,7 @@ import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { ProfileModule } from './profile/profile.module';
 import { ApplicationModule } from './application/application.module';
 import { EmployeeModule } from './employee/employee.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EmployeeModule } from './employee/employee.module';
     ProfileModule,
     ApplicationModule,
     EmployeeModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

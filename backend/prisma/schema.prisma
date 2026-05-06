@@ -4,8 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
   moduleFormat = "commonjs"
 }
 
@@ -42,6 +41,8 @@ model User {
   applications Application[]
   employees    Employee[] @relation("CompanyEmployees")
   employed  Employee[] @relation("UserEmployment")
+  notifications        Notification[] @relation("UserNotifications")
+  sentNotifications    Notification[] @relation("SenderNotifications")
   @@map("users")
 }
 
@@ -172,4 +173,19 @@ model Application {
 
   @@unique([jobId, userId])
   @@map("applications")
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  senderId   String?
+  sender     User?    @relation("SenderNotifications", fields: [senderId], references: [id])
+
+  message    String
+  type       ApplicationStatus
+
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
