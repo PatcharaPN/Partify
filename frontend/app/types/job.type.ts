@@ -74,7 +74,15 @@ export interface User {
   lineId: string | null;
   role: "CANDIDATE" | "EMPLOYER" | "ADMIN";
   profile: Profile | null;
+  resume: Resume[];
 }
+export type Resume = {
+  id: string;
+  userId: string;
+  fileName?: string | null;
+  url: string;
+  createdAt: string;
+};
 export type Profile = {
   id: string;
   userId: string;

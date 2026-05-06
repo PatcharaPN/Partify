@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { jwtDecode } from "jwt-decode";
 import { useAppDispatch } from "@/app/lib/hooks";
-import { setUser, User } from "@/app/store/slices/authSlice";
+import { setUser } from "@/app/store/slices/authSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
 
 export default function CallbackPage() {

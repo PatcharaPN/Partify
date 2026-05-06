@@ -32,11 +32,12 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [phone, setPhone] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const avatarUrlRef = useRef("");
   const dispatch = useAppDispatch();
-  const { profile, fetchLoading, upsertLoading } = useAppSelector(
+  const { profile, fetchLoading } = useAppSelector(
     (state) => state.profileReducer,
   );
 
@@ -105,7 +106,25 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
     );
   };
+  const handleUploadResume = async (file: File) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axiosInstance.post("/resume/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res);
 
+      setResumeFile(file);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleSave = async () => {
     const finalAvatarUrl = avatarUrlRef.current || profile?.avatarUrl || "";
 
@@ -126,6 +145,7 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
       console.error("❌ Failed:", result.payload);
     }
   };
+  const handleRemoveResume = () => {};
   if (fetchLoading) {
     return <BuildProfileSkeleton />;
   }
@@ -136,6 +156,7 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
         name,
         phone,
         birthDate,
+        resumeFile,
         summary,
         skills: selectedSkills,
         experience: selectedExpereince,
@@ -146,6 +167,8 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
         experienceSearch,
       }}
       actions={{
+        uploadResume: handleUploadResume,
+        removeResume: handleRemoveResume,
         setName,
         setPhone,
         setBirthDate,

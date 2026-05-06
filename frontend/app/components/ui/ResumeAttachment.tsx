@@ -7,7 +7,8 @@ interface ResumeAttachmentProps {
 }
 
 export default function ResumeAttachment({ resumeUrl }: ResumeAttachmentProps) {
-  const filename = resumeUrl.split("/").pop() ?? "resume.pdf";
+  const fileName = resumeUrl;
+  console.log(resumeUrl);
 
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-[#2563EB]/40 hover:bg-blue-50/40 transition-all group">
@@ -28,7 +29,7 @@ export default function ResumeAttachment({ resumeUrl }: ResumeAttachmentProps) {
       {/* File info */}
       <div className="flex-1 min-w-0">
         <p className="m-0 text-[13px] font-medium text-gray-700 truncate">
-          {filename}
+          {fileName}
         </p>
         <p className="m-0 text-[11px] text-gray-400 mt-0.5">Resume / CV</p>
       </div>

@@ -12,6 +12,7 @@ import { ProfileModule } from './profile/profile.module';
 import { ApplicationModule } from './application/application.module';
 import { EmployeeModule } from './employee/employee.module';
 import { NotificationModule } from './notification/notification.module';
+import { ResumeModule } from './resume/resume.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { NotificationModule } from './notification/notification.module';
     ApplicationModule,
     EmployeeModule,
     NotificationModule,
+    ResumeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

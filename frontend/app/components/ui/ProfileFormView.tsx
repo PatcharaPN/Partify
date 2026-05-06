@@ -21,6 +21,8 @@ type ProfileFormActions = {
   setAvatarPreview: (url: string) => void;
   uploadAvatar: (file: File) => Promise<void>;
   save: () => Promise<void>;
+  uploadResume: (file: File) => Promise<void>;
+  removeResume: () => void;
 };
 
 type ProfileFormState = {
@@ -35,6 +37,9 @@ type ProfileFormState = {
   avatarPreview?: string;
   skillSearch: string;
   experienceSearch: string;
+  resumeFile?: File | null;
+  resumeName?: string;
+  resumeSize?: string;
 };
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -257,7 +262,6 @@ export default function ProfileForm({
                 placeholder="Write something about yourself..."
               />
             </div>
-
             {/* Top Skills */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h2 className="font-semibold text-gray-900 text-base mb-0.5">
@@ -330,9 +334,7 @@ export default function ProfileForm({
                 </div>
               )}
             </div>
-
             {/* Experience & Availability */}
-
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h2 className="font-semibold text-gray-900 text-base mb-0.5">
                 Top Skills
@@ -404,7 +406,6 @@ export default function ProfileForm({
                 </div>
               )}
             </div>
-
             {/* Weekly Availability */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-1">
@@ -443,35 +444,63 @@ export default function ProfileForm({
                   </div>
                 ))}
               </div>
-
-              {/* Work Hours & Timezone */}
-              <div className="grid grid-cols-2 gap-3">
-                {/* <div className="border border-gray-100 rounded-xl px-3 py-2.5 flex items-center gap-2 bg-gray-50">
-                  <Icon
-                    icon="mdi:clock-outline"
-                    className="text-gray-400 text-base"
-                  />
-                  <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
-                      Work Hours
-                    </p>
-                    <p className="text-sm font-medium text-gray-700">
-                      15 – 20 hours / week
-                    </p>
-                  </div>
-                </div> */}
-                {/* <div className="border border-gray-100 rounded-xl px-3 py-2.5 flex items-center gap-2 bg-gray-50">
-                  <Icon icon="mdi:earth" className="text-gray-400 text-base" />
-                  <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
-                      Timezone
-                    </p>
-                    <p className="text-sm font-medium text-gray-700">
-                      GMT -05:00 (EST)
-                    </p>
-                  </div>
-                </div> */}
+            </div>
+            {/* Resume upload */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="font-semibold text-gray-900 text-base">
+                  Resume Uploading
+                </h2>
               </div>
+              <p className="text-xs text-gray-400 mb-5">
+                Upload your resume to let employers know more about you
+              </p>
+
+              {/* Upload Area */}
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all">
+                <Icon
+                  icon="solar:upload-linear"
+                  className="w-6 h-6 text-gray-400 mb-2"
+                />
+                <span className="text-sm text-gray-500">Click to upload</span>
+                <span className="text-xs text-gray-400 mt-1">
+                  PDF, DOC up to 5MB
+                </span>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.doc,.docx"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    await actions.uploadResume(file);
+                  }}
+                />
+              </label>
+
+              {/* Uploaded file preview */}
+              {state.resumeFile && (
+                <div className="flex items-center gap-3 mt-4 p-3 bg-gray-50 rounded-xl">
+                  <Icon
+                    icon="solar:file-text-linear"
+                    className="w-5 h-5 text-gray-400 shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-700 truncate">
+                      {state.resumeFile.name}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {(state.resumeFile.size / 1024 / 1025).toFixed(1)} MB
+                    </p>
+                  </div>
+                  <button className="text-gray-400 hover:text-red-400 transition-colors">
+                    <Icon
+                      icon="solar:close-circle-linear"
+                      className="w-4 h-4"
+                    />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

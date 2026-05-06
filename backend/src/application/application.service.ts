@@ -26,12 +26,24 @@ export class ApplicationService {
     if (existing) {
       throw new Error('Already applied');
     }
-    return await this.prisma.application.create({
+
+    const application = await this.prisma.application.create({
       data: {
         jobId,
         userId,
       },
+      include: {
+        job: true,
+      },
     });
+
+    await this.notificationService.pushNotification(
+      `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.companyName} กรุณาตรวจสอบรายละเอียด`,
+      'PENDING',
+      application.job.companyId,
+      application.jobId,
+    );
+    return application;
   }
 
   async approveApplication(applicationId: string, employerId: string) {
@@ -84,6 +96,7 @@ export class ApplicationService {
               select: {
                 id: true,
                 profile: true,
+                resume: true,
               },
             },
           },
@@ -125,6 +138,7 @@ export class ApplicationService {
         user: {
           include: {
             profile: true,
+            resume: true,
           },
         },
         job: true,

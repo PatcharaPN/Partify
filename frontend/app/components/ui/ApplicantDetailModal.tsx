@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Application, ApplicationStatus } from "@/app/types/job.type";
 import ResumeAttachment from "./ResumeAttachment";
+import { motion } from "framer-motion";
 
 interface ApplicantDetailModalProps {
   applicants: Application;
@@ -48,6 +49,7 @@ export default function ApplicantDetailModal({
 }: ApplicantDetailModalProps) {
   const [status, setStatus] = useState<ApplicationStatus>(applicants.status);
   const profile = applicants.user?.profile;
+  const resume = applicants.user?.resume?.[0];
 
   const availability = profile?.availability ?? [];
   const shifts = profile?.shifts ?? [];
@@ -78,8 +80,11 @@ export default function ApplicantDetailModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/15 backdrop-blur-[5px]"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="relative w-full max-w-140 max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-        {/* ── Header ── */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        className="relative w-full max-w-140 max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+      >
         <div className="flex items-center justify-between gap-3 px-5 py-4 shrink-0">
           <div className="flex items-center gap-3">
             {profile?.avatarUrl ? (
@@ -109,7 +114,6 @@ export default function ApplicantDetailModal({
             >
               {cfg.label}
             </span>
-            {/* Outlined close — design system */}
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-lg border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center text-lg leading-none cursor-pointer"
@@ -119,7 +123,6 @@ export default function ApplicantDetailModal({
           </div>
         </div>
 
-        {/* ── Contact row ── */}
         <div className="flex flex-wrap gap-x-5 gap-y-1 px-5 py-3 border-b border-gray-100">
           {applicants.user?.email && (
             <span className="flex items-center gap-1.5 text-[13px] text-gray-500">
@@ -181,10 +184,8 @@ export default function ApplicantDetailModal({
           )}
         </div>
 
-        {/* ── Scrollable body ── */}
         <div className="overflow-y-auto flex-1">
           <div className="flex flex-col gap-5 px-5 py-4">
-            {/* Summary */}
             {profile?.summary && (
               <div className="bg-gray-50 rounded-xl px-4 py-3 border-l-[3px] border-[#2563EB]">
                 <p className="m-0 text-[13px] text-gray-600 leading-relaxed">
@@ -192,7 +193,6 @@ export default function ApplicantDetailModal({
                 </p>
               </div>
             )}
-            {/* Availability */}
             <div>
               <SectionLabel>วันที่ว่าง</SectionLabel>
               <div className="flex gap-1.5 flex-wrap">
@@ -214,7 +214,6 @@ export default function ApplicantDetailModal({
                 })}
               </div>
             </div>
-            {/* Shifts */}
             {shifts.length > 0 && (
               <div>
                 <SectionLabel>ช่วงเวลาที่ทำได้</SectionLabel>
@@ -230,7 +229,6 @@ export default function ApplicantDetailModal({
                 </div>
               </div>
             )}
-            {/* Skills */}
             {skills.length > 0 && (
               <div>
                 <SectionLabel>ทักษะ</SectionLabel>
@@ -246,7 +244,6 @@ export default function ApplicantDetailModal({
                 </div>
               </div>
             )}
-            {/* Experience */}
             {experience.length > 0 && (
               <div>
                 <SectionLabel>ประสบการณ์</SectionLabel>
@@ -263,15 +260,11 @@ export default function ApplicantDetailModal({
               </div>
             )}
             <SectionLabel>เรซูเม่ / CV</SectionLabel>
-            {profile?.resumeUrl && (
-              <ResumeAttachment resumeUrl={profile?.resumeUrl} />
-            )}
+            {resume?.fileName && <ResumeAttachment resumeUrl={resume?.url} />}
           </div>
         </div>
 
-        {/* ── Footer actions ── */}
         <div className="flex gap-2 px-5 py-3.5 border-t border-gray-100 bg-white shrink-0">
-          {/* Outlined / Reject */}
           <button
             onClick={() => handleStatusChange("REJECTED")}
             className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all border border-red-200 text-red-600
@@ -280,7 +273,6 @@ export default function ApplicantDetailModal({
             ไม่ผ่าน
           </button>
 
-          {/* Outlined / Interview — Tertiary #BC4800 */}
           <button
             onClick={() => handleStatusChange("INTERVIEW")}
             className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all border border-orange-300 text-[#BC4800]
@@ -289,7 +281,6 @@ export default function ApplicantDetailModal({
             นัดสัมภาษณ์
           </button>
 
-          {/* Primary / Accept */}
           <button
             onClick={() => handleStatusChange("ACCEPTED")}
             className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold cursor-pointer transition-all text-white
@@ -298,7 +289,7 @@ export default function ApplicantDetailModal({
             รับเข้าทำงาน
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

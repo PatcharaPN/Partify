@@ -41,6 +41,7 @@ model User {
   applications Application[]
   employees    Employee[] @relation("CompanyEmployees")
   employed  Employee[] @relation("UserEmployment")
+  resume    Resume[] 
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
   @@map("users")
@@ -192,4 +193,13 @@ model Notification {
   job   Job? @relation(fields: [jobId], references: [id])
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+
+model Resume {
+ id       String @id @default(uuid())
+ userId   String
+ fileName String?
+ url      String
+ createdAt DateTime @default(now())
+ user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
