@@ -43,13 +43,19 @@ export class JobsService {
         bookmarks: userId
           ? { where: { userId }, select: { id: true } }
           : { select: { id: true } },
+        ...(userId && {
+          applications: {
+            where: { userId },
+            select: { id: true },
+          },
+        }),
       },
     });
 
-    return jobs.map((job) => ({
+    return jobs.map(({ applications = [], bookmarks, ...job }) => ({
       ...job,
-      isBookmarked: job.bookmarks.length > 0,
-      bookmarks: undefined,
+      isBookmarked: bookmarks.length > 0,
+      isApplied: applications.length > 0,
     }));
   }
   async getJobsByID(jobId: string, user: any) {

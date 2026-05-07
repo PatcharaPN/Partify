@@ -454,30 +454,30 @@ export default function JobDetail() {
                   {appliedStatus === "PENDING" ? (
                     <button
                       disabled
-                      className="w-full bg-yellow-500 text-white py-2.5 rounded-xl"
+                      className="w-full bg-yellow-400/40 text-yellow-800 py-2.5 rounded-xl"
                     >
-                      Pending review
+                      รอการตอบรับ
                     </button>
                   ) : appliedStatus === "ACCEPTED" ? (
                     <button
                       disabled
-                      className="w-full bg-green-600 text-white py-2.5 rounded-xl"
+                      className="w-full bg-green-600/40 text-green-800 py-2.5 rounded-xl"
                     >
-                      Accepted
+                      ตอบรับแล้ว
                     </button>
                   ) : appliedStatus === "REJECTED" ? (
                     <button
                       onClick={() => setIsModalOpen(true)}
                       className="w-full bg-red-500 text-white py-2.5 rounded-xl"
                     >
-                      Apply again
+                      ยื่นสมัครอีกรอบ
                     </button>
                   ) : (
                     <button
                       onClick={() => setIsModalOpen(true)}
                       className="w-full bg-blue-600 text-white py-2.5 rounded-xl"
                     >
-                      Apply now
+                      ยื่นสมัคร
                     </button>
                   )}
                 </div>

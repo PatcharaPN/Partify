@@ -65,7 +65,7 @@ export const fetchApplicationStatus = createAsyncThunk(
   "application/status",
   async ({ jobId, userId }: { jobId: string; userId: string }) => {
     const res = await axiosInstance.get(
-      `/application/status?jobId=${jobId}&userId=${userId}`,
+      `/applications/status?jobId=${jobId}&userId=${userId}`,
     );
     return res.data?.status ?? null;
   },

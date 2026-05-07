@@ -49,7 +49,7 @@ export interface Job {
   // Relations
   skills: Skill[];
   applications: Application[];
-
+  isApplied: boolean;
   createdAt: string;
 }
 export interface Application {

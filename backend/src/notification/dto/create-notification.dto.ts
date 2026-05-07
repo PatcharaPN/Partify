@@ -10,5 +10,5 @@ export class CreateNotificationDto {
 
   @IsString()
   @IsOptional()
-  jobId: string;
+  jobId!: string;
 }

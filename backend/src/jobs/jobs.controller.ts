@@ -13,6 +13,7 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { JobOwnerGuard } from './jobs-owner.guard';
 import { AuthGuard } from '../auth/auth.guard';
+import { OptionalAuthGuard } from '../auth/optional-auth.guard';
 
 @Controller('jobs')
 export class JobsController {
@@ -22,10 +23,10 @@ export class JobsController {
   postJob(@Body() dto: CreateJobDto, @Req() req) {
     return this.jobsService.postJob(dto, req.user.sub);
   }
-
+  @UseGuards(OptionalAuthGuard)
   @Get()
   getJobs(@Req() req) {
-    return this.jobsService.getJobs();
+    return this.jobsService.getJobs(req.user?.sub);
   }
   @UseGuards(AuthGuard)
   @Get('/owner/:id')

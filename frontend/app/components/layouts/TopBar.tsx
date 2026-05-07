@@ -22,7 +22,7 @@ export default function TopBar() {
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-md bg-white px-2 py-3">
-      <div className="mx-auto flex items-center justify-between">
+      <div className="mx-auto grid grid-cols-3">
         <Link
           className="inline-block text-primary text-xl font-bold font-headline px-4 py-2"
           href="/"
@@ -30,7 +30,7 @@ export default function TopBar() {
           Partify
         </Link>
 
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center justify-center">
           <Link
             className={`${
               isActive("/jobs")
@@ -52,7 +52,7 @@ export default function TopBar() {
             แดชบอร์ด
           </Link>
         </nav>
-        <div className="flex items-center gap-5">
+        <div className="flex items-center justify-end gap-5">
           {" "}
           <div className="relative">
             <button
