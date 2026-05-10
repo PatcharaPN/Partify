@@ -110,10 +110,6 @@ export class CreateJobDto {
   @IsString()
   urgency?: string;
 
-  // Company
-  @IsString()
-  companyId!: string;
-
   @IsOptional()
   @IsString()
   companyName?: string;

@@ -83,6 +83,32 @@ export type Resume = {
   url: string;
   createdAt: string;
 };
+export type WorkModel = "onsite" | "hybrid" | "remote";
+
+export type PostJobFormData = {
+  title: string;
+
+  description: string;
+
+  jobType: string;
+
+  workStyle: WorkModel;
+
+  salaryNegotiable: boolean;
+
+  salaryMin?: string;
+  salaryMax?: string;
+
+  workingHours: string;
+  workingDays: string;
+
+  startDate: string;
+  closingDate: string;
+
+  location: string;
+
+  benefits: string[];
+};
 export type Profile = {
   id: string;
   userId: string;

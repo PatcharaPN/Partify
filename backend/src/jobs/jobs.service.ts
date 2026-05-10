@@ -13,16 +13,24 @@ export class JobsService {
   constructor(private readonly prisma: PrismaService) {}
   async postJob(dto: CreateJobDto, companyId: string) {
     const existing = await this.prisma.job.findFirst({
-      where: { title: dto.title, companyId },
+      where: {
+        title: dto.title,
+        companyId,
+      },
     });
+
     if (existing) {
       throw new BadRequestException('งานนี้มีอยู่ในระบบแล้ว');
     }
+
     const { skills, ...jobData } = dto;
+
     return this.prisma.job.create({
       data: {
         ...jobData,
+
         companyId,
+
         skills: skills?.length
           ? {
               create: skills.map((skill) => ({
@@ -31,6 +39,7 @@ export class JobsService {
             }
           : undefined,
       },
+
       include: {
         skills: true,
       },

@@ -1,6 +1,6 @@
 // store/slices/jobSlice.ts
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { Job } from "@/app/types/job.type";
+import { Job, PostJobFormData } from "@/app/types/job.type";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface JobState {
@@ -21,41 +21,78 @@ const initialState: JobState = {
   error: null,
 };
 
-export const fetchRecomandJob = createAsyncThunk(
-  "jobs/fetchRecomand",
-  async () => {
-    const res = await axiosInstance.get("/jobs/recommend");
-    return res.data;
+export const postJob = createAsyncThunk(
+  "jobs/postJob",
+  async (formData: any, thunkAPI) => {
+    try {
+      const res = await axiosInstance.post("/jobs/add", formData);
+
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to post job",
+      );
+    }
   },
 );
 
-export const fetchJobs = createAsyncThunk("jobs/fetchAll", async () => {
-  const token = localStorage.getItem("access_token");
-  const res = await axiosInstance.get("/jobs", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data;
-});
+export const fetchRecomandJob = createAsyncThunk(
+  "jobs/fetchRecomandJob",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get("/jobs/recommend");
 
-export const fetchJobById = createAsyncThunk("", async (jobId: string) => {
-  const token = localStorage.getItem("access_token");
-  const res = await axiosInstance.get(`/jobs/${jobId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  console.log(res.data);
-  return res.data;
-});
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch recommended jobs",
+      );
+    }
+  },
+);
+
+export const fetchJobs = createAsyncThunk(
+  "jobs/fetchAll",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get("/jobs");
+
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch jobs",
+      );
+    }
+  },
+);
+
+export const fetchJobById = createAsyncThunk(
+  "jobs/fetchById",
+  async (jobId: string, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(`/jobs/${jobId}`);
+
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch job",
+      );
+    }
+  },
+);
 
 export const fetchOwnerRelatedJobs = createAsyncThunk(
   "jobs/fetchOwner",
-  async (ownerId: string): Promise<Job[]> => {
-    const res = await axiosInstance.get(`/jobs/owner/${ownerId}`);
-    console.log("Fetched owner-related jobs:", res.data);
-    return res.data as Job[];
+  async (ownerId: string, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(`/jobs/owner/${ownerId}`);
+
+      return res.data as Job[];
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch owner jobs",
+      );
+    }
   },
 );
 
@@ -69,30 +106,37 @@ const jobSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
+
       .addCase(fetchJobs.fulfilled, (state, action: PayloadAction<Job[]>) => {
         state.isLoading = false;
         state.jobs = action.payload;
       })
+
       .addCase(fetchJobs.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message ?? "เกิดข้อผิดพลาด";
+        state.error = (action.payload as string) ?? "Failed to fetch jobs";
       })
-      .addCase(fetchJobById.fulfilled, (state, action: PayloadAction<Job>) => {
-        state.selectedJob = action.payload;
-        state.isLoading = false;
-      })
+
       .addCase(fetchJobById.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
+
+      .addCase(fetchJobById.fulfilled, (state, action: PayloadAction<Job>) => {
+        state.selectedJob = action.payload;
+        state.isLoading = false;
+      })
+
       .addCase(fetchJobById.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message ?? "เกิดข้อผิดพลาด";
+        state.error = (action.payload as string) ?? "Failed to fetch job";
       })
+
       .addCase(fetchOwnerRelatedJobs.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
+
       .addCase(
         fetchOwnerRelatedJobs.fulfilled,
         (state, action: PayloadAction<Job[]>) => {
@@ -100,24 +144,44 @@ const jobSlice = createSlice({
           state.employeeJob = action.payload;
         },
       )
+
       .addCase(fetchOwnerRelatedJobs.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message ?? "เกิดข้อผิดพลาด";
+        state.error =
+          (action.payload as string) ?? "Failed to fetch owner jobs";
       })
+
       .addCase(fetchRecomandJob.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
 
-      .addCase(fetchRecomandJob.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.recomandJobs = action.payload;
-      })
+      .addCase(
+        fetchRecomandJob.fulfilled,
+        (state, action: PayloadAction<Job[]>) => {
+          state.isLoading = false;
+          state.recomandJobs = action.payload;
+        },
+      )
 
       .addCase(fetchRecomandJob.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          action.error.message || "Failed to fetch recommended jobs";
+          (action.payload as string) ?? "Failed to fetch recommended jobs";
+      })
+
+      .addCase(postJob.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+
+      .addCase(postJob.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+
+      .addCase(postJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) ?? "Failed to post job";
       });
   },
 });
