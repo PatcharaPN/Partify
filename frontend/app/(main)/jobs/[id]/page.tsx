@@ -66,7 +66,7 @@ export default function JobDetail() {
           day: "numeric",
         })
       : null;
-  const hasCompanyProfile = !!selectedJob.companyProfileURL;
+  const hasCompanyProfile = !!selectedJob.company.companyProfileURL;
   return (
     <div className="flex justify-center bg-gray-50 min-h-screen">
       <main className="w-full max-w-5xl mt-10 mb-20 px-4">
@@ -374,20 +374,20 @@ export default function JobDetail() {
             {/* Company Card */}
             <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-3">
-                {selectedJob.companyImageURL ? (
+                {selectedJob.company.companyImageURL ? (
                   <img
-                    src={selectedJob.companyImageURL}
-                    alt={selectedJob.companyName}
+                    src={selectedJob.company.companyImageURL}
+                    alt={selectedJob.company.companyName}
                     className="w-10 h-10 rounded-lg object-cover shrink-0"
                   />
                 ) : (
                   <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
-                    {selectedJob.companyName?.charAt(0) ?? "C"}
+                    {selectedJob.company.companyName?.charAt(0) ?? "C"}
                   </div>
                 )}
                 <div>
                   <p className="font-bold text-gray-900 text-sm">
-                    {selectedJob.companyName}
+                    {selectedJob.company.companyName}
                   </p>
                   <p className="text-yellow-500 text-xs">
                     ★ 4.8 (2.4k reviews)

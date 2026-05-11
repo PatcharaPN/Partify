@@ -2,29 +2,6 @@ import { PostJobFormData } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-type WorkModel = "onsite" | "hybrid" | "remote";
-type JobType = "FULLTIME" | "PARTTIME" | "FREELANCE" | "INTERNSHIP";
-type ExperienceLevel = "ENTRY" | "JUNIOR" | "MID" | "SENIOR";
-type UrgencyLevel = "LOW" | "MEDIUM" | "HIGH";
-
-const CATEGORIES = [
-  "ร้านอาหาร & เครื่องดื่ม",
-  "ค้าปลีก & แฟชั่น",
-  "บริการลูกค้า",
-  "คลังสินค้า & โลจิสติกส์",
-  "IT & เทคโนโลยี",
-  "อื่นๆ",
-];
-
-const EDUCATION_LEVELS = [
-  { value: "NONE", label: "ไม่ระบุ" },
-  { value: "HIGH_SCHOOL", label: "มัธยมปลาย / ปวช." },
-  { value: "VOCATIONAL", label: "ปวส." },
-  { value: "BACHELOR", label: "ปริญญาตรี" },
-  { value: "MASTER", label: "ปริญญาโท" },
-  { value: "DOCTORAL", label: "ปริญญาเอก" },
-];
-
 type StepBasicInfoProps = {
   step: number;
   updateField: <K extends keyof PostJobFormData>(

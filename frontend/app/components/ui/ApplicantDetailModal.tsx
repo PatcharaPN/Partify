@@ -4,19 +4,13 @@ import { useState } from "react";
 import { Application, ApplicationStatus } from "@/app/types/job.type";
 import ResumeAttachment from "./ResumeAttachment";
 import { motion } from "framer-motion";
+import { SHIFT_LABEL } from "@/app/constants/jobLabels";
 
 interface ApplicantDetailModalProps {
   applicants: Application;
   onClose: () => void;
   onStatusChange?: (id: string, status: ApplicationStatus) => void;
 }
-
-const SHIFT_LABEL: Record<string, string> = {
-  MORNING: "เช้า",
-  AFTERNOON: "บ่าย",
-  EVENING: "เย็น",
-  NIGHT: "กลางคืน",
-};
 
 const DAY_SHORT = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
 const DAY_KEYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];

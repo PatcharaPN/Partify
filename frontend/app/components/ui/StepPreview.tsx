@@ -1,3 +1,4 @@
+import { SUGGESTED_BENEFITS } from "@/app/constants/jobLabels";
 import { PostJobFormData } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -10,17 +11,6 @@ type StepDetailsProps = {
   ) => void;
   form: PostJobFormData;
 };
-
-const SUGGESTED_BENEFITS = [
-  "ประกันสังคม",
-  "ค่าล่วงเวลา OT",
-  "อาหารกลางวัน",
-  "ยูนิฟอร์มฟรี",
-  "โบนัสประจำปี",
-  "วันหยุดพักร้อน",
-  "ค่าเดินทาง",
-  "ประกันสุขภาพ",
-];
 
 const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
   const benefits: string[] = form.benefits ?? [];

@@ -12,6 +12,7 @@ export interface Company {
   companySize?: string;
   createdAt?: string;
   updatedAt?: string;
+  companyProfileURL?: string;
 }
 export interface Job {
   id: string;

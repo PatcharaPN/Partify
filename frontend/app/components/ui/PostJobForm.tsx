@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@reduxjs/toolkit/query";
 import { postJob } from "@/app/store/slices/jobSlice";
 
-const STEP_LABELS = ["ข้อมูลเบื้องต้น", "รายละเอียด", "ตรวจสอบ"];
 const PostJobForm = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();

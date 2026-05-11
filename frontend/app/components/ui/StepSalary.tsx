@@ -1,3 +1,4 @@
+import { CURRENCIES, WORKING_DAYS_OPTIONS } from "@/app/constants/jobLabels";
 import { PostJobFormData } from "@/app/types/job.type";
 import { motion } from "framer-motion";
 
@@ -9,20 +10,6 @@ type StepSalaryProps = {
   ) => void;
   form: PostJobFormData;
 };
-
-const CURRENCIES = [
-  { value: "THB", label: "THB — บาท" },
-  { value: "USD", label: "USD — ดอลลาร์" },
-  { value: "JPY", label: "JPY — เยน" },
-];
-
-const WORKING_DAYS_OPTIONS = [
-  "จันทร์–ศุกร์",
-  "จันทร์–เสาร์",
-  "อังคาร–อาทิตย์",
-  "ทุกวัน",
-  "ยืดหยุ่น",
-];
 
 const StepSalary = ({ form, step, updateField }: StepSalaryProps) => {
   return (

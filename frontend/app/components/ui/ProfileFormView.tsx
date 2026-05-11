@@ -96,11 +96,9 @@ export default function ProfileForm({
       !state.skills.includes(s) &&
       s.toLowerCase().includes(state.skillSearch.toLowerCase()),
   );
-  console.log(state.company);
 
   return (
     <div className="min-h-screen bg-[#F5F6FA] font-sans">
-      {/* Main Content */}
       <main className="max-w-3xl mx-auto px-4 py-10">
         {mode === "edit" ? (
           <div>
@@ -135,7 +133,6 @@ export default function ProfileForm({
         <div className="grid grid-cols-[200px_1fr] gap-6">
           {/* Left Column */}
           <div className="flex flex-col gap-4">
-            {/* Photo Upload Card */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col items-center gap-3 shadow-sm">
               <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-200">
                 <img
@@ -166,13 +163,8 @@ export default function ProfileForm({
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-
                     const previewUrl = URL.createObjectURL(file);
-
-                    // 1. set preview
                     actions.setAvatarPreview(previewUrl);
-
-                    // 2. upload (ถ้ามีจริงใน actions)
                     await actions.uploadAvatar(file);
                   }}
                 />
@@ -182,8 +174,6 @@ export default function ProfileForm({
                 </span>
               </label>
             </div>
-
-            {/* Expert Tip */}
             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 shadow-sm">
               <div className="flex items-center gap-1.5 mb-2">
                 <Icon
@@ -208,7 +198,6 @@ export default function ProfileForm({
                 ข้อมูลส่วนตัว
               </h2>
               <div className="flex flex-col gap-4">
-                {/* Name */}
                 <div>
                   <label className="text-xs font-semibold text-gray-500 mb-1 block">
                     ชื่อ-นามสกุล <span className="text-red-400">*</span>
@@ -222,7 +211,6 @@ export default function ProfileForm({
                   />
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="text-xs font-semibold text-gray-500 mb-1 block">
                     เบอร์โทรศัพท์
@@ -236,7 +224,6 @@ export default function ProfileForm({
                   />
                 </div>
 
-                {/* Birth Date */}
                 <div>
                   <label className="text-xs font-semibold text-gray-500 mb-1 block">
                     วันเกิด
@@ -250,7 +237,6 @@ export default function ProfileForm({
                 </div>
               </div>
             </div>
-            {/* Professional Summary */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h2 className="font-semibold text-gray-900 text-base mb-1">
                 Professional Summary
@@ -269,7 +255,6 @@ export default function ProfileForm({
             </div>
             {state.role === "EMPLOYER" && (
               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="font-semibold text-gray-900 text-base">
@@ -285,7 +270,6 @@ export default function ProfileForm({
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  {/* Company Logo */}
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-[10px] border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
                       {state.company.companyImageURL ? (
@@ -458,7 +442,6 @@ export default function ProfileForm({
                   ))}
               </div>
 
-              {/* Search */}
               <div className="relative">
                 <Icon
                   icon="mdi:magnify"
@@ -473,7 +456,6 @@ export default function ProfileForm({
                 />
               </div>
 
-              {/* Search results */}
               {state.experienceSearch && filteredExperience.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {filteredExperience.map((exp) => (
@@ -493,7 +475,6 @@ export default function ProfileForm({
                 </div>
               )}
             </div>
-            {/* Experience & Availability */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h2 className="font-semibold text-gray-900 text-base mb-0.5">
                 Top Skills
@@ -502,7 +483,6 @@ export default function ProfileForm({
                 Select up to 6 skills that define your core expertise.
               </p>
 
-              {/* Selected Skills */}
               <div className="flex flex-wrap gap-2 mb-3">
                 {state.skills.map((skill) => (
                   <button
@@ -530,7 +510,6 @@ export default function ProfileForm({
                   ))}
               </div>
 
-              {/* Search */}
               <div className="relative">
                 <Icon
                   icon="mdi:magnify"
@@ -545,7 +524,6 @@ export default function ProfileForm({
                 />
               </div>
 
-              {/* Search results */}
               {state.skillSearch && filteredSkills.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {filteredSkills.map((skill) => (
@@ -565,7 +543,6 @@ export default function ProfileForm({
                 </div>
               )}
             </div>
-            {/* Weekly Availability */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="font-semibold text-gray-900 text-base">
@@ -579,7 +556,6 @@ export default function ProfileForm({
                 When are you typically available for assignments?
               </p>
 
-              {/* Day toggles */}
               <div className="flex justify-between mb-5">
                 {DAYS.map((day, i) => (
                   <div key={day} className="flex flex-col items-center gap-1.5">
@@ -604,7 +580,6 @@ export default function ProfileForm({
                 ))}
               </div>
             </div>
-            {/* Resume upload */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="font-semibold text-gray-900 text-base">
@@ -615,7 +590,6 @@ export default function ProfileForm({
                 Upload your resume to let employers know more about you
               </p>
 
-              {/* Upload Area */}
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all">
                 <Icon
                   icon="solar:upload-linear"
@@ -637,7 +611,6 @@ export default function ProfileForm({
                 />
               </label>
 
-              {/* Uploaded file preview */}
               {state.resumeFile && (
                 <div className="flex items-center gap-3 mt-4 p-3 bg-gray-50 rounded-xl">
                   <Icon

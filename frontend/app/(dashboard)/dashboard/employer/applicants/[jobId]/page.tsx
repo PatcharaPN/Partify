@@ -10,32 +10,13 @@ import { Application, ApplicationStatus } from "@/app/types/job.type";
 import { axiosInstance } from "@/app/lib/axiosInstance";
 import PopupContainer from "@/app/components/ui/PopupContainer";
 import { PopupState } from "@/app/types/ui.type";
+import { usePagination } from "@/app/hooks/usePagination";
 
 export default function ApplicantsPage() {
   const params = useParams();
   const jobId = params.jobId as string;
   const { jobDetail, approveApplication, totalApplicants } =
     useJobApplications(jobId);
-  const [view, setView] = useState<"list" | "grid">("list");
-  const [activeFilter, setActiveFilter] = useState("All Statuses");
-  const [loadingState, setLoadingState] = useState<PopupState | null>(null);
-  const [selectedApplicant, setSelectedApplicant] =
-    useState<Application | null>(null);
-  const now = new Date();
-  const last24hr = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
-  const totalPages = Math.max(1, Math.ceil(totalApplicants / pageSize));
-  const start = (currentPage - 1) * pageSize + 1;
-  const end = Math.min(currentPage * pageSize, totalApplicants);
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
   const applications = jobDetail?.applications ?? [];
   const sorted = [...applications]
     .filter((a) => a.status === "PENDING")
@@ -43,16 +24,24 @@ export default function ApplicantsPage() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-  const paginatedApplicants = sorted.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [totalPages]);
+  const [view, setView] = useState<"list" | "grid">("list");
+  const [activeFilter, setActiveFilter] = useState("All Statuses");
+  const [loadingState, setLoadingState] = useState<PopupState | null>(null);
+  const [selectedApplicant, setSelectedApplicant] =
+    useState<Application | null>(null);
+  const pageSize = 8;
+  const {
+    currentPage,
+    paginatedItems,
+    setCurrentPage,
+    handlePrev,
+    handleNext,
+    totalPages,
+    end,
+    start,
+  } = usePagination(sorted, pageSize);
+  const now = new Date();
+  const last24hr = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
   const newCandidate = applications.filter(
     (c) => new Date(c.createdAt) >= last24hr,
@@ -201,7 +190,7 @@ export default function ApplicantsPage() {
             ))}
           </div>{" "}
           <div className="flex flex-col gap-2.5">
-            {paginatedApplicants.map((c) => {
+            {paginatedItems.map((c) => {
               const skills = c.user?.profile?.skills || [];
               const shown = skills.slice(0, 2);
               const remaining = skills.length - 2;
