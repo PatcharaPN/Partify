@@ -1,7 +1,7 @@
 "use client";
 
 import { EXPERIENCE_SKILL_MAP } from "@/app/constants/skillOption";
-import { Profile } from "@/app/types/job.type";
+import { Company, Profile } from "@/app/types/job.type";
 
 import { Icon } from "@iconify/react";
 
@@ -23,6 +23,8 @@ type ProfileFormActions = {
   save: () => Promise<void>;
   uploadResume: (file: File) => Promise<void>;
   removeResume: () => void;
+  uploadCompanyImage: (file: File) => Promise<void>;
+  setCompanyState: React.Dispatch<React.SetStateAction<Company>>;
 };
 
 type ProfileFormState = {
@@ -40,6 +42,8 @@ type ProfileFormState = {
   resumeFile?: File | null;
   resumeName?: string;
   resumeSize?: string;
+  role?: "CANDIDATE" | "EMPLOYER" | "ADMIN";
+  company: Company | any;
 };
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -92,6 +96,7 @@ export default function ProfileForm({
       !state.skills.includes(s) &&
       s.toLowerCase().includes(state.skillSearch.toLowerCase()),
   );
+  console.log(state.company);
 
   return (
     <div className="min-h-screen bg-[#F5F6FA] font-sans">
@@ -262,7 +267,162 @@ export default function ProfileForm({
                 placeholder="Write something about yourself..."
               />
             </div>
-            {/* Top Skills */}
+            {state.role === "EMPLOYER" && (
+              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="font-semibold text-gray-900 text-base">
+                      ข้อมูลบริษัท
+                    </h2>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      ข้อมูลนี้จะแสดงในประกาศรับสมัครงานของคุณ
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest border border-blue-200 bg-blue-50 px-2 py-0.5 rounded-full">
+                    Employer
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  {/* Company Logo */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-[10px] border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+                      {state.company.companyImageURL ? (
+                        <img
+                          src={state.company.companyImageURL}
+                          alt="company logo"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Icon
+                          icon="mdi:office-building-outline"
+                          className="w-6 h-6 text-gray-300"
+                        />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-700 mb-1">
+                        โลโก้บริษัท
+                      </p>
+                      <label className="cursor-pointer inline-block">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const preview = URL.createObjectURL(file);
+                            actions.setCompanyState((prev) => ({
+                              ...prev,
+                              companyImageURL: preview,
+                            }));
+                            await actions.uploadCompanyImage(file);
+                          }}
+                        />
+                        <span className="text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition">
+                          อัปโหลดโลโก้
+                        </span>
+                      </label>
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        PNG, JPG ขนาดไม่เกิน 2MB
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 mb-1 block">
+                      ชื่อบริษัท <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={state.company.companyName ?? ""}
+                      onChange={(e) =>
+                        actions.setCompanyState((prev) => ({
+                          ...prev,
+                          companyName: e.target.value,
+                        }))
+                      }
+                      placeholder="เช่น The Coffee Lab Co., Ltd."
+                      className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 mb-2 block">
+                      ขนาดบริษัท
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {["1–10", "11–50", "51–200", "200+"].map((size) => (
+                        <button
+                          key={size}
+                          onClick={() =>
+                            actions.setCompanyState((prev) => ({
+                              ...prev,
+                              companySize: size,
+                            }))
+                          }
+                          className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all ${
+                            state.company.companySize === size
+                              ? "bg-blue-50 text-blue-600 border-blue-200"
+                              : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          {size} คน
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 mb-1 block">
+                      เกี่ยวกับบริษัท
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={state.company.companyBio ?? ""}
+                      onChange={(e) =>
+                        actions.setCompanyState((prev) => ({
+                          ...prev,
+                          companyBio: e.target.value,
+                        }))
+                      }
+                      placeholder="แนะนำบริษัทของคุณสั้นๆ เช่น ประเภทธุรกิจ บรรยากาศการทำงาน..."
+                      className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition resize-none"
+                    />
+                  </div>
+
+                  <div className="flex gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3.5 py-2.5">
+                    <Icon
+                      icon="mdi:alert-circle-outline"
+                      className="w-4 h-4 text-amber-500 shrink-0 mt-0.5"
+                    />
+                    <p className="text-xs text-amber-700 leading-relaxed">
+                      ต้องกรอก <span className="font-semibold">ชื่อบริษัท</span>{" "}
+                      ก่อนถึงจะลงประกาศงานได้
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {state.role !== "EMPLOYER" && (
+              <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-200 p-5 flex items-center gap-3 opacity-60">
+                <Icon
+                  icon="mdi:lock-outline"
+                  className="w-5 h-5 text-gray-400 shrink-0"
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-500">
+                    ข้อมูลบริษัท
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    เฉพาะบัญชี Employer เท่านั้น
+                  </p>
+                </div>
+              </div>
+            )}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h2 className="font-semibold text-gray-900 text-base mb-0.5">
                 Experiences
@@ -271,7 +431,6 @@ export default function ProfileForm({
                 Select up to 6 Job that define your core expertise.
               </p>
 
-              {/* Selected Skills */}
               <div className="flex flex-wrap gap-2 mb-3">
                 {state.experience.map((skill) => (
                   <button

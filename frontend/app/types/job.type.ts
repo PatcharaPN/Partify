@@ -3,7 +3,16 @@ export interface Skill {
   name: string;
   jobId: string;
 }
-
+export interface Company {
+  id?: string;
+  companyName: string;
+  userId?: string;
+  companyImageURL?: string;
+  companyBio?: string;
+  companySize?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 export interface Job {
   id: string;
   isOwner: boolean;
@@ -13,13 +22,11 @@ export interface Job {
   responsibilities?: string;
   qualifications?: string;
 
-  // Salary
   salaryMin?: number;
   salaryMax?: number;
   salaryNegotiable: boolean;
   currency?: string;
   isBookmarked?: boolean;
-  // Job Info
   jobType?: string;
   workStyle?: string;
   experienceLevel?: string;
@@ -27,26 +34,18 @@ export interface Job {
   educationLevel?: string;
   positions: number;
 
-  // Schedule
   workingHours?: string;
   workingDays?: string;
   startDate?: string;
   closingDate?: string;
 
-  // Benefits
   benefits: string[];
 
-  // Location
   location?: string;
   urgency?: string;
 
-  // Company
-  companyId: string;
-  companyName?: string;
-  companyImageURL?: string;
+  company: Company;
   overviewPictureURL?: string[];
-  companyProfileURL: string;
-  // Relations
   skills: Skill[];
   applications: Application[];
   isApplied: boolean;
@@ -73,6 +72,8 @@ export interface User {
   email: string | null;
   lineId: string | null;
   role: "CANDIDATE" | "EMPLOYER" | "ADMIN";
+  companyId: string;
+  company: Company;
   profile: Profile | null;
   resume: Resume[];
 }
@@ -87,26 +88,31 @@ export type WorkModel = "onsite" | "hybrid" | "remote";
 
 export type PostJobFormData = {
   title: string;
-
   description: string;
+  responsibilities?: string;
+  qualifications?: string;
 
+  category?: string;
   jobType: string;
-
   workStyle: WorkModel;
-
-  salaryNegotiable: boolean;
+  experienceLevel?: string;
+  experienceYears?: number;
+  educationLevel?: string;
+  positions?: number;
+  urgency?: string;
+  status?: string;
 
   salaryMin?: string;
   salaryMax?: string;
+  salaryNegotiable: boolean;
+  currency?: string;
 
   workingHours: string;
   workingDays: string;
-
   startDate: string;
   closingDate: string;
 
   location: string;
-
   benefits: string[];
 };
 export type Profile = {

@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@reduxjs/toolkit/query";
 import { postJob } from "@/app/store/slices/jobSlice";
 
-const STEP_LABELS = ["ข้อมูลเบื้องต้น", "รายละเอียด", "เงื่อนไข", "ตรวจสอบ"];
+const STEP_LABELS = ["ข้อมูลเบื้องต้น", "รายละเอียด", "ตรวจสอบ"];
 const PostJobForm = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
@@ -98,20 +98,21 @@ const PostJobForm = () => {
         <div className="px-6 py-4 border-b border-neutral-100">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-medium tracking-wide text-blue-600 uppercase">
-              ขั้นตอนที่ {step} จาก 4 — {STEP_LABELS[step - 1]}
+              ขั้นตอนที่ {step} จาก {STEP_LABELS.length} —{" "}
+              {STEP_LABELS[step - 1]}
             </span>
             <span className="text-xs text-neutral-400">
-              {(step / 4) * 100}%
+              {Math.round((step / STEP_LABELS.length) * 100)}%
             </span>
           </div>
           <div className="h-0.5 bg-neutral-100 rounded-full overflow-hidden">
             <div
-              style={{ width: `${(step / 4) * 100}%` }}
+              style={{ width: `${(step / STEP_LABELS.length) * 100}%` }}
               className="h-full bg-blue-600 rounded-full transition-all duration-300"
             />
           </div>
           <div className="flex gap-1.5 mt-2">
-            {[0, 1, 2, 3].map((i) => (
+            {[0, 1, 2].map((i) => (
               <div
                 key={i}
                 className={`flex-1 h-0.5 rounded-full ${i === 0 ? "bg-blue-600" : "bg-neutral-100"}`}
@@ -129,9 +130,7 @@ const PostJobForm = () => {
             <StepSalary step={step} updateField={updateField} form={form} />
           )}
 
-          {step === 3 && (
-            <StepConditions step={step} updateField={updateField} form={form} />
-          )}
+          {step === 3 && <StepConditions step={step} form={form} />}
         </AnimatePresence>
 
         {/* Footer */}

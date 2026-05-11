@@ -34,18 +34,18 @@ model User {
   role        Role     @default(CANDIDATE)
   createdAt   DateTime @default(now())
   accounts    Account[]
-
+  
   profile     Profile?
   bookmarks   Bookmark[]  
-  jobs        Job[]        @relation("EmployerJobs")
   applications Application[]
-  employees    Employee[] @relation("CompanyEmployees")
   employed  Employee[] @relation("UserEmployment")
-  resume    Resume[] 
+  resume    Resume[]  
+  company   Company?
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
   @@map("users")
 }
+
 
 model Account {
   id                String @id @default(uuid())
@@ -113,11 +113,9 @@ model Job {
   location          String?
   urgency           String?
   createdAt         DateTime  @default(now())
-  
+
   companyId         String
-  company           User      @relation("EmployerJobs", fields: [companyId], references: [id])
-  companyImageURL   String?
-  companyName       String?
+  company   Company @relation(fields: [companyId],references: [id])
   employees Employee[]
   applications      Application[]
   notifications Notification[]
@@ -149,16 +147,19 @@ model JobSkill {
 
 model Employee {
   id        String   @id @default(uuid())
-  userId    String
-  companyId String
-  jobId     String?
-
+  
   hiredAt   DateTime @default(now())
-  status    String?  // ACTIVE / RESIGNED / TERMINATED
+  status    String?
 
+  userId    String
   user      User @relation("UserEmployment",fields: [userId], references: [id], onDelete: Cascade)
-  company   User @relation("CompanyEmployees", fields: [companyId], references: [id])
+ 
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  
+  jobId     String?
   job       Job? @relation(fields: [jobId], references: [id])
+
 
   @@unique([userId, companyId])
   @@map("employees")
@@ -202,4 +203,18 @@ model Resume {
  url      String
  createdAt DateTime @default(now())
  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Company {
+  id                String @id @default(uuid())
+  companyName       String
+  userId            String @unique
+  companyImageURL   String?
+  companyBio        String?
+  companySize       String?
+  createdAt         DateTime @default(now()) 
+  updatedAt         DateTime @updatedAt 
+  jobs              Job[]
+  employees         Employee[]
+  user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  @@map("companies")
 }

@@ -31,9 +31,13 @@ export class NotificationService {
         jobId: true,
         type: true,
         job: {
-          select: {
-            companyName: true,
-            companyImageURL: true,
+          include: {
+            company: {
+              select: {
+                companyName: true,
+                companyImageURL: true,
+              },
+            },
           },
         },
       },

@@ -7,8 +7,8 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { BookmarksService } from './bookmarks.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('bookmarks')

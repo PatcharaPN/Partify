@@ -33,12 +33,16 @@ export class ApplicationService {
         userId,
       },
       include: {
-        job: true,
+        job: {
+          include: {
+            company: true,
+          },
+        },
       },
     });
 
     await this.notificationService.pushNotification(
-      `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.companyName} กรุณาตรวจสอบรายละเอียด`,
+      `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.company} กรุณาตรวจสอบรายละเอียด`,
       'PENDING',
       application.job.companyId,
       application.jobId,
@@ -78,7 +82,7 @@ export class ApplicationService {
             email: true,
             password: true,
           },
-          include: { profile: true, jobs: true },
+          include: { profile: true, company: true },
         },
       },
       orderBy: {

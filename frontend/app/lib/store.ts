@@ -3,9 +3,16 @@ import AuthReducer from "../store/slices/authSlice";
 import jobReducer from "../store/slices/jobSlice";
 import profileReducer from "../store/slices/profileSlice";
 import ApplicationReducer from "../store/slices/applicationSlice";
+import CompanyReducer from "../store/slices/companySlice";
 export const makeStore = () => {
   return configureStore({
-    reducer: { AuthReducer, jobReducer, profileReducer, ApplicationReducer },
+    reducer: {
+      AuthReducer,
+      jobReducer,
+      profileReducer,
+      CompanyReducer,
+      ApplicationReducer,
+    },
   });
 };
 

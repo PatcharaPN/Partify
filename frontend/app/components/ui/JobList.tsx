@@ -12,8 +12,8 @@ const JobList = ({ jobs }: JobListProps) => {
       <div className="bg-white border border-neutral-200/70 rounded-2xl p-4 flex flex-col gap-3 hover:border-neutral-300 hover:bg-neutral-50/50 transition-all">
         <div className="flex gap-3 items-start">
           <img
-            src={jobs.companyImageURL ?? ""}
-            alt={jobs.companyName ?? ""}
+            src={jobs.company.companyImageURL ?? ""}
+            alt={jobs.company.companyName ?? ""}
             className="w-11 h-11 rounded-[10px] object-cover border border-neutral-100 shrink-0 bg-neutral-50"
           />
           <div className="min-w-0 flex-1">
@@ -32,7 +32,7 @@ const JobList = ({ jobs }: JobListProps) => {
                   icon="mingcute:building-2-line"
                   className="w-3 h-3 shrink-0"
                 />
-                {jobs.companyName}
+                {jobs.company.companyName}
               </span>
               <span className="flex items-center gap-1 text-xs text-neutral-500">
                 <Icon

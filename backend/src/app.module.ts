@@ -13,6 +13,7 @@ import { ApplicationModule } from './application/application.module';
 import { EmployeeModule } from './employee/employee.module';
 import { NotificationModule } from './notification/notification.module';
 import { ResumeModule } from './resume/resume.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ResumeModule } from './resume/resume.module';
     EmployeeModule,
     NotificationModule,
     ResumeModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
