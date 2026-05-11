@@ -79,10 +79,10 @@ const PostJobForm = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden border border-neutral-200/60">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4">
+      <div className="bg-white rounded-2xl w-full max-w-lg flex flex-col max-h-[85vh] border border-neutral-200/60">
         {/* Header */}
-        <div className="flex items-start justify-between px-6 py-5 border-b border-neutral-100">
+        <div className="flex items-start justify-between px-6 py-5 border-b border-neutral-100 shrink-0">
           <h2 className="text-lg font-semibold text-gray-900">
             ลงประกาศงานพาร์ทไทม์
           </h2>
@@ -95,7 +95,7 @@ const PostJobForm = () => {
         </div>
 
         {/* Progress */}
-        <div className="px-6 py-4 border-b border-neutral-100">
+        <div className="px-6 py-4 border-b border-neutral-100 shrink-0">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-medium tracking-wide text-blue-600 uppercase">
               ขั้นตอนที่ {step} จาก {STEP_LABELS.length} —{" "}
@@ -120,19 +120,22 @@ const PostJobForm = () => {
             ))}
           </div>
         </div>
+        <div className="overflow-y-auto overflow-x-hidden flex-1">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+              <StepBasicInfo
+                step={step}
+                updateField={updateField}
+                form={form}
+              />
+            )}
+            {step === 2 && (
+              <StepSalary step={step} updateField={updateField} form={form} />
+            )}
 
-        {/* Body */}
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <StepBasicInfo step={step} updateField={updateField} form={form} />
-          )}
-          {step === 2 && (
-            <StepSalary step={step} updateField={updateField} form={form} />
-          )}
-
-          {step === 3 && <StepConditions step={step} form={form} />}
-        </AnimatePresence>
-
+            {step === 3 && <StepConditions step={step} form={form} />}
+          </AnimatePresence>
+        </div>
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-neutral-100">
           <button className="text-sm font-medium text-neutral-400 hover:text-neutral-600 transition-colors">
