@@ -117,12 +117,6 @@ const PersonalInfoPage = () => {
 
       <div className="flex justify-end gap-2">
         <button
-          onClick={handleCancel}
-          className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-        >
-          ยกเลิก
-        </button>
-        <button
           onClick={handleSave}
           disabled={!name.trim()}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
