@@ -1,4 +1,6 @@
-import { PostJobFormData } from "@/app/types/job.type";
+import { CATEGORIES, EDUCATION_LEVELS } from "@/app/constants/jobLabels";
+import { PostJobFormData, WorkModel } from "@/app/types/job.type";
+import { ExperienceLevel, JobType, UrgencyLevel } from "@/app/types/ui.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 

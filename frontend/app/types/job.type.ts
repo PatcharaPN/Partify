@@ -11,6 +11,7 @@ export interface Company {
   companyBio?: string;
   companySize?: string;
   createdAt?: string;
+  location?: string;
   updatedAt?: string;
   companyProfileURL?: string;
 }

@@ -88,7 +88,7 @@ model Job {
   description       String
   responsibilities  String?
   qualifications    String?
-
+  category          String?
   salaryMin         Int?
   salaryMax         Int?
   salaryNegotiable  Boolean   @default(false)

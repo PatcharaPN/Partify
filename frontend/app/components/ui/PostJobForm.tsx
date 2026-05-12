@@ -11,6 +11,7 @@ import StepConditions from "./StepWorkInfo";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@reduxjs/toolkit/query";
 import { postJob } from "@/app/store/slices/jobSlice";
+import { STEP_LABELS } from "@/app/constants/jobLabels";
 
 const PostJobForm = () => {
   const [step, setStep] = useState(1);
@@ -21,27 +22,17 @@ const PostJobForm = () => {
 
   const [form, setForm] = useState<PostJobFormData>({
     title: "",
-
     description: "",
-
     jobType: "",
-
     workStyle: "onsite",
-
     salaryNegotiable: false,
-
     salaryMin: "",
     salaryMax: "",
-
     workingHours: "",
     workingDays: "",
-
     benefits: [],
-
     closingDate: "",
-
     location: "",
-
     startDate: "",
   });
   const updateField = <K extends keyof typeof form>(
@@ -78,7 +69,7 @@ const PostJobForm = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4">
+    <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl w-full max-w-lg flex flex-col max-h-[85vh] border border-neutral-200/60">
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-5 border-b border-neutral-100 shrink-0">

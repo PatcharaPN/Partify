@@ -11,16 +11,15 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class JobsService {
   constructor(private readonly prisma: PrismaService) {}
-  async postJob(dto: CreateJobDto, companyId: string) {
-    const existing = await this.prisma.job.findFirst({
+  async postJob(dto: CreateJobDto, userId: string) {
+    const company = await this.prisma.company.findFirst({
       where: {
-        title: dto.title,
-        companyId,
+        userId: userId,
       },
     });
 
-    if (existing) {
-      throw new BadRequestException('งานนี้มีอยู่ในระบบแล้ว');
+    if (!company) {
+      throw new BadRequestException('Employer must create company first');
     }
 
     const { skills, ...jobData } = dto;
@@ -29,7 +28,7 @@ export class JobsService {
       data: {
         ...jobData,
 
-        companyId,
+        companyId: company.id,
 
         skills: skills?.length
           ? {
@@ -49,6 +48,7 @@ export class JobsService {
     const jobs = await this.prisma.job.findMany({
       include: {
         skills: true,
+        company: true,
         bookmarks: userId
           ? { where: { userId }, select: { id: true } }
           : { select: { id: true } },

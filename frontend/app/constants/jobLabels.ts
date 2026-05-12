@@ -1,3 +1,5 @@
+import { Company } from "../types/job.type";
+
 export const JOB_TYPE_LABELS: Record<string, { label: string; color: string }> =
   {
     FULLTIME: {
@@ -60,11 +62,6 @@ export const EDUCATION_LEVELS = [
   { value: "DOCTORAL", label: "ปริญญาเอก" },
 ];
 export const STEP_LABELS = ["ข้อมูลเบื้องต้น", "รายละเอียด", "ตรวจสอบ"];
-
-export type WorkModel = "onsite" | "hybrid" | "remote";
-export type JobType = "FULLTIME" | "PARTTIME" | "FREELANCE" | "INTERNSHIP";
-export type ExperienceLevel = "ENTRY" | "JUNIOR" | "MID" | "SENIOR";
-export type UrgencyLevel = "LOW" | "MEDIUM" | "HIGH";
 
 export const SHIFT_LABEL: Record<string, string> = {
   MORNING: "เช้า",

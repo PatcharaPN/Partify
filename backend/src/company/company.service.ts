@@ -63,6 +63,7 @@ export class CompanyService {
           userId,
         },
         select: {
+          id: true,
           companyBio: true,
           companyImageURL: true,
           companyName: true,

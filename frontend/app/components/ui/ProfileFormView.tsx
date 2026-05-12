@@ -4,48 +4,15 @@ import { EXPERIENCE_SKILL_MAP } from "@/app/constants/skillOption";
 import { Company, Profile } from "@/app/types/job.type";
 
 import { Icon } from "@iconify/react";
+import PersonalInfoSection from "./PersonalInfoSection";
 
-type ProfileFormActions = {
-  setName: (v: string) => void;
-  setPhone: (v: string) => void;
-  setBirthDate: (v: string) => void;
-  setSummary: (v: string) => void;
-  setExperience: (v: string[]) => void;
-  setSkills: (v: string[]) => void;
-  setAvailability: (v: string[]) => void;
-  toggleSkill: (v: string) => void;
-  toggleExperience: (v: string) => void;
-  toggleDay: (v: string) => void;
-  setSkillSearch: (v: string) => void;
-  setExperienceSearch: (v: string) => void;
-  setAvatarPreview: (url: string) => void;
-  uploadAvatar: (file: File) => Promise<void>;
-  save: () => Promise<void>;
-  uploadResume: (file: File) => Promise<void>;
-  removeResume: () => void;
-  uploadCompanyImage: (file: File) => Promise<void>;
-  setCompanyState: React.Dispatch<React.SetStateAction<Company>>;
-};
-
-type ProfileFormState = {
-  name: string;
-  phone: string;
-  birthDate: string;
-  summary: string;
-  skills: string[];
-  experience: string[];
-  availability: string[];
-  avatarUrl?: string;
-  avatarPreview?: string;
-  skillSearch: string;
-  experienceSearch: string;
-  resumeFile?: File | null;
-  resumeName?: string;
-  resumeSize?: string;
-  role?: "CANDIDATE" | "EMPLOYER" | "ADMIN";
-  company: Company | any;
-};
-const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+import CompanySection from "./CompanySection";
+import LocketCompanySection from "./LocketCompanySection";
+import ExperienceSection from "./ExperienceSection";
+import SkillSection from "./SkillSection";
+import AvailabilitySection from "./AvailabilitySection";
+import ResumeSection from "./ResumeSection";
+import { ProfileFormActions, ProfileFormState } from "@/app/types/ui.type";
 
 type ProfileFormProps = {
   profile?: Profile;
@@ -68,6 +35,7 @@ export default function ProfileForm({
   profile,
   onSuccess,
 }: ProfileFormProps) {
+  console.log("company", state.company);
   const EXPERIENCE_OPTIONS = Object.keys(EXPERIENCE_SKILL_MAP).sort();
 
   const toggleExperience = (skill: string) => {
@@ -80,25 +48,14 @@ export default function ProfileForm({
 
     actions.setExperience(updated);
   };
-  const availableSkills = Array.from(
-    new Set(state.experience.flatMap((exp) => EXPERIENCE_SKILL_MAP[exp] || [])),
-  );
-  const SKILL_OPTIONS = Array.from(
-    new Set(Object.values(EXPERIENCE_SKILL_MAP).flat()),
-  ).sort();
   const filteredExperience = EXPERIENCE_OPTIONS.filter(
     (s) =>
       !state.experience.includes(s) &&
       s.toLowerCase().includes(state.experienceSearch.toLowerCase()),
   );
-  const filteredSkills = availableSkills.filter(
-    (s) =>
-      !state.skills.includes(s) &&
-      s.toLowerCase().includes(state.skillSearch.toLowerCase()),
-  );
-
   return (
     <div className="min-h-screen bg-[#F5F6FA] font-sans">
+      <div className="grid grid-cols-[200px_1fr] gap-6"></div>
       <main className="max-w-3xl mx-auto px-4 py-10">
         {mode === "edit" ? (
           <div>
@@ -193,447 +150,51 @@ export default function ProfileForm({
 
           {/* Right Column */}
           <div className="flex flex-col gap-5">
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-900 text-base mb-4">
-                ข้อมูลส่วนตัว
-              </h2>
-              <div className="flex flex-col gap-4">
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                    ชื่อ-นามสกุล <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={state.name}
-                    onChange={(e) => actions.setName(e.target.value)}
-                    placeholder="เช่น สมชาย ใจดี"
-                    className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                    เบอร์โทรศัพท์
-                  </label>
-                  <input
-                    type="tel"
-                    value={state.phone}
-                    onChange={(e) => actions.setPhone(e.target.value)}
-                    placeholder="เช่น 081-234-5678"
-                    className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                    วันเกิด
-                  </label>
-                  <input
-                    type="date"
-                    value={state.birthDate}
-                    onChange={(e) => actions.setBirthDate(e.target.value)}
-                    className="w-full px-4 py-2 text-sm text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-900 text-base mb-1">
-                Professional Summary
-              </h2>
-              <p className="text-xs text-gray-400 mb-3">
-                Briefly describe your editorial background, expertise, and what
-                you're looking for in your next role.
-              </p>
-              <textarea
-                className="w-full"
-                rows={4}
-                value={state.summary}
-                onChange={(e) => actions.setSummary(e.target.value)}
-                placeholder="Write something about yourself..."
+            <PersonalInfoSection
+              name={state.name}
+              phone={state.phone}
+              birthDate={state.birthDate}
+              summary={state.summary}
+              setName={actions.setName}
+              setPhone={actions.setPhone}
+              setBirthDate={actions.setBirthDate}
+              setSummary={actions.setSummary}
+            />
+            {state.role === "EMPLOYER" ? (
+              <CompanySection
+                company={state.company}
+                setCompanyState={actions.setCompanyState}
+                uploadCompanyImage={actions.uploadCompanyImage}
               />
-            </div>
-            {state.role === "EMPLOYER" && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="font-semibold text-gray-900 text-base">
-                      ข้อมูลบริษัท
-                    </h2>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      ข้อมูลนี้จะแสดงในประกาศรับสมัครงานของคุณ
-                    </p>
-                  </div>
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest border border-blue-200 bg-blue-50 px-2 py-0.5 rounded-full">
-                    Employer
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-[10px] border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
-                      {state.company.companyImageURL ? (
-                        <img
-                          src={state.company.companyImageURL}
-                          alt="company logo"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Icon
-                          icon="mdi:office-building-outline"
-                          className="w-6 h-6 text-gray-300"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-700 mb-1">
-                        โลโก้บริษัท
-                      </p>
-                      <label className="cursor-pointer inline-block">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            const preview = URL.createObjectURL(file);
-                            actions.setCompanyState((prev) => ({
-                              ...prev,
-                              companyImageURL: preview,
-                            }));
-                            await actions.uploadCompanyImage(file);
-                          }}
-                        />
-                        <span className="text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition">
-                          อัปโหลดโลโก้
-                        </span>
-                      </label>
-                      <p className="text-[11px] text-gray-400 mt-1">
-                        PNG, JPG ขนาดไม่เกิน 2MB
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                      ชื่อบริษัท <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={state.company.companyName ?? ""}
-                      onChange={(e) =>
-                        actions.setCompanyState((prev) => ({
-                          ...prev,
-                          companyName: e.target.value,
-                        }))
-                      }
-                      placeholder="เช่น The Coffee Lab Co., Ltd."
-                      className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 mb-2 block">
-                      ขนาดบริษัท
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {["1–10", "11–50", "51–200", "200+"].map((size) => (
-                        <button
-                          key={size}
-                          onClick={() =>
-                            actions.setCompanyState((prev) => ({
-                              ...prev,
-                              companySize: size,
-                            }))
-                          }
-                          className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all ${
-                            state.company.companySize === size
-                              ? "bg-blue-50 text-blue-600 border-blue-200"
-                              : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300"
-                          }`}
-                        >
-                          {size} คน
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                      เกี่ยวกับบริษัท
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={state.company.companyBio ?? ""}
-                      onChange={(e) =>
-                        actions.setCompanyState((prev) => ({
-                          ...prev,
-                          companyBio: e.target.value,
-                        }))
-                      }
-                      placeholder="แนะนำบริษัทของคุณสั้นๆ เช่น ประเภทธุรกิจ บรรยากาศการทำงาน..."
-                      className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition resize-none"
-                    />
-                  </div>
-
-                  <div className="flex gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3.5 py-2.5">
-                    <Icon
-                      icon="mdi:alert-circle-outline"
-                      className="w-4 h-4 text-amber-500 shrink-0 mt-0.5"
-                    />
-                    <p className="text-xs text-amber-700 leading-relaxed">
-                      ต้องกรอก <span className="font-semibold">ชื่อบริษัท</span>{" "}
-                      ก่อนถึงจะลงประกาศงานได้
-                    </p>
-                  </div>
-                </div>
-              </div>
+            ) : (
+              <LocketCompanySection />
             )}
+            <ExperienceSection
+              filteredExperiences={filteredExperience}
+              experiences={state.experience}
+              experienceSearch={state.experienceSearch}
+              toggleExperience={actions.toggleExperience}
+              setExperienceSearch={actions.setExperienceSearch}
+            />
 
-            {state.role !== "EMPLOYER" && (
-              <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-200 p-5 flex items-center gap-3 opacity-60">
-                <Icon
-                  icon="mdi:lock-outline"
-                  className="w-5 h-5 text-gray-400 shrink-0"
-                />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">
-                    ข้อมูลบริษัท
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    เฉพาะบัญชี Employer เท่านั้น
-                  </p>
-                </div>
-              </div>
-            )}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-900 text-base mb-0.5">
-                Experiences
-              </h2>
-              <p className="text-xs text-gray-400 mb-4">
-                Select up to 6 Job that define your core expertise.
-              </p>
+            <SkillSection
+              skills={state.skills}
+              experience={state.experience}
+              skillSearch={state.skillSearch}
+              toggleSkill={actions.toggleSkill}
+              setSkillSearch={actions.setSkillSearch}
+            />
 
-              <div className="flex flex-wrap gap-2 mb-3">
-                {state.experience.map((skill) => (
-                  <button
-                    key={skill}
-                    onClick={() => actions.toggleExperience(skill)}
-                    className="flex items-center gap-1.5 bg-[#2563EB] text-white text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-700 transition"
-                  >
-                    {skill}
-                    <Icon icon="mdi:close" className="text-sm opacity-80" />
-                  </button>
-                ))}
-                {filteredExperience
-                  .filter((s) => !state.experience.includes(s))
-                  .slice(0, 4)
-                  .map((skill) => (
-                    <button
-                      key={skill}
-                      onClick={() => toggleExperience(skill)}
-                      disabled={state.experience.length >= 6}
-                      className="flex items-center gap-1 bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-50 hover:text-blue-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      {skill}
-                      <Icon icon="mdi:plus" className="text-sm" />
-                    </button>
-                  ))}
-              </div>
+            <AvailabilitySection
+              availability={state.availability}
+              toggleDay={actions.toggleDay}
+            />
 
-              <div className="relative">
-                <Icon
-                  icon="mdi:magnify"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"
-                />
-                <input
-                  type="text"
-                  placeholder="Search or add more Expereince..."
-                  value={state.experienceSearch}
-                  onChange={(e) => actions.setExperienceSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                />
-              </div>
-
-              {state.experienceSearch && filteredExperience.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {filteredExperience.map((exp) => (
-                    <button
-                      key={exp}
-                      onClick={() => {
-                        actions.toggleExperience(exp);
-                        actions.setExperienceSearch("");
-                      }}
-                      disabled={state.experience.length >= 6}
-                      className="flex items-center gap-1 bg-white border border-blue-200 text-blue-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-50 transition disabled:opacity-40"
-                    >
-                      {exp}
-                      <Icon icon="mdi:plus" className="text-sm" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-900 text-base mb-0.5">
-                Top Skills
-              </h2>
-              <p className="text-xs text-gray-400 mb-4">
-                Select up to 6 skills that define your core expertise.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-3">
-                {state.skills.map((skill) => (
-                  <button
-                    key={skill}
-                    onClick={() => actions.toggleSkill(skill)}
-                    className="flex items-center gap-1.5 bg-[#2563EB] text-white text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-700 transition"
-                  >
-                    {skill}
-                    <Icon icon="mdi:close" className="text-sm opacity-80" />
-                  </button>
-                ))}
-                {filteredSkills
-                  .filter((s) => !state.skills.includes(s))
-                  .slice(0, 4)
-                  .map((skill) => (
-                    <button
-                      key={skill}
-                      onClick={() => actions.toggleSkill(skill)}
-                      disabled={state.skills.length >= 6}
-                      className="flex items-center gap-1 bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-50 hover:text-blue-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      {skill}
-                      <Icon icon="mdi:plus" className="text-sm" />
-                    </button>
-                  ))}
-              </div>
-
-              <div className="relative">
-                <Icon
-                  icon="mdi:magnify"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"
-                />
-                <input
-                  type="text"
-                  placeholder="Search or add more skills..."
-                  value={state.skillSearch}
-                  onChange={(e) => actions.setSkillSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-                />
-              </div>
-
-              {state.skillSearch && filteredSkills.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {filteredSkills.map((skill) => (
-                    <button
-                      key={skill}
-                      onClick={() => {
-                        actions.toggleSkill(skill);
-                        actions.setSkillSearch("");
-                      }}
-                      disabled={state.skills.length >= 6}
-                      className="flex items-center gap-1 bg-white border border-blue-200 text-blue-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-50 transition disabled:opacity-40"
-                    >
-                      {skill}
-                      <Icon icon="mdi:plus" className="text-sm" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="font-semibold text-gray-900 text-base">
-                  Weekly Availability
-                </h2>
-                <span className="text-[11px] font-bold text-blue-500 uppercase tracking-widest border border-blue-200 bg-blue-50 px-2 py-0.5 rounded-full">
-                  Part-Time Preferred
-                </span>
-              </div>
-              <p className="text-xs text-gray-400 mb-5">
-                When are you typically available for assignments?
-              </p>
-
-              <div className="flex justify-between mb-5">
-                {DAYS.map((day, i) => (
-                  <div key={day} className="flex flex-col items-center gap-1.5">
-                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                      {day}
-                    </span>
-                    <button
-                      onClick={() => actions.toggleDay(day)}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm ${
-                        state.availability.includes(day)
-                          ? "bg-[#2563EB] text-white shadow-blue-200"
-                          : "bg-gray-100 text-gray-300 hover:bg-gray-200"
-                      }`}
-                    >
-                      {state.availability.includes(day) ? (
-                        <Icon icon="mdi:check" className="text-base" />
-                      ) : (
-                        <div className="w-2 h-2 rounded-full bg-gray-300" />
-                      )}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="font-semibold text-gray-900 text-base">
-                  Resume Uploading
-                </h2>
-              </div>
-              <p className="text-xs text-gray-400 mb-5">
-                Upload your resume to let employers know more about you
-              </p>
-
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all">
-                <Icon
-                  icon="solar:upload-linear"
-                  className="w-6 h-6 text-gray-400 mb-2"
-                />
-                <span className="text-sm text-gray-500">Click to upload</span>
-                <span className="text-xs text-gray-400 mt-1">
-                  PDF, DOC up to 5MB
-                </span>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept=".pdf,.doc,.docx"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    await actions.uploadResume(file);
-                  }}
-                />
-              </label>
-
-              {state.resumeFile && (
-                <div className="flex items-center gap-3 mt-4 p-3 bg-gray-50 rounded-xl">
-                  <Icon
-                    icon="solar:file-text-linear"
-                    className="w-5 h-5 text-gray-400 shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-700 truncate">
-                      {state.resumeFile.name}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {(state.resumeFile.size / 1024 / 1025).toFixed(1)} MB
-                    </p>
-                  </div>
-                  <button className="text-gray-400 hover:text-red-400 transition-colors">
-                    <Icon
-                      icon="solar:close-circle-linear"
-                      className="w-4 h-4"
-                    />
-                  </button>
-                </div>
-              )}
-            </div>
+            <ResumeSection
+              resumeFile={state.resumeFile}
+              uploadResume={actions.uploadResume}
+              removeResume={actions.removeResume}
+            />
           </div>
         </div>
 

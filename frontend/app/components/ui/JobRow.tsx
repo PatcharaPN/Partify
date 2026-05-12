@@ -22,7 +22,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
         <div>
           <p className="text-sm font-semibold text-gray-800">{job.title}</p>
           <p className="text-[11px] text-gray-400 mt-0.5">
-            {job.companyName} · {job.location}
+            {job.company.companyName} · {job.company.location}
           </p>
         </div>
       </div>
