@@ -1,4 +1,4 @@
-import { Bone } from "../../jobs/JobListSkeleton";
+import { Bone } from "../(main)/jobs/JobListSkeleton";
 
 function BuildProfileSkeleton() {
   return (
