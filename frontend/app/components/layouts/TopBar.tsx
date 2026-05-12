@@ -70,7 +70,7 @@ export default function TopBar() {
           </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <Link href={"/profile/edit"} className="flex items-center gap-3">
+              <Link href={"/profile/info"} className="flex items-center gap-3">
                 <img
                   src={user?.profile?.avatarUrl || "/images/default-avatar.png"}
                   alt="avatar"

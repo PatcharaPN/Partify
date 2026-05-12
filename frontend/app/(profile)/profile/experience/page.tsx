@@ -2,16 +2,17 @@ import { Icon } from "@iconify/react";
 
 const ExperienceSection = () => {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-      <h2 className="font-semibold text-gray-900 text-base mb-0.5">
-        Experiences
-      </h2>
-      <p className="text-xs text-gray-400 mb-4">
-        Select up to 6 Job that define your core expertise.
-      </p>
+    <div className="bg-gray-50 min-h-[calc(100vh-70px)] p-6 flex flex-col gap-4">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <h2 className="font-semibold text-gray-900 text-base mb-0.5">
+          Experiences
+        </h2>
+        <p className="text-xs text-gray-400 mb-4">
+          Select up to 6 Job that define your core expertise.
+        </p>
 
-      <div className="flex flex-wrap gap-2 mb-3">
-        {/* {experiences.map((skill) => (
+        <div className="flex flex-wrap gap-2 mb-3">
+          {/* {experiences.map((skill) => (
           <button
             key={skill}
             onClick={() => toggleExperience(skill)}
@@ -35,21 +36,21 @@ const ExperienceSection = () => {
               <Icon icon="mdi:plus" className="text-sm" />
             </button>
           ))} */}
-      </div>
+        </div>
 
-      <div className="relative">
-        <Icon
-          icon="mdi:magnify"
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"
-        />
-        <input
-          type="text"
-          placeholder="Search or add more Expereince..."
-          className="w-full pl-9 pr-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-        />
-      </div>
+        <div className="relative">
+          <Icon
+            icon="mdi:magnify"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"
+          />
+          <input
+            type="text"
+            placeholder="Search or add more Expereince..."
+            className="w-full pl-9 pr-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+          />
+        </div>
 
-      {/* {experienceSearch && filteredExperiences.length > 0 && (
+        {/* {experienceSearch && filteredExperiences.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           {filteredExperiences.map((exp) => (
             <button
@@ -67,6 +68,7 @@ const ExperienceSection = () => {
           ))}
         </div>
       )} */}
+      </div>
     </div>
   );
 };
