@@ -57,12 +57,6 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
     </span>
   );
 
-  const mockImages: ImageSlot[] = [
-    {
-      file: new File([], "mock-image.jpg", { type: "image/jpeg" }),
-      preview: "https://placehold.co/600x400",
-    },
-  ];
   return (
     <motion.div
       key={step}
@@ -72,7 +66,11 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
       transition={{ duration: 0.25, ease: "easeInOut" }}
       className="px-6 py-5 flex flex-col gap-5"
     >
-      <JobImageUpload maxImages={3} onChange={() => {}} value={mockImages} />
+      <JobImageUpload
+        maxImages={3}
+        value={form.overviewPictureURL}
+        onChange={(slots) => updateField("overviewPictureURL", slots)}
+      />
       {/* Description */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">

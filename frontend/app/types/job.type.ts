@@ -112,7 +112,7 @@ export type PostJobFormData = {
   salaryMax?: string;
   salaryNegotiable: boolean;
   currency?: string;
-
+  overviewPictureURL: ImageSlot[];
   workingHours: string;
   workingDays: string;
   startDate: string;

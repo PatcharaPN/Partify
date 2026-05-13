@@ -75,6 +75,7 @@ export class JobsService {
       include: {
         company: {
           select: {
+            userId: true,
             companyBio: true,
             companyImageURL: true,
             companyName: true,
@@ -91,7 +92,7 @@ export class JobsService {
     console.log('user:', user);
     return {
       ...jobs,
-      isOwner: user ? jobs.companyId === user.sub : false,
+      isOwner: user ? jobs.company.userId === user.sub : false,
     };
   }
   async getJobsByOwnerId(ownerId: string) {

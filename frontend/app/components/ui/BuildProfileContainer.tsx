@@ -11,7 +11,6 @@ import { Company } from "@/app/types/job.type";
 import { getCompany, upsertCompany } from "@/app/store/slices/companySlice";
 import BuildProfileSkeleton from "@/app/(profile)/skeletonEditProfile";
 
-const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 type ProfileFormProps = {
   mode?: "setup" | "edit";
   title?: string;
@@ -21,6 +20,7 @@ type ProfileFormProps = {
   totalSteps?: number;
   onSuccess?: () => void;
 };
+
 export default function BuildProfilePage({ mode }: ProfileFormProps) {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [experienceSearch, setExperienceSearch] = useState("");
@@ -53,9 +53,7 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
 
   useEffect(() => {
     dispatch(fetchProfile());
-    dispatch(getCompany()).then((res) => {
-      console.log("getCompany result:", res);
-    });
+    dispatch(getCompany());
   }, [dispatch]);
 
   useEffect(() => {
@@ -70,15 +68,16 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
       initializedCompany.current = true;
     }
   }, [company]);
+
   useEffect(() => {
     if (profile) {
       setName(profile.name || "");
       setPhone(profile.phone || "");
       setBirthDate(profile.birthDate ? profile.birthDate.split("T")[0] : "");
       setSummary(profile.summary || "");
-      setActiveDays(profile.availability);
+      setActiveDays(profile.availability || []);
       setSelectedExpereince(profile.experience || []);
-      setSelectedSkills(profile.skills);
+      setSelectedSkills(profile.skills || []);
       setAvatarPreview(profile.avatarUrl || "");
     }
   }, [profile]);

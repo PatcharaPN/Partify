@@ -36,6 +36,7 @@ const PostJobForm = () => {
     closingDate: "",
     location: "",
     district: "",
+    overviewPictureURL: [],
     locationDetail: "",
     province: "",
     startDate: "",
@@ -66,6 +67,10 @@ const PostJobForm = () => {
   const handlePostJob = async () => {
     const payload = {
       ...form,
+
+      overviewPictureURL: form.overviewPictureURL
+        .map((img) => img.preview)
+        .filter((url) => url.startsWith("https")),
       salaryMin: Number(form.salaryMin),
       salaryMax: Number(form.salaryMax),
     };

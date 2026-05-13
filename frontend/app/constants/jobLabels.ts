@@ -234,3 +234,4 @@ export const PROVINCES_DISTRICTS: Record<string, string[]> = {
     "พุนพิน",
   ],
 };
+const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];

@@ -99,7 +99,7 @@ export default function JobDetail() {
 
           <div className="flex justify-between items-center pt-4 gap-4 flex-wrap">
             <div className="flex items-center gap-5 flex-wrap">
-              {selectedJob.location && (
+              {selectedJob.province && (
                 <div className="flex items-center gap-1.5 text-gray-600 text-sm">
                   <Icon
                     icon="ep:location"
@@ -107,7 +107,13 @@ export default function JobDetail() {
                     width="20"
                     height="20"
                   />
-                  <span>{selectedJob.location}</span>
+                  {[
+                    selectedJob.locationDetail,
+                    selectedJob.district,
+                    selectedJob.province,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
                 </div>
               )}
               <div className="flex items-center gap-1.5 text-gray-600 text-sm">
@@ -402,19 +408,19 @@ export default function JobDetail() {
 
               <div className="flex flex-col gap-2 text-xs border-t border-gray-100 pt-3 mb-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Industry</span>
+                  <span className="text-gray-400">ประเภทธุรกิจ</span>
                   <span className="font-medium text-gray-700">
-                    Food &amp; Beverage
+                    อาหารและเครื่องดื่ม
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Size</span>
+                  <span className="text-gray-400">พนักงาน</span>
                   <span className="font-medium text-gray-700">
-                    10,000+ Employees
+                    {selectedJob.company.companySize} คน
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Hiring since</span>
+                  <span className="text-gray-400">สมัครใช้งานเมื่อ</span>
                   <span className="font-medium text-gray-700">
                     2018 on Partify
                   </span>
