@@ -13,6 +13,7 @@ import { RootState } from "@reduxjs/toolkit/query";
 import { postJob } from "@/app/store/slices/jobSlice";
 import { STEP_LABELS } from "@/app/constants/jobLabels";
 import StepLocation from "./StepLocation";
+import StepDetails from "./StepDetail";
 
 const PostJobForm = () => {
   const [step, setStep] = useState(1);
@@ -129,7 +130,10 @@ const PostJobForm = () => {
             {step === 3 && (
               <StepLocation form={form} updateField={updateField} />
             )}
-            {step === 4 && <StepConditions step={step} form={form} />}
+            {step === 4 && (
+              <StepDetails updateField={updateField} step={step} form={form} />
+            )}
+            {step === 5 && <StepConditions step={step} form={form} />}
           </AnimatePresence>
         </div>
         {/* Footer */}

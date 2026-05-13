@@ -143,3 +143,7 @@ export type ApplicationStatus =
   | "ACCEPTED"
   | "REJECTED"
   | "INTERVIEW";
+export type ImageSlot = {
+  file: File;
+  preview: string;
+};

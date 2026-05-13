@@ -8,6 +8,7 @@ import JobDetailSkeleton from "./JobDetailSkeleton";
 import QuickApplyModal from "@/app/components/ui/ApplyModal";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 import { fetchApplicationStatus } from "@/app/store/slices/applicationSlice";
+import JobEditPanel from "@/app/components/ui/JobEditPanel";
 
 export default function JobDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);

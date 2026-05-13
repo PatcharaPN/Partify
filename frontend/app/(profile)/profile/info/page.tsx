@@ -5,6 +5,7 @@ import { upsertProfile } from "@/app/store/slices/profileSlice";
 import { useEffect, useState } from "react";
 
 const PersonalInfoPage = () => {
+  const [initialized, setInitialized] = useState(false);
   const { currentUser } = useCurrentUser();
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
@@ -13,13 +14,16 @@ const PersonalInfoPage = () => {
   const [summary, setSummary] = useState("");
 
   useEffect(() => {
-    if (currentUser?.profile) {
-      setName(currentUser.profile.name || "");
-      setPhone(currentUser.profile.phone || "");
-      setBirthDate(currentUser.profile.birthDate?.split("T")[0] ?? "");
-      setSummary(currentUser.profile.summary || "");
-    }
-  }, [currentUser?.profile]);
+    const profile = currentUser?.profile;
+    if (!profile || initialized) return;
+
+    setName(profile?.name || "");
+    setPhone(profile?.phone || "");
+    setBirthDate(profile?.birthDate?.split("T")[0] ?? "");
+    setSummary(profile?.summary || "");
+
+    setInitialized(true);
+  }, [currentUser?.profile, initialized]);
 
   const handleSave = async () => {
     await dispatch(
