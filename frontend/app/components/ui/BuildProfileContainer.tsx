@@ -5,11 +5,11 @@ import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import BuildProfileSkeleton from "../../(main)/profile/edit/skeletonEditProfile";
 import { EXPERIENCE_SKILL_MAP } from "@/app/constants/skillOption";
 import ProfileForm from "@/app/components/ui/ProfileFormView";
 import { Company } from "@/app/types/job.type";
 import { getCompany, upsertCompany } from "@/app/store/slices/companySlice";
+import BuildProfileSkeleton from "@/app/(profile)/skeletonEditProfile";
 
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 type ProfileFormProps = {

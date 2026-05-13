@@ -35,7 +35,7 @@ export interface Job {
   experienceYears?: number;
   educationLevel?: string;
   positions: number;
-
+  category?: string;
   workingHours?: string;
   workingDays?: string;
   startDate?: string;
@@ -52,6 +52,10 @@ export interface Job {
   applications: Application[];
   isApplied: boolean;
   createdAt: string;
+
+  province?: string;
+  district?: string;
+  locationDetail?: string;
 }
 export interface Application {
   id: string;
@@ -113,7 +117,9 @@ export type PostJobFormData = {
   workingDays: string;
   startDate: string;
   closingDate: string;
-
+  province: string;
+  district: string;
+  locationDetail: string;
   location: string;
   benefits: string[];
 };

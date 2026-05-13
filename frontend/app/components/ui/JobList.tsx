@@ -39,7 +39,10 @@ const JobList = ({ jobs }: JobListProps) => {
                   icon="mingcute:location-line"
                   className="w-3 h-3 shrink-0"
                 />
-                {jobs.location}
+
+                {[jobs.locationDetail, jobs.district, jobs.province]
+                  .filter(Boolean)
+                  .join(", ")}
               </span>
               <span className="flex items-center gap-1 text-xs text-neutral-500">
                 <Icon icon="mingcute:time-line" className="w-3 h-3 shrink-0" />

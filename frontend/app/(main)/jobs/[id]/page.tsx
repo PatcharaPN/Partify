@@ -66,7 +66,7 @@ export default function JobDetail() {
           day: "numeric",
         })
       : null;
-  const hasCompanyProfile = !!selectedJob.company.companyProfileURL;
+  const hasCompanyProfile = Boolean(selectedJob.company?.companyProfileURL);
   return (
     <div className="flex justify-center bg-gray-50 min-h-screen">
       <main className="w-full max-w-5xl mt-10 mb-20 px-4">

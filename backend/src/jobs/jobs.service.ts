@@ -29,7 +29,7 @@ export class JobsService {
         ...jobData,
 
         companyId: company.id,
-
+        status: 'active',
         skills: skills?.length
           ? {
               create: skills.map((skill) => ({
@@ -73,6 +73,15 @@ export class JobsService {
         id: jobId,
       },
       include: {
+        company: {
+          select: {
+            companyBio: true,
+            companyImageURL: true,
+            companyName: true,
+            companyProfileURL: true,
+            companySize: true,
+          },
+        },
         skills: true,
       },
     });
@@ -89,10 +98,11 @@ export class JobsService {
     const jobs = await this.prisma.job.findMany({
       where: {
         company: {
-          id: ownerId,
+          userId: ownerId,
         },
       },
       include: {
+        company: true,
         applications: {
           include: {
             user: {

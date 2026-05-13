@@ -16,6 +16,7 @@ export default function EmployerDashboard() {
 
   const [search, setSearch] = useState("");
 
+  console.log(jobs);
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) =>
       job.title.toLowerCase().includes(search.toLowerCase()),

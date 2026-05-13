@@ -17,7 +17,12 @@ const JobRow = ({ href, job }: JobRowProps) => {
       {/* Title */}
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 shrink-0 group-hover:border-gray-200 transition-colors">
-          <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />
+          {/* <Icon icon="mdi:briefcase-outline" className="w-4 h-4" /> */}
+          <img
+            className="object-center w-full h-full"
+            src={job.company.companyImageURL}
+            alt=""
+          />
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-800">{job.title}</p>

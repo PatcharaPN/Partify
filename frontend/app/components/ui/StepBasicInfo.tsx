@@ -38,7 +38,7 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
       </div>
 
       {/* Category + Work Model */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
             หมวดหมู่
@@ -60,31 +60,6 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
               icon="mdi:chevron-down"
               className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
             />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            รูปแบบงาน
-          </label>
-          <div className="flex bg-neutral-100 rounded-xl p-0.5 gap-0.5">
-            {(["onsite", "hybrid", "remote"] as WorkModel[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => updateField("workStyle", m)}
-                className={`flex-1 py-2 text-xs font-medium rounded-[10px] transition-all ${
-                  form.workStyle === m
-                    ? "bg-white text-blue-600 border border-neutral-200"
-                    : "text-neutral-500 hover:text-neutral-700"
-                }`}
-              >
-                {m === "onsite"
-                  ? "On-site"
-                  : m === "hybrid"
-                    ? "Hybrid"
-                    : "Remote"}
-              </button>
-            ))}
           </div>
         </div>
       </div>

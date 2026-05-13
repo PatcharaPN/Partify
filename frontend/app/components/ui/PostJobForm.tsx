@@ -7,11 +7,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import StepBasicInfo from "./StepBasicInfo";
 import StepSalary from "./StepSalary";
-import StepConditions from "./StepWorkInfo";
+import StepConditions from "./StepPreview";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@reduxjs/toolkit/query";
 import { postJob } from "@/app/store/slices/jobSlice";
 import { STEP_LABELS } from "@/app/constants/jobLabels";
+import StepLocation from "./StepLocation";
 
 const PostJobForm = () => {
   const [step, setStep] = useState(1);
@@ -33,6 +34,9 @@ const PostJobForm = () => {
     benefits: [],
     closingDate: "",
     location: "",
+    district: "",
+    locationDetail: "",
+    province: "",
     startDate: "",
   });
   const updateField = <K extends keyof typeof form>(
@@ -46,10 +50,10 @@ const PostJobForm = () => {
   };
   if (!isOpen) return null;
   const handleNextStep = () => {
-    if (step === 4) {
+    if (step === 5) {
       window.alert("Posted Job");
     }
-    if (step >= 4) return;
+    if (step >= 5) return;
 
     setStep((prev) => prev + 1);
   };
@@ -121,9 +125,11 @@ const PostJobForm = () => {
             )}
             {step === 2 && (
               <StepSalary step={step} updateField={updateField} form={form} />
+            )}{" "}
+            {step === 3 && (
+              <StepLocation form={form} updateField={updateField} />
             )}
-
-            {step === 3 && <StepConditions step={step} form={form} />}
+            {step === 4 && <StepConditions step={step} form={form} />}
           </AnimatePresence>
         </div>
         {/* Footer */}
@@ -140,10 +146,10 @@ const PostJobForm = () => {
               <span>ย้อนกลับ</span>
             </button>
             <button
-              onClick={step < 4 ? handleNextStep : handlePostJob}
+              onClick={step < 5 ? handleNextStep : handlePostJob}
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl active:scale-95 transition-all"
             >
-              {step < 4 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}
+              {step < 5 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}
               <Icon icon="mdi:arrow-right" className="w-4 h-4" />
             </button>
           </div>

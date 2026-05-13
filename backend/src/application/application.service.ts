@@ -94,6 +94,7 @@ export class ApplicationService {
     const job = await this.prisma.job.findUnique({
       where: { id: jobId },
       include: {
+        company: true,
         applications: {
           include: {
             user: {
@@ -115,7 +116,7 @@ export class ApplicationService {
       throw new NotFoundException('Job not found');
     }
 
-    if (job.companyId !== userId) {
+    if (job.company.userId !== userId) {
       throw new ForbiddenException('You are not the owner');
     }
 
@@ -167,7 +168,7 @@ export class ApplicationService {
         this.prisma.employee.create({
           data: {
             userId: application.userId,
-            companyId: application.job.companyId,
+            companyId: application.job.company.id,
             jobId: application.jobId,
             status: 'ACTIVE',
           },
@@ -196,7 +197,7 @@ export class ApplicationService {
   }
 
   private validateOwnerShip(employerId: any, application: any) {
-    if (employerId !== application?.job.companyId) {
+    if (employerId !== application?.job.company.id) {
       throw new ForbiddenException('Access denied');
     }
   }

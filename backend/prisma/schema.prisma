@@ -114,6 +114,10 @@ model Job {
   urgency           String?
   createdAt         DateTime  @default(now())
 
+  province          String?
+  district          String?
+  locationDetail    String?
+ 
   companyId         String
   company   Company @relation(fields: [companyId],references: [id])
   employees Employee[]

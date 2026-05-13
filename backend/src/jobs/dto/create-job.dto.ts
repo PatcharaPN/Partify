@@ -7,6 +7,7 @@ import {
   IsDate,
   ValidateNested,
   Min,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -128,4 +129,19 @@ export class CreateJobDto {
   @ValidateNested({ each: true })
   @Type(() => SkillDto)
   skills?: SkillDto[];
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  province?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  district?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  locationDetail?: string;
 }
