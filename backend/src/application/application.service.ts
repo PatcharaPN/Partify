@@ -188,7 +188,13 @@ export class ApplicationService {
       where: {
         id: applicationId,
       },
-      include: { job: true },
+      include: {
+        job: {
+          include: {
+            company: true,
+          },
+        },
+      },
     });
     if (!application) {
       throw new NotFoundException('Application not found');
@@ -197,7 +203,7 @@ export class ApplicationService {
   }
 
   private validateOwnerShip(employerId: any, application: any) {
-    if (employerId !== application?.job.company.id) {
+    if (employerId !== application?.job.company.userId) {
       throw new ForbiddenException('Access denied');
     }
   }

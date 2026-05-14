@@ -65,7 +65,10 @@ export default function TopBar() {
             </button>
 
             {openNotification && (
-              <NotificationContainer notifications={data || []} />
+              <NotificationContainer
+                onClose={() => setOpenNotification(!openNotification)}
+                notifications={data || []}
+              />
             )}
           </div>
           {isAuthenticated ? (

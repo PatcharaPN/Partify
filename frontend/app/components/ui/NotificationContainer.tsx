@@ -1,22 +1,22 @@
+import { Job } from "@/app/types/job.type";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 type Notification = {
   id: string;
   message: string;
   isRead: boolean;
   createdAt: string;
-  job?: {
-    companyName?: string;
-    companyImageURL?: string;
-  };
+  job?: Job;
 };
 
 type Props = {
   notifications?: Notification[];
+  onClose: () => void;
 };
 
-const NotificationContainer = ({ notifications = [] }: Props) => {
+const NotificationContainer = ({ notifications = [], onClose }: Props) => {
   return (
     <motion.div
       className="absolute right-0 mt-2 w-80 bg-white shadow-xl rounded-2xl border border-gray-100 z-50 overflow-hidden"
@@ -39,37 +39,38 @@ const NotificationContainer = ({ notifications = [] }: Props) => {
         )}
 
         {notifications.map((noti) => (
-          <div
-            key={noti.id}
-            className={`flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${
-              !noti.isRead ? "bg-blue-50" : ""
-            }`}
-          >
-            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
-              {noti.job?.companyImageURL ? (
-                <img
-                  src={noti.job.companyImageURL}
-                  className="w-full h-full object-cover"
-                />
-              ) : null}
-            </div>
+          <Link key={noti.id} onClick={onClose} href={`/jobs/${noti.job?.id}`}>
+            <div
+              className={`flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${
+                !noti.isRead ? "bg-blue-50" : ""
+              }`}
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                {noti.job?.company.companyImageURL ? (
+                  <img
+                    src={noti.job.company.companyImageURL}
+                    className="w-full h-full object-cover"
+                  />
+                ) : null}
+              </div>
 
-            <div className="flex-1">
-              <p className="text-sm text-gray-800 line-clamp-3">
-                {noti.message}
-              </p>
+              <div className="flex-1">
+                <p className="text-sm text-gray-800 line-clamp-3">
+                  {noti.message}
+                </p>
 
-              <div className="flex items-center justify-between mt-1">
-                <span className="text-xs text-gray-400">
-                  {formatTimeAgo(noti.createdAt)}
-                </span>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-xs text-gray-400">
+                    {formatTimeAgo(noti.createdAt)}
+                  </span>
 
-                {!noti.isRead && (
-                  <span className="w-2 h-2 bg-blue-500 rounded-full" />
-                )}
+                  {!noti.isRead && (
+                    <span className="w-2 h-2 bg-blue-500 rounded-full" />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
