@@ -9,6 +9,13 @@ export class ProfileService {
   async getMe(userId: string) {
     const profile = await this.prisma.profile.findUnique({
       where: { userId },
+      include: {
+        user: {
+          include: {
+            resume: true,
+          },
+        },
+      },
     });
 
     if (!profile) {

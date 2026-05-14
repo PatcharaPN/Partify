@@ -126,16 +126,26 @@ export type PostJobFormData = {
 export type Profile = {
   id: string;
   userId: string;
-  name: string;
+  firstName: string;
+  lastName?: string;
   phone?: string;
   summary?: string;
-  experience?: string[];
+  workingHours?: string;
+  province?: string;
+  district?: string;
   skills: string[];
   shifts: string[];
   availability: string[];
+  preferredJobTypes: string[];
+  preferredCategories: string[];
+  expectedSalary?: number;
+  experience: string[];
+  gender?: string;
+  nationality?: string;
   resumeUrl?: string;
   avatarUrl?: string;
   birthDate?: string;
+  reliabilityScore?: number;
 };
 
 export type ApplicationStatus =

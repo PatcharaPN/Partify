@@ -3,23 +3,32 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
+import { getRoleLabel } from "@/app/helpers/getRoleLabel";
 
 const SIDEBAR_ELEMENTS = [
-  { name: "Profile", path: "/profile/info", icon: "mdi:account-outline" },
   {
-    name: "Company",
+    name: "ประวัติส่วนตัว",
+    path: "/profile/info",
+    icon: "mdi:account-outline",
+    role: ["ADMIN", "CANDIDATE", "EMPLOYER"],
+  },
+  {
+    name: "บริษัท",
     path: "/profile/company",
     icon: "mdi:office-building-outline",
+    role: ["ADMIN", "EMPLOYER"],
   },
   {
-    name: "Resume",
+    name: "เรซูเม่",
     path: "/profile/resume",
     icon: "mdi:file-document-outline",
+    role: ["ADMIN", "CANDIDATE", "EMPLOYER"],
   },
   {
-    name: "Experience",
+    name: "ประสบการณ์ทำงานและทักษะ",
     path: "/profile/experience",
     icon: "mdi:briefcase-outline",
+    role: ["ADMIN", "CANDIDATE", "EMPLOYER"],
   },
 ];
 
@@ -27,9 +36,11 @@ export default function ProfileSidebar() {
   const { currentUser } = useCurrentUser();
   const pathname = usePathname();
   const router = useRouter();
-
+  const visibleElements = SIDEBAR_ELEMENTS.filter((elements) =>
+    elements.role.includes(currentUser?.role ?? ""),
+  );
   return (
-    <div className="flex flex-col gap-6 w-55 p-5">
+    <div className="flex flex-col gap-6 w-64 p-5">
       {/* Avatar + name */}
       <div className="flex flex-col gap-2">
         <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
@@ -44,9 +55,11 @@ export default function ProfileSidebar() {
         </div>
         <div>
           <p className="text-sm font-medium text-gray-900">
-            {currentUser?.profile?.name}
+            {currentUser?.profile?.firstName} {currentUser?.profile?.lastName}
           </p>
-          <p className="text-xs text-gray-400"> {currentUser?.role}</p>
+          <p className="text-xs text-gray-400">
+            {getRoleLabel(currentUser?.role)}
+          </p>
         </div>
       </div>
 
@@ -55,10 +68,10 @@ export default function ProfileSidebar() {
       {/* Nav */}
       <div className="flex flex-col gap-2">
         <span className="text-[11px] font-medium uppercase tracking-widest text-gray-400 px-2.5">
-          Account
+          บัญชี
         </span>
         <ul className="flex flex-col gap-0.5">
-          {SIDEBAR_ELEMENTS.map((item) => {
+          {visibleElements.map((item) => {
             const active = pathname === item.path;
 
             return (

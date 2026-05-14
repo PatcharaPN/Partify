@@ -80,7 +80,7 @@ export default function TopBar() {
                   className="w-9 h-9 rounded-full object-cover"
                 />
                 <span className="text-neutral-700 font-medium">
-                  {user?.profile?.name}
+                  {user?.profile?.firstName} {user?.profile?.lastName}
                 </span>
               </Link>
 

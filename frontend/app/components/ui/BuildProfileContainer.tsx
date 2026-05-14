@@ -71,7 +71,7 @@ export default function BuildProfilePage({ mode }: ProfileFormProps) {
 
   useEffect(() => {
     if (profile) {
-      setName(profile.name || "");
+      setName(profile.firstName || "");
       setPhone(profile.phone || "");
       setBirthDate(profile.birthDate ? profile.birthDate.split("T")[0] : "");
       setSummary(profile.summary || "");
