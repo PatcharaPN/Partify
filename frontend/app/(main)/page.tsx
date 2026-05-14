@@ -1,9 +1,13 @@
+"use client";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import Button from "../components/ui/Button";
 import CountUp from "../components/ui/CountUp";
+import { useToast } from "../providers/ToastProvider";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { showToast } = useToast();
   const categories = [
     {
       title: "สายครีเอทีฟ",
@@ -21,6 +25,14 @@ export default function Home() {
       img: "./images/bg/delivery.jpg",
     },
   ];
+
+  useEffect(() => {
+    showToast({
+      title: "สำเร็จ",
+      message: "สมัครงานเรียบร้อยแล้ว",
+      type: "SUCCESS",
+    });
+  }, []);
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
       <div className="grid grid-cols-2 gap-10 py-50">
@@ -164,7 +176,7 @@ export default function Home() {
         </h1>
         <Button
           variant="custom"
-          classname="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
+          className="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
         >
           เริ่มต้นฟรี
         </Button>

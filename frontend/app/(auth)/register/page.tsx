@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/lib/hooks";
-import { register } from "@/app/store/slices/authSlice";
+import { fetchCurrentUser, register } from "@/app/store/slices/authSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
@@ -20,7 +20,6 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -34,7 +33,19 @@ export default function RegisterPage() {
     if (!isStep2Valid || !isStep1Valid) return;
     try {
       setLoading(true);
-      await dispatch(register({ email, password, role })).unwrap();
+      await dispatch(
+        register({
+          email,
+          password,
+          role,
+          profile: {
+            firstName,
+            lastName,
+            phone,
+          },
+        }),
+      ).unwrap();
+      dispatch(fetchCurrentUser()).unwrap();
       router.push("/");
     } catch (error) {
     } finally {

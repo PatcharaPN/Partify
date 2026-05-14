@@ -21,7 +21,11 @@ type RegisterPayload = {
   email: string;
   password: string;
   role?: string;
-  profile: Profile;
+  profile?: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+  };
 };
 type AuthResponse = {
   access_token: string;
@@ -30,17 +34,16 @@ type AuthResponse = {
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({
-    email,
-    password,
-    role,
-    profile: { firstName, lastName, phone },
-  }: RegisterPayload) => {
+  async ({ email, password, role, profile }: RegisterPayload) => {
     const res = await axiosInstance.post<AuthResponse>("/auth/register", {
       email,
       password,
       role: role || "CANDIDATE",
-      profile: { firstName, lastName, phone },
+      profile: {
+        firstName: profile?.firstName,
+        lastName: profile?.lastName,
+        phone: profile?.phone,
+      },
     });
     const token = res.data.access_token;
     localStorage.setItem("access_token", token);

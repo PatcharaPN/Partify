@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Kanit, Mitr } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import Providers from "./provider";
+import { ToastProvider } from "./providers/ToastProvider";
 
 const kanit = Kanit({
   weight: ["200", "400"],
@@ -39,7 +40,9 @@ export default function RootLayout({
     >
       <body className="min-h-screen">
         <Providers>
-          <StoreProvider>{children}</StoreProvider>
+          <ToastProvider>
+            <StoreProvider>{children}</StoreProvider>
+          </ToastProvider>
         </Providers>
       </body>
     </html>

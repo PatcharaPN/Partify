@@ -75,7 +75,7 @@ export default function TopBar() {
             <div className="flex items-center gap-3">
               <Link href={"/profile/info"} className="flex items-center gap-3">
                 <img
-                  src={user?.profile?.avatarUrl || "/images/default-avatar.png"}
+                  src={user?.profile?.avatarUrl || "/images/default-avatar.jpg"}
                   alt="avatar"
                   className="w-9 h-9 rounded-full object-cover"
                 />
