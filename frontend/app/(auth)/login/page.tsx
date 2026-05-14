@@ -5,6 +5,7 @@ import PersonaCard from "@/app/components/ui/PersonaCard";
 import SocialLoginButton from "@/app/components/ui/SocialLoginButton";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchCurrentUser, login } from "@/app/store/slices/authSlice";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -41,8 +42,14 @@ export default function LoginPage() {
     window.location.href = "http://localhost:3001/auth/line";
   };
   return (
-    <div className="relative flex items-center justify-center min-h-screen">
-      <main className="z-10 bg-white shadow-xl grid grid-cols-2 w-full max-w-5xl min-h-100 rounded-2xl overflow-hidden">
+    <div className="relative flex items-center justify-center h-[calc(100vh-70px)]">
+      <motion.main
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -24 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="z-10 bg-white shadow-xl grid grid-cols-2 w-full max-w-5xl min-h-100 rounded-2xl overflow-hidden"
+      >
         <div
           className={`relative bg-cover p-10 bg-[url(/images/bg/office_BG.webp)]`}
         >
@@ -54,13 +61,13 @@ export default function LoginPage() {
               {/* {Persona Card} */}
               <div className="">
                 <span className="text-3xl font-bold text-blue-100">
-                  Your time,
+                  งานดี,
                   <br />
-                  <span className="text-white">your terms.</span>
+                  <span className="text-white">ในแบบที่คุณเลือก</span>
                 </span>
                 <p className="text-md w-2/3 text-white">
-                  Join a community of high-caliber professionals and premium
-                  recruiters redefining part-time excellence.
+                  ร่วมเป็นส่วนหนึ่งของชุมชนผู้หางานและนายจ้างมืออาชีพ
+                  ที่กำลังเปลี่ยนโลกของงานพาร์ทไทม์
                 </p>
               </div>
               <div>
@@ -72,8 +79,35 @@ export default function LoginPage() {
         </div>
         <div className="p-10">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-2">Welcome.</h1>
-            <p>Please enter your details to sign In</p>
+            <h1 className="text-2xl font-bold mb-2">ยินดีต้อนรับ</h1>
+            <p>กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
+          </div>
+          <div className="py-5 flex flex-col gap-5">
+            <InputField
+              label="อีเมล"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <InputField
+              label="รหัสผ่าน"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>{" "}
+          <Button
+            onClick={handleLogin}
+            disabled={!email || !password}
+            className="w-full py-3"
+          >
+            เข้าสู่ระบบ
+          </Button>
+          <div className="flex items-center gap-4 py-5">
+            <div className="flex-1 h-px bg-gray-200"></div>
+            <span className="text-sm text-gray-400 tracking-widest">
+              หรือเข้าสู่ระบบด้วย
+            </span>
+            <div className="flex-1 h-px bg-gray-200"></div>
           </div>
           <div className="flex items-center justify-center gap-4">
             {" "}
@@ -93,44 +127,23 @@ export default function LoginPage() {
               Line
             </SocialLoginButton>
           </div>
-          <div className="flex items-center gap-4 py-5">
-            <div className="flex-1 h-px bg-gray-200"></div>
-            <span className="text-sm text-gray-400 tracking-widest">
-              OR CONTINUE WITH
-            </span>
-            <div className="flex-1 h-px bg-gray-200"></div>
-          </div>
-          <div className="py-5 flex flex-col gap-5">
-            <InputField
-              label="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <InputField
-              label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button onClick={handleLogin} classname="w-full py-3">
-            Sign In
-          </Button>
           <div className="flex items-center justify-start gap-2 mt-4">
             <input type="checkbox" />
-            <p className="text-xs">Remember this account for 30 days</p>
+            <p className="text-xs">จดจำบัญชีนี้เป็นเวลา 30 วัน</p>
           </div>
-          <span className="text-xs text-center mt-6 block">
-            Don't have an account?{" "}
-            <Link
-              className="text-blue-600 font-semibold hover:underline"
-              href={"/register"}
-            >
-              Sign Up
-            </Link>
-          </span>
+          <div className="w-full flex justify-center">
+            <span className="text-center text-sm text-slate-400 mt-4">
+              ยังไม่มีบัญชี?
+              <Link
+                className="text-blue-600 px-2 hover:underline"
+                href={"/register"}
+              >
+                สมัครสมาชิก
+              </Link>
+            </span>
+          </div>
         </div>
-      </main>
+      </motion.main>
       <div className="left-25 bottom-10 z-0 opacity-20 absolute rounded-full bg-primary blur-3xl w-50 h-50"></div>
       <div className="right-25 top-10 z-0 opacity-20 absolute rounded-full bg-primary blur-3xl w-50 h-50"></div>
     </div>

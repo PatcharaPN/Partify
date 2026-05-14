@@ -16,7 +16,9 @@ export default function InputField({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
-        <label className="font-bold text-sm text-neutral-600">{label}</label>
+        <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
+          {label}
+        </label>
         {forgotPassword && (
           <a href="#" className="text-sm text-blue-600 font-semibold">
             Forgot Password?

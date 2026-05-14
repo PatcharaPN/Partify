@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { User } from "@/app/types/job.type";
+import { Profile, User } from "@/app/types/job.type";
 
 interface AuthState {
   user: User | null;
@@ -21,6 +21,7 @@ type RegisterPayload = {
   email: string;
   password: string;
   role?: string;
+  profile: Profile;
 };
 type AuthResponse = {
   access_token: string;
@@ -29,11 +30,17 @@ type AuthResponse = {
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ email, password, role }: RegisterPayload) => {
+  async ({
+    email,
+    password,
+    role,
+    profile: { firstName, lastName, phone },
+  }: RegisterPayload) => {
     const res = await axiosInstance.post<AuthResponse>("/auth/register", {
       email,
       password,
       role: role || "CANDIDATE",
+      profile: { firstName, lastName, phone },
     });
     const token = res.data.access_token;
     localStorage.setItem("access_token", token);

@@ -16,7 +16,12 @@ export class AuthController {
 
   @Post('register')
   register(@Body() body) {
-    return this.authService.register(body.email, body.password, body.role);
+    return this.authService.register(
+      body.email,
+      body.password,
+      body.role,
+      body.profile,
+    );
   }
   @Post('login')
   login(@Body() body) {

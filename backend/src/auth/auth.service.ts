@@ -12,7 +12,12 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
-  async register(email: string, password: string, role: Role) {
+  async register(
+    email: string,
+    password: string,
+    role: Role,
+    profile: { firstName: string; lastName: string; phone: string },
+  ) {
     const isExist = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -25,6 +30,13 @@ export class AuthService {
         email,
         password: hash,
         role,
+        profile: {
+          create: {
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            phone: profile.phone,
+          },
+        },
       },
     });
 
@@ -75,7 +87,6 @@ export class AuthService {
       });
     }
 
-    // 3. create user ถ้าไม่มี
     let isNew = false;
 
     if (!user) {
@@ -87,7 +98,6 @@ export class AuthService {
 
       isNew = true;
 
-      // create profile
       await this.prisma.profile.create({
         data: {
           firstName: input.name ?? 'Unknown',
@@ -97,7 +107,6 @@ export class AuthService {
       });
     }
 
-    // 4. create account link
     await this.prisma.account.create({
       data: {
         provider: input.provider,
