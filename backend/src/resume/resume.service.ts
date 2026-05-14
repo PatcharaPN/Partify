@@ -38,4 +38,25 @@ export class ResumeService {
 
     return resume;
   }
+
+  async removeResume(resumeId: string, userId: string) {
+    const resume = await this.prisma.resume.findUnique({
+      where: {
+        id: resumeId,
+      },
+    });
+    if (!resume || resume.userId !== userId) {
+      throw new BadRequestException('Resume not found');
+    }
+    const { error } = await this.supabase.storage
+      .from('resume')
+      .remove([resume.fileName]);
+
+    if (error) throw new BadRequestException(error.message);
+
+    await this.prisma.resume.delete({
+      where: { id: resumeId },
+    });
+    return { message: 'Resume removed successfully' };
+  }
 }
