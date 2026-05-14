@@ -9,6 +9,7 @@ import QuickApplyModal from "@/app/components/ui/ApplyModal";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 import { fetchApplicationStatus } from "@/app/store/slices/applicationSlice";
 import JobEditPanel from "@/app/components/ui/JobEditPanel";
+import ProfileMatchScoreCard from "@/app/components/ui/ProfileMatchScoreCard";
 
 export default function JobDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -490,24 +491,8 @@ export default function JobDetail() {
                 </div>
               )}
             </section>
-
             {/* Profile Match */}
-            <section className="bg-linear-to-r from-blue-500 to-blue-300 rounded-2xl p-5 shadow-sm text-white">
-              <p className="text-xs font-extrabold uppercase tracking-widest text-blue-200 mb-1">
-                Profile Match
-              </p>
-              <p className="text-4xl font-bold mb-2">94%</p>
-              <div className="w-full bg-blue-400/40 rounded-full h-1.5 mb-3">
-                <div
-                  className="bg-white rounded-full h-1.5"
-                  style={{ width: "94%" }}
-                />
-              </div>
-              <p className="text-xs text-blue-100 leading-relaxed">
-                Your previous experience in customer service and availability
-                for morning shifts make you a top candidate!
-              </p>
-            </section>
+            <ProfileMatchScoreCard job={selectedJob} />
           </div>
         </div>
       </main>{" "}

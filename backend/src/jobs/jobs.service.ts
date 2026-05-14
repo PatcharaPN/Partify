@@ -30,24 +30,13 @@ export class JobsService {
 
         companyId: company.id,
         status: 'active',
-        skills: skills?.length
-          ? {
-              create: skills.map((skill) => ({
-                name: skill.name,
-              })),
-            }
-          : undefined,
-      },
-
-      include: {
-        skills: true,
+        skills: skills,
       },
     });
   }
   async getJobs(userId?: string) {
     const jobs = await this.prisma.job.findMany({
       include: {
-        skills: true,
         company: true,
         bookmarks: userId
           ? { where: { userId }, select: { id: true } }
@@ -83,7 +72,6 @@ export class JobsService {
             companySize: true,
           },
         },
-        skills: true,
       },
     });
     if (!jobs) {
@@ -133,17 +121,7 @@ export class JobsService {
       where: { id: jobId },
       data: {
         ...jobData,
-        skills: skills
-          ? {
-              deleteMany: {},
-              create: skills.map((skill) => ({
-                name: skill.name,
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        skills: true,
+        skills: skills ?? undefined,
       },
     });
   }
@@ -162,11 +140,7 @@ export class JobsService {
     const jobs = await this.prisma.job.findMany({
       where: {
         skills: {
-          some: {
-            name: {
-              in: userSkills,
-            },
-          },
+          hasSome: userSkills,
         },
         applications: {
           none: {
@@ -174,9 +148,7 @@ export class JobsService {
           },
         },
       },
-      include: {
-        skills: true,
-      },
+
       take: 10,
     });
     return jobs;

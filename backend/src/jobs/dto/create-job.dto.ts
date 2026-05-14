@@ -11,13 +11,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class SkillDto {
-  @IsString()
-  id!: string;
-  @IsString()
-  name!: string;
-}
-
 export class CreateJobDto {
   @IsString()
   title!: string;
@@ -127,8 +120,7 @@ export class CreateJobDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SkillDto)
-  skills?: SkillDto[];
+  skills?: string[];
 
   @IsOptional()
   @IsString()

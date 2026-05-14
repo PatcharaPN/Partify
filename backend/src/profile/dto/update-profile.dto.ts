@@ -1,13 +1,68 @@
-import { IsOptional, IsString, IsArray, isArray } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsArray,
+  IsInt,
+  IsDateString,
+} from 'class-validator';
 
 export class UpdateProfileDto {
   @IsOptional()
   @IsString()
-  name?: string;
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  lastName?: string;
 
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @IsOptional()
+  @IsString()
+  summary?: string;
+
+  @IsOptional()
+  @IsString()
+  workingHours?: string;
+
+  @IsOptional()
+  @IsString()
+  province?: string;
+
+  @IsOptional()
+  @IsString()
+  district?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  skills?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  shifts?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  availability?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  preferredJobTypes?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  preferredCategories?: string[];
+
+  @IsOptional()
+  @IsInt()
+  expectedSalary?: number;
 
   @IsOptional()
   @IsArray()
@@ -16,19 +71,11 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsString()
-  summary?: string;
+  gender?: string;
 
   @IsOptional()
-  @IsArray()
-  skills?: string[];
-
-  @IsOptional()
-  @IsArray()
-  shifts?: string[];
-
-  @IsOptional()
-  @IsArray()
-  availability?: string[];
+  @IsString()
+  nationality?: string;
 
   @IsOptional()
   @IsString()
@@ -39,5 +86,6 @@ export class UpdateProfileDto {
   avatarUrl?: string;
 
   @IsOptional()
+  @IsDateString()
   birthDate?: string;
 }

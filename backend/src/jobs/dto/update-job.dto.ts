@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateJobDto, SkillDto } from './create-job.dto';
+import { CreateJobDto } from './create-job.dto';
 import {
   IsArray,
   IsBoolean,
@@ -121,6 +121,5 @@ export class UpdateJobDto extends PartialType(CreateJobDto) {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SkillDto)
-  skills?: SkillDto[];
+  skills?: string[];
 }

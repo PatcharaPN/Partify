@@ -90,7 +90,7 @@ export class AuthService {
       // create profile
       await this.prisma.profile.create({
         data: {
-          name: input.name ?? 'Unknown',
+          firstName: input.name ?? 'Unknown',
           avatarUrl: input.picture ?? null,
           userId: user!.id,
         },

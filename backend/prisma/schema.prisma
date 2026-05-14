@@ -62,16 +62,24 @@ model Account {
 model Profile {
   id           String   @id @default(uuid())
   userId       String   @unique
-
-  name         String
+  firstName    String
+  lastName     String?
   phone        String?
   summary      String?   
   workingHours      String?
-
+  province     String?
+  district     String? 
   skills       String[]   
   shifts       String[]  
-  availability String[]   
+  availability String[]
+  preferredJobTypes   String[]
+  preferredCategories String[]
+  expectedSalary      Int?
   experience   String[]
+
+
+  gender       String?
+  nationality  String?
 
   resumeUrl    String?
   avatarUrl    String?
@@ -123,7 +131,7 @@ model Job {
   employees Employee[]
   applications      Application[]
   notifications Notification[]
-  skills            JobSkill[]    
+  skills            String[]    
   @@map("jobs")
 }
 
@@ -143,7 +151,7 @@ model Bookmark {
 model JobSkill {
   id      String  @id @default(uuid())
   jobId   String
-  job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  // job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
   name    String  
 
   @@map("job_skills")
