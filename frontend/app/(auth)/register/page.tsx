@@ -8,51 +8,71 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import Button from "@/app/components/ui/Button";
-
-type Role = "CANDIDATE" | "EMPLOYER" | null;
+import { Role } from "@/app/types/job.type";
+import { Controller, useForm } from "react-hook-form";
+import { registerSchema, RegisterValues } from "@/app/schemas/registerSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function RegisterPage() {
   const dispatch = useAppDispatch();
-  const router = useRouter();
+  const {
+    register: registeredField,
+    handleSubmit,
+    control,
+    trigger,
+    formState: { errors },
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      role: undefined,
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+      phone: "",
+    },
+  });
+
   const [step, setStep] = useState<1 | 2>(1);
-
-  const [role, setRole] = useState<Role>(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isStep1Valid = role && email && password;
-  const isStep2Valid = firstName && lastName && phone;
+  const handleNext = async () => {
+    const isValid = await trigger([
+      "role",
+      "email",
+      "password",
+      "confirmPassword",
+    ]);
+    if (isValid) setStep(2);
+  };
 
-  const handleSubmit = async () => {
-    if (!isStep2Valid || !isStep1Valid) return;
+  const onSubmit = async (data: RegisterValues) => {
     try {
       setLoading(true);
       await dispatch(
         register({
-          email,
-          password,
-          role,
+          email: data.email,
+          password: data.password,
+          role: data.role,
           profile: {
-            firstName,
-            lastName,
-            phone,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            phone: data.phone,
           },
         }),
       ).unwrap();
-      dispatch(fetchCurrentUser()).unwrap();
+
+      await dispatch(fetchCurrentUser()).unwrap();
       router.push("/");
     } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
-
   const stepVariants = {
     initial: { opacity: 0, x: 30 },
     animate: { opacity: 1, x: 0 },
@@ -159,11 +179,11 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* ── Right Panel ── */}
-        <div className="flex flex-1 items-center justify-center p-10 bg-white shadow-lg rounded-r-2xl">
+        {/* Right Panel */}
+        <div className="flex flex-1 items-center justify-center p-5 bg-white shadow-lg rounded-r-2xl">
           <div className="w-full">
             {/* Step Indicator */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-3">
               {[1, 2].map((s) => (
                 <div key={s} className="flex items-center gap-2">
                   <div
@@ -191,7 +211,6 @@ export default function RegisterPage() {
               </span>
             </div>
 
-            {/* Steps — fixed height to prevent layout shift */}
             <div className="relative">
               <AnimatePresence mode="wait">
                 {step === 1 && (
@@ -206,95 +225,103 @@ export default function RegisterPage() {
                     <h1 className="text-2xl font-bold text-slate-900 tracking-tight mb-1">
                       สร้างบัญชีของคุณ
                     </h1>
-                    <p className="text-sm text-slate-500 mb-7">
+                    <p className="text-sm text-slate-500 mb-4">
                       เข้าร่วมชุมชนของผู้หางานและนายจ้างมืออาชีพ
                     </p>
-
                     {/* Role */}
-                    <div className="mb-5">
-                      <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2.5">
-                        ฉันคือ...
-                      </label>
-                      <div className="flex gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setRole("CANDIDATE")}
-                          className={`flex-1 relative text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer
-                          ${role === "CANDIDATE" ? "border-blue-600 bg-white ring-2 ring-blue-100" : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/40"}`}
-                        >
-                          <span
-                            className={`absolute top-3 right-3 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all
-                            ${role === "CANDIDATE" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
-                          >
-                            {role === "CANDIDATE" && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-white block" />
-                            )}
-                          </span>
-                          <Icon
-                            icon="solar:users-group-rounded-linear"
-                            className="w-5 h-5 text-blue-600 mb-2.5"
-                          />
-                          <p className="text-sm font-semibold text-slate-800 mb-0.5">
-                            ผู้หางาน
-                          </p>
-                          <p className="text-xs text-slate-400 leading-snug">
-                            ฉันต้องการหางานพาร์ทไทม์
-                          </p>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setRole("EMPLOYER")}
-                          className={`flex-1 relative text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer
-                          ${role === "EMPLOYER" ? "border-blue-600 bg-white ring-2 ring-blue-100" : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/40"}`}
-                        >
-                          <span
-                            className={`absolute top-3 right-3 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all
-                            ${role === "EMPLOYER" ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
-                          >
-                            {role === "EMPLOYER" && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-white block" />
-                            )}
-                          </span>
-                          <Icon
-                            icon="solar:buildings-2-linear"
-                            className="w-5 h-5 text-slate-400 mb-2.5"
-                          />
-                          <p className="text-sm font-semibold text-slate-800 mb-0.5">
-                            นายจ้าง
-                          </p>
-                          <p className="text-xs text-slate-400 leading-snug">
-                            ฉันต้องการจ้างพนักงานพาร์ทไทม์
-                          </p>
-                        </button>
-                      </div>
-                    </div>
-
+                    <Controller
+                      name="role"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="mb-2">
+                          <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2.5">
+                            ฉันคือ...
+                          </label>
+                          <div className="flex gap-3">
+                            {[
+                              {
+                                value: "CANDIDATE",
+                                label: "ผู้หางาน",
+                                desc: "ฉันต้องการหางานพาร์ทไทม์",
+                                icon: "solar:users-group-rounded-linear",
+                              },
+                              {
+                                value: "EMPLOYER",
+                                label: "นายจ้าง",
+                                desc: "ฉันต้องการจ้างพนักงานพาร์ทไทม์",
+                                icon: "solar:buildings-2-linear",
+                              },
+                            ].map((item) => (
+                              <button
+                                key={item.value}
+                                type="button"
+                                onClick={() => field.onChange(item.value)}
+                                className={`flex-1 relative text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer
+                          ${field.value === item.value ? "border-blue-600 bg-white ring-2 ring-blue-100" : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/40"}`}
+                              >
+                                <span
+                                  className={`absolute top-3 right-3 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all
+                            ${field.value === item.value ? "border-blue-600 bg-blue-600" : "border-slate-300 bg-white"}`}
+                                >
+                                  {field.value === item.value && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white block" />
+                                  )}
+                                </span>
+                                <Icon
+                                  icon={item.icon}
+                                  className="w-5 h-5 text-blue-600 mb-2.5"
+                                />
+                                <p className="text-sm font-semibold text-slate-800 mb-0.5">
+                                  {item.label}
+                                </p>
+                                <p className="text-xs text-slate-400 leading-snug">
+                                  {item.desc}
+                                </p>
+                              </button>
+                            ))}
+                          </div>
+                          {errors.role && (
+                            <p className="text-xs text-red-500 mt-1">
+                              {errors.role.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    ></Controller>
                     {/* Email */}
-                    <div className="mb-4">
+                    <div className="mb-2">
                       <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
                         อีเมล
                       </label>
                       <input
+                        {...registeredField("email")}
                         type="email"
                         placeholder="john@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
                       />
+                      {errors.email && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
-
                     {/* Password */}
-                    <div className="mb-6">
-                      <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
-                        รหัสผ่าน
-                      </label>
+                    <div className="mb-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-[11px] font-semibold tracking-widest text-slate-400">
+                          รหัสผ่าน
+                        </label>
+                        {errors.password && (
+                          <p className="text-[11px] text-red-500">
+                            {errors.password.message}
+                          </p>
+                        )}
+                      </div>
                       <div className="relative">
                         <input
+                          {...registeredField("password")}
                           type={showPassword ? "text" : "password"}
                           placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
                           className="w-full px-3.5 py-2.5 pr-10 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
                         />
                         <button
@@ -314,14 +341,49 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
+                    {/* Confirm Password */}
+                    <div className="mb-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-[11px] font-semibold tracking-widest text-slate-400">
+                          ยืนยันรหัสผ่าน
+                        </label>
+                        {errors.confirmPassword && (
+                          <p className="text-[11px] text-red-500">
+                            {errors.confirmPassword.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <input
+                          {...registeredField("confirmPassword")}
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          className="w-full px-3.5 py-2.5 pr-10 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          <Icon
+                            icon={
+                              showConfirmPassword
+                                ? "solar:eye-closed-linear"
+                                : "solar:eye-linear"
+                            }
+                            className="w-4.5 h-4.5"
+                          />
+                        </button>
+                      </div>
+                    </div>
                     <Button
-                      disabled={!isStep1Valid}
-                      onClick={() => setStep(2)}
+                      onClick={handleNext}
                       className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-sm font-semibold tracking-wide transition-all duration-150"
                     >
                       ถัดไป
                     </Button>
-
                     <div className="w-full flex justify-center">
                       <span className="text-center text-sm text-slate-400 mt-4">
                         มีบัญชีอยู่แล้ว?{" "}
@@ -359,24 +421,32 @@ export default function RegisterPage() {
                           ชื่อ
                         </label>
                         <input
+                          {...registeredField("firstName")}
                           type="text"
                           placeholder="สมชาย"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
                           className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
                         />
+                        {errors.firstName && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.firstName.message}
+                          </p>
+                        )}
                       </div>
                       <div className="flex-1">
                         <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
                           นามสกุล
                         </label>
                         <input
+                          {...registeredField("lastName")}
                           type="text"
                           placeholder="ใจดี"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
                           className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
                         />
+                        {errors.lastName && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -386,17 +456,18 @@ export default function RegisterPage() {
                         เบอร์โทรศัพท์
                       </label>
                       <input
+                        {...registeredField("phone")}
                         type="tel"
                         placeholder="08X-XXX-XXXX"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
                         className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all"
                       />
+                      {errors.phone && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.phone.message}
+                        </p>
+                      )}
                     </div>
-
-                    {/* padding เพื่อให้สูงเท่า step 1 */}
                     <div className="mb-15" />
-
                     <div className="flex gap-3">
                       <Button
                         onClick={() => setStep(1)}
@@ -406,8 +477,7 @@ export default function RegisterPage() {
                         ย้อนกลับ
                       </Button>
                       <Button
-                        onClick={handleSubmit}
-                        disabled={!isStep2Valid || loading}
+                        onClick={handleSubmit(onSubmit)}
                         className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-sm font-semibold tracking-wide transition-all duration-150 flex items-center justify-center gap-2"
                       >
                         {loading && (
@@ -423,7 +493,7 @@ export default function RegisterPage() {
 
                     <div className="w-full flex justify-center">
                       <span className="text-center text-sm text-slate-400 mt-4">
-                        มีบัญชีอยู่แล้ว?{" "}
+                        มีบัญชีอยู่แล้ว?
                         <Link
                           className="text-blue-600 px-2 hover:underline"
                           href="/login"

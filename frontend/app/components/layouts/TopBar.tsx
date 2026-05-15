@@ -19,7 +19,6 @@ export default function TopBar() {
     (state) => state.AuthReducer,
   );
   const dispatch = useAppDispatch();
-
   return (
     <header className="sticky top-0 z-1 w-full shadow-md bg-white px-2 py-3">
       <div className="mx-auto grid grid-cols-3">
@@ -55,14 +54,16 @@ export default function TopBar() {
         <div className="flex items-center justify-end gap-5">
           {" "}
           <div className="relative">
-            <button
-              onClick={() => setOpenNotification(!openNotification)}
-              className="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <Icon icon="heroicons:bell" className="w-5 h-5" />
+            {isAuthenticated && (
+              <button
+                onClick={() => setOpenNotification(!openNotification)}
+                className="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <Icon icon="heroicons:bell" className="w-5 h-5" />
 
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
-            </button>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+              </button>
+            )}
 
             {openNotification && (
               <NotificationContainer

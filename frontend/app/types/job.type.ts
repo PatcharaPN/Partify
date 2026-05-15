@@ -157,3 +157,4 @@ export type ImageSlot = {
   file: File;
   preview: string;
 };
+export type Role = "CANDIDATE" | "EMPLOYER" | null;
