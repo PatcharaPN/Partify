@@ -92,5 +92,8 @@
       "^src/(.*)$": "<rootDir>/$1",
       "^generated/(.*)$": "<rootDir>/../generated/$1"
     }
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
