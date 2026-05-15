@@ -1,22 +1,23 @@
-# 🚀 Partify — Part-Time Job Platform
+# 🎯 Partify — Part-Time Job Platform
 
-Partify is a full-stack web application designed to help users discover, apply, and manage part-time job opportunities efficiently. The platform supports multiple user roles including candidates, employers, and administrators.
+Partify is a full-stack web application for discovering and applying to part-time jobs, featuring role-based access for candidates, employers, and admins.
 
 ---
 
 ## ✨ Features
 
 ### 👤 Candidate
-- Register & Login
-- Manage profile & upload resume
+- Register & Login with multi-step form (role → credentials → profile)
+- Upload profile avatar via Cloudinary
+- Manage profile, resume, work experience, and skills
 - Browse and search part-time jobs
-- Apply for jobs
-- Track application status
+- Apply for jobs and track application status
 
 ### 🏢 Employer
 - Create and manage job postings
-- View applicants
+- View and manage applicants
 - Update application status (Accepted / Rejected / Interview)
+- Manage company profile
 
 ### 🛠️ Admin
 - Manage users
@@ -27,25 +28,25 @@ Partify is a full-stack web application designed to help users discover, apply, 
 
 ## 🏗️ Tech Stack
 
-| Layer | Technology |
+### Frontend
+| Technology | Purpose |
 |---|---|
-| Frontend | React |
-| Backend | NestJS |
-| Database | PostgreSQL (via Supabase) |
-| ORM | Prisma |
-| Authentication | JWT + bcrypt |
-| Deployment | Vercel / Render |
-| CI/CD | GitHub Actions |
+| Next.js 14 (App Router) | Framework |
+| TypeScript | Language |
+| Tailwind CSS | Styling |
+| Redux Toolkit | State Management |
+| React Hook Form + Zod | Form Validation |
+| Framer Motion | Animations |
+| Iconify (Solar icons) | Icons |
 
----
-
-## 🔐 Key Concepts
-
-- Role-based access control (Candidate / Employer / Admin)
-- RESTful API design
-- Secure authentication with JWT
-- Relational database modeling with Prisma
-- Scalable backend architecture
+### Backend
+| Technology | Purpose |
+|---|---|
+| NestJS | Framework |
+| PostgreSQL (Supabase) | Database |
+| Prisma | ORM |
+| JWT + bcrypt | Authentication |
+| Cloudinary | Image Upload |
 
 ---
 
@@ -53,16 +54,25 @@ Partify is a full-stack web application designed to help users discover, apply, 
 
 ```
 Partify/
-├── frontend/        # React application
-└── backend/         # NestJS application
+├── frontend/               # Next.js application
+│   └── src/
+│       ├── app/
+│       │   ├── components/ # Reusable UI components
+│       │   ├── store/      # Redux slices (auth, profile, etc.)
+│       │   ├── hooks/      # Custom hooks
+│       │   ├── schemas/    # Zod validation schemas
+│       │   ├── types/      # TypeScript types
+│       │   └── helpers/    # Utility functions
+│       └── ...
+└── backend/                # NestJS application
     ├── src/
-    │   ├── auth/    # Authentication module
-    │   ├── prisma/  # Prisma service
-    │   └── ...
-    ├── prisma/
-    │   └── schema.prisma
-    └── generated/
-        └── prisma/
+    │   ├── auth/           # Authentication module
+    │   ├── profile/        # Profile module
+    │   ├── jobs/           # Jobs module
+    │   ├── applications/   # Applications module
+    │   └── prisma/         # Prisma service
+    └── prisma/
+        └── schema.prisma
 ```
 
 ---
@@ -70,16 +80,15 @@ Partify/
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js >= 18
 - PostgreSQL (or Supabase account)
+- Cloudinary account
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/PatcharaPN/partify.git
-cd partify
+git clone https://github.com/PatcharaPN/Partify.git
+cd Partify
 ```
 
 #### Backend
@@ -89,7 +98,7 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend` directory:
+Create `.env` in `backend/`:
 
 ```env
 DATABASE_URL=postgresql://postgres:<password>@<host>:5432/postgres
@@ -97,13 +106,8 @@ JWT_SECRET=your_jwt_secret
 ```
 
 ```bash
-# Generate Prisma client
 npx prisma generate
-
-# Run migrations
 npx prisma migrate dev
-
-# Start the server
 npm run start:dev
 ```
 
@@ -115,32 +119,49 @@ npm install
 npm run dev
 ```
 
+Create `.env.local` in `frontend/`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
 ---
 
 ## 🔑 Environment Variables
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET` | Secret key for JWT signing |
+| Variable | Location | Description |
+|---|---|---|
+| `DATABASE_URL` | backend | PostgreSQL connection string |
+| `JWT_SECRET` | backend | Secret key for JWT signing |
+| `NEXT_PUBLIC_API_URL` | frontend | Backend API base URL |
 
 ---
 
-## 📝 API Endpoints (Auth)
+## 📝 API Endpoints
 
+### Auth
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/auth/register` | Register a new user |
-| POST | `/auth/login` | Login and receive JWT token |
+| POST | `/auth/register` | Register new user |
+| POST | `/auth/login` | Login and receive JWT |
+| GET | `/auth/me` | Get current user |
 
----
+### Profile
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/profile` | Get profile |
+| POST | `/profile` | Create or update profile |
 
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+### Jobs
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/jobs` | List all jobs |
+| POST | `/jobs` | Create job (Employer) |
+| PATCH | `/jobs/:id` | Update job |
+| DELETE | `/jobs/:id` | Delete job |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License
