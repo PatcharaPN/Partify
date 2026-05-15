@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { getRoleLabel } from "@/app/helpers/getRoleLabel";
+import AvatarProfilePrefix from "./AvatarProfilePrefix";
 
 const SIDEBAR_ELEMENTS = [
   {
@@ -44,14 +45,21 @@ export default function ProfileSidebar() {
       {/* Avatar + name */}
       <div className="flex flex-col gap-2">
         <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
-          <img
-            src={
-              currentUser?.profile?.avatarUrl
-                ? currentUser?.profile?.avatarUrl
-                : "/images/default-avatar.jpg"
-            }
-            className="w-full h-full object-cover"
-          />
+          {currentUser?.profile?.avatarUrl ? (
+            <img
+              src={
+                currentUser?.profile?.avatarUrl
+                  ? currentUser?.profile?.avatarUrl
+                  : "/images/default-avatar.jpg"
+              }
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <AvatarProfilePrefix
+              size="lg"
+              firstName={currentUser?.profile?.firstName ?? "?"}
+            />
+          )}
         </div>
         <div>
           <p className="text-sm font-medium text-gray-900">

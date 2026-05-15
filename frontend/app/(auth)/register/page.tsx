@@ -66,11 +66,10 @@ export default function RegisterPage() {
       ).unwrap();
 
       await dispatch(fetchCurrentUser()).unwrap();
+      setLoading(false);
       router.push("/");
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   const stepVariants = {

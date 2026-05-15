@@ -8,6 +8,7 @@ import { Icon } from "@iconify/react";
 import NotificationContainer from "../ui/NotificationContainer";
 import { useState } from "react";
 import { useNotification } from "@/app/hooks/useNotification";
+import AvatarProfilePrefix from "../ui/AvatarProfilePrefix";
 
 export default function TopBar() {
   const router = useRouter();
@@ -75,11 +76,19 @@ export default function TopBar() {
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <Link href={"/profile/info"} className="flex items-center gap-3">
-                <img
-                  src={user?.profile?.avatarUrl || "/images/default-avatar.jpg"}
-                  alt="avatar"
-                  className="w-9 h-9 rounded-full object-cover"
-                />
+                {user?.profile?.avatarUrl ? (
+                  <img
+                    src={
+                      user?.profile?.avatarUrl || "/images/default-avatar.jpg"
+                    }
+                    alt="avatar"
+                    className="w-9 h-9 rounded-full object-cover"
+                  />
+                ) : (
+                  <AvatarProfilePrefix
+                    firstName={user?.profile?.firstName ?? "?"}
+                  />
+                )}
                 <span className="text-neutral-700 font-medium">
                   {user?.profile?.firstName} {user?.profile?.lastName}
                 </span>
