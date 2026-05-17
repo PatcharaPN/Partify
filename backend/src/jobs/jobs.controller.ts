@@ -28,9 +28,15 @@ export class JobsController {
   getJobs(@Req() req) {
     return this.jobsService.getJobs(req.user?.sub);
   }
+
+  @Get('/related/:id')
+  fetchRelatedJobs(@Param('id') jobId: string) {
+    return this.jobsService.fetchRelatedJobs(jobId);
+  }
+
   @UseGuards(AuthGuard)
   @Get('/owner/:id')
-  getRelatedJobs(@Param('id') ownerId) {
+  getRelatedJobs(@Param('id') ownerId: string) {
     return this.jobsService.getJobsByOwnerId(ownerId);
   }
 

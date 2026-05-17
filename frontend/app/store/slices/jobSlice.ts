@@ -7,6 +7,7 @@ interface JobState {
   jobs: Job[];
   recomandJobs: Job[];
   employeeJob: Job[];
+  relatedJobs: Job[];
   isLoading: boolean;
   selectedJob: Job | null;
   error: string | null;
@@ -16,6 +17,7 @@ const initialState: JobState = {
   jobs: [],
   employeeJob: [],
   recomandJobs: [],
+  relatedJobs: [],
   selectedJob: null,
   isLoading: false,
   error: null,
@@ -28,6 +30,20 @@ export const postJob = createAsyncThunk(
       const res = await axiosInstance.post("/jobs/add", formData);
 
       return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to post job",
+      );
+    }
+  },
+);
+
+export const fetchRelatedJob = createAsyncThunk(
+  "/jobs/related",
+  async (jobId: string, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(`/jobs/related/${jobId}`);
+      return res.data as Job[];
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to post job",
@@ -182,6 +198,9 @@ const jobSlice = createSlice({
       .addCase(postJob.rejected, (state, action) => {
         state.isLoading = false;
         state.error = (action.payload as string) ?? "Failed to post job";
+      })
+      .addCase(fetchRelatedJob.fulfilled, (state, action) => {
+        state.relatedJobs = action.payload;
       });
   },
 });

@@ -1,12 +1,8 @@
-export interface Skill {
-  id: string;
-  name: string;
-  jobId: string;
-}
 export interface Company {
   id?: string;
   companyName: string;
   userId?: string;
+  category?: string;
   companyImageURL?: string;
   companyBio?: string;
   companySize?: string;
@@ -48,7 +44,7 @@ export interface Job {
 
   company: Company;
   overviewPictureURL?: string[];
-  skills: Skill[];
+  skills: string[];
   applications: Application[];
   isApplied: boolean;
   createdAt: string;

@@ -4,11 +4,13 @@ import { fetchCurrentUser } from "../store/slices/authSlice";
 
 export const useCurrentUser = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.AuthReducer);
+  const { user, isAuthenticated, isLoading, token, error } = useAppSelector(
+    (state) => state.AuthReducer,
+  );
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
   const currentUser = user;
-  return { currentUser };
+  return { currentUser, isAuthenticated, isLoading, token, error };
 };

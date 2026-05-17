@@ -34,6 +34,38 @@ export class JobsService {
       },
     });
   }
+  async fetchRelatedJobs(jobId: string) {
+    const currentJob = await this.prisma.job.findUnique({
+      where: {
+        id: jobId,
+      },
+      include: {
+        company: {
+          include: {
+            jobs: {
+              where: {
+                id: {
+                  not: jobId,
+                },
+                status: 'OPEN',
+              },
+              take: 3,
+              orderBy: {
+                createdAt: 'desc',
+              },
+              include: {
+                company: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!currentJob) {
+      throw new NotFoundException();
+    }
+    return currentJob?.company.jobs;
+  }
   async getJobs(userId?: string) {
     const jobs = await this.prisma.job.findMany({
       include: {
@@ -65,6 +97,7 @@ export class JobsService {
         company: {
           select: {
             userId: true,
+            category: true,
             companyBio: true,
             companyImageURL: true,
             companyName: true,

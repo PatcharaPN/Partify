@@ -5,6 +5,7 @@ import PersonaCard from "@/app/components/ui/PersonaCard";
 import SocialLoginButton from "@/app/components/ui/SocialLoginButton";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchCurrentUser, login } from "@/app/store/slices/authSlice";
+import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const navigate = useRouter();
+  const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
   const { isAuthenticated } = useAppSelector((state) => state.AuthReducer);
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
@@ -88,12 +90,30 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-
-            <InputField
-              label="รหัสผ่าน"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              {" "}
+              <InputField
+                type={visiblePassword ? "text" : "password"}
+                placeholder="••••••••"
+                label="รหัสผ่าน"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />{" "}
+              <button
+                type="button"
+                onClick={() => setVisiblePassword(!visiblePassword)}
+                className="absolute right-3 top-13 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <Icon
+                  icon={
+                    visiblePassword
+                      ? "solar:eye-closed-linear"
+                      : "solar:eye-linear"
+                  }
+                  className="w-4.5 h-4.5"
+                />
+              </button>
+            </div>
           </div>{" "}
           <Button
             onClick={handleLogin}

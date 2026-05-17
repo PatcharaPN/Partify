@@ -14,5 +14,9 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsString()
+  category?: string;
+
+  @IsOptional()
+  @IsString()
   companySize?: string;
 }

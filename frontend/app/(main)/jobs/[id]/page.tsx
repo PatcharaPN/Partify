@@ -1,21 +1,26 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { fetchJobById } from "@/app/store/slices/jobSlice";
+import { fetchJobById, fetchRelatedJob } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import JobDetailSkeleton from "./JobDetailSkeleton";
 import QuickApplyModal from "@/app/components/ui/ApplyModal";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 import { fetchApplicationStatus } from "@/app/store/slices/applicationSlice";
 import ProfileMatchScoreCard from "@/app/components/ui/ProfileMatchScoreCard";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
+import JobRow from "@/app/components/ui/JobRow";
+import RelatedJobCard from "@/app/components/ui/RelatedJobCard";
 
 export default function JobDetail() {
+  const router = useRouter();
+  const { isAuthenticated } = useCurrentUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
   const { appliedStatus } = useAppSelector((state) => state.ApplicationReducer);
   const { user } = useAppSelector((state) => state.AuthReducer);
-  const { selectedJob, isLoading, error } = useAppSelector(
+  const { relatedJobs, selectedJob, isLoading, error } = useAppSelector(
     (state) => state.jobReducer,
   );
   const dispatch = useAppDispatch();
@@ -23,6 +28,7 @@ export default function JobDetail() {
   useEffect(() => {
     if (id) {
       dispatch(fetchJobById(id as string));
+      dispatch(fetchRelatedJob(id as string));
     }
     dispatch(fetchCurrentUser());
   }, [id]);
@@ -68,6 +74,14 @@ export default function JobDetail() {
         })
       : null;
   const hasCompanyProfile = Boolean(selectedJob.company?.companyProfileURL);
+
+  const handleApply = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="flex justify-center bg-gray-50 min-h-screen">
       <main className="w-full max-w-5xl mt-10 mb-20 px-4">
@@ -200,7 +214,6 @@ export default function JobDetail() {
                   </div>
                 </div>
               )}
-
             {/* The Role */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
@@ -221,7 +234,6 @@ export default function JobDetail() {
                 </div>
               )}
             </section>
-
             {/* Requirements & Benefits */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Requirements */}
@@ -300,7 +312,6 @@ export default function JobDetail() {
                 </ul>
               </section>
             </div>
-
             {/* Job Details */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h2 className="text-base font-bold text-gray-900 mb-4">
@@ -355,7 +366,6 @@ export default function JobDetail() {
                 </div>
               </div>
             </section>
-
             {/* Skills */}
             {selectedJob.skills && selectedJob.skills.length > 0 && (
               <section className="bg-white rounded-2xl p-6 shadow-sm">
@@ -363,13 +373,26 @@ export default function JobDetail() {
                   Required Skills
                 </h2>
                 <div className="flex flex-wrap gap-2">
-                  {selectedJob.skills.map((skill) => (
+                  {selectedJob.skills.map((skill, i) => (
                     <span
-                      key={skill.id}
+                      key={`${skill}-${i}`}
                       className="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1.5 rounded-full font-medium"
                     >
-                      {skill.name}
+                      {skill}
                     </span>
+                  ))}
+                </div>
+              </section>
+            )}
+            {relatedJobs.length > 0 && (
+              <section className="rounded-2xl p-6">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  งานอื่นจากบริษัทนี้
+                </h2>
+
+                <div className="flex flex-col gap-3">
+                  {relatedJobs.map((job) => (
+                    <RelatedJobCard job={job} />
                   ))}
                 </div>
               </section>
@@ -396,9 +419,9 @@ export default function JobDetail() {
                   <p className="font-bold text-gray-900 text-sm">
                     {selectedJob.company.companyName}
                   </p>
-                  <p className="text-yellow-500 text-xs">
+                  {/* <p className="text-yellow-500 text-xs">
                     ★ 4.8 (2.4k reviews)
-                  </p>
+                  </p> */}
                 </div>
               </div>
 
@@ -410,7 +433,7 @@ export default function JobDetail() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">ประเภทธุรกิจ</span>
                   <span className="font-medium text-gray-700">
-                    อาหารและเครื่องดื่ม
+                    {selectedJob.company.category}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -481,7 +504,7 @@ export default function JobDetail() {
                     </button>
                   ) : (
                     <button
-                      onClick={() => setIsModalOpen(true)}
+                      onClick={handleApply}
                       className="w-full bg-blue-600 text-white py-2.5 rounded-xl"
                     >
                       ยื่นสมัคร

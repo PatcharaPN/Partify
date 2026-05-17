@@ -26,13 +26,13 @@ export default function Home() {
     },
   ];
 
-  useEffect(() => {
-    showToast({
-      title: "สำเร็จ",
-      message: "สมัครงานเรียบร้อยแล้ว",
-      type: "SUCCESS",
-    });
-  }, []);
+  // useEffect(() => {
+  //   showToast({
+  //     title: "สำเร็จ",
+  //     message: "สมัครงานเรียบร้อยแล้ว",
+  //     type: "SUCCESS",
+  //   });
+  // }, []);
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
       <div className="grid grid-cols-2 gap-10 py-50">

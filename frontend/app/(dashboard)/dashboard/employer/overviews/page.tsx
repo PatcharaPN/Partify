@@ -31,7 +31,7 @@ export default function EmployerDashboard() {
       <main className="flex-1 overflow-auto">
         <DashboardHeader
           title="แดชบอร์ดผู้ประกอบการ"
-          name={user?.profile?.name}
+          name={user?.profile?.firstName}
         />
 
         <div className="px-8 py-6 space-y-6">
@@ -75,9 +75,7 @@ export default function EmployerDashboard() {
               </div>
             </div>
 
-            {/* Table header */}
             <TableHeader />
-            {/* JobRow */}
             {filteredJobs.map((job) => (
               <JobRow key={job.id} job={job} />
             ))}

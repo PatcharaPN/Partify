@@ -64,6 +64,7 @@ export class CompanyService {
         },
         select: {
           id: true,
+          category: true,
           companyBio: true,
           companyImageURL: true,
           companyName: true,

@@ -27,7 +27,7 @@ export default function CallbackPage() {
           dispatch(setUser({ user: res.data, token }));
 
           if (isNew) {
-            router.push("/setup-profile");
+            router.push("/profile/info");
           } else {
             router.push("/");
           }

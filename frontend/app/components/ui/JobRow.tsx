@@ -1,7 +1,5 @@
 import { Job } from "@/app/types/job.type";
-import { Icon } from "@iconify/react";
 import Link from "next/link";
-import React from "react";
 import AvatarStack from "./AvatarStack";
 
 type JobRowProps = {
@@ -10,7 +8,9 @@ type JobRowProps = {
 };
 
 const JobRow = ({ href, job }: JobRowProps) => {
-  const pendingApps = job.applications.filter((a) => a.status === "PENDING");
+  console.log(job);
+  const pendingApps =
+    job.applications?.filter((a) => a.status === "PENDING") ?? [];
 
   const content = (
     <div className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group">
@@ -20,7 +20,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
           {/* <Icon icon="mdi:briefcase-outline" className="w-4 h-4" /> */}
           <img
             className="object-center w-full h-full"
-            src={job.company.companyImageURL}
+            src={job.company?.companyImageURL || ""}
             alt=""
           />
         </div>
@@ -48,8 +48,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
       <div>
         <AvatarStack
           count={pendingApps.length}
-          avatars={job.applications
-            .filter((a) => a.status === "PENDING")
+          avatars={pendingApps
             .slice()
             .sort(
               (a, b) =>

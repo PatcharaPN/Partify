@@ -220,6 +220,7 @@ model Company {
   id                String @id @default(uuid())
   companyName       String
   userId            String @unique
+  category          String?
   companyImageURL   String?
   companyProfileURL String?
   companyBio        String?
