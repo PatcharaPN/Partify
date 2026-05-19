@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import React from "react";
 
 type Props = {
   value: string;
@@ -10,14 +9,14 @@ type Props = {
 const SearchInput = ({ value, onChange, placeholder }: Props) => {
   return (
     <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 w-52">
-      <Icon icon="mdi:magnify" className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-      <input
-        type="text"
-        placeholder={`${placeholder ? placeholder : "Search..."}`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none w-full"
-      />
+      <div className="flex items-center gap-2 border rounded-2xl px-4 py-3 bg-white">
+        <Icon icon="mdi:magnify" />
+
+        <input
+          placeholder="Search jobs, companies, locations..."
+          className="w-full outline-none"
+        />
+      </div>
     </div>
   );
 };

@@ -105,7 +105,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-5">
           <h1 className="text-2xl font-semibold text-gray-900">
-            Welcome back, {profile?.name || "User"}!
+            Welcome back, {profile?.firstName || "User"}!
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             You have 3 active applications this week.
@@ -167,7 +167,7 @@ export default function DashboardPage() {
             <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">
               Saved Jobs
             </p>
-            <p className="text-3xl font-bold text-gray-900 tabular-nums">8</p>
+            <p className="text-3xl font-bold text-gray-900 tabular-nums">0</p>
           </div>
         </div>
 
@@ -187,12 +187,12 @@ export default function DashboardPage() {
                   <Link key={app.id} href={`/jobs/${app.job?.id}`}>
                     <div className="flex items-center gap-3 py-3">
                       <img
-                        src={app.job?.companyImageURL}
+                        src={app.job?.company.companyImageURL}
                         className="w-15 h-15"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-gray-900">
-                          {app.job?.companyName}
+                          {app.job?.company?.companyName || ""}
                         </div>
                         <div className="text-xs text-gray-500">
                           {app.job?.title}
@@ -240,12 +240,9 @@ export default function DashboardPage() {
                         <span className="text-sm font-medium text-gray-900">
                           {job.title}
                         </span>
-                        <span className="text-xs font-semibold text-green-600">
-                          {/* {job.rate} */} 5
-                        </span>
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">
-                        {job.companyName} • {job.location}
+                        {job.company?.companyName || ""} • {job.location}
                       </div>
                       <div className="flex gap-1.5 mt-2 mb-3">
                         {/* {job.tags.map((tag) => (

@@ -8,9 +8,19 @@ import JobListSkeleton from "./JobListSkeleton";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import JobList from "@/app/components/ui/JobList";
 
+const TAGS = [
+  "React",
+  "Node.js",
+  "ขับรถ",
+  "บัญชี",
+  "ดูแลเด็ก",
+  "IT Support",
+  "งานออฟฟิศ",
+];
 export default function JobPage() {
   const dispatch = useAppDispatch();
   const { currentUser } = useCurrentUser();
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortedBy, setSortedBy] = useState("newest");
   const [salary, setSalary] = useState(0);
   const { jobs, isLoading, error } = useAppSelector(
@@ -20,11 +30,19 @@ export default function JobPage() {
     dispatch(fetchJobs());
     console.log(jobs);
   }, []);
-
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
   const filteredJob = useMemo(() => {
     let result =
       salary === 0 ? jobs : jobs.filter((j) => Number(j.salaryMin) >= salary);
-
+    if (selectedTags.length > 0) {
+      result = result.filter((j) =>
+        selectedTags.every((tag) => j.skills?.includes(tag)),
+      );
+    }
     if (sortedBy === "salary_desc")
       return [...result].sort(
         (a, b) => Number(b.salaryMin) - Number(a.salaryMin),
@@ -39,7 +57,7 @@ export default function JobPage() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-  }, [jobs, salary, sortedBy]);
+  }, [jobs, salary, sortedBy, selectedTags]);
 
   return (
     <div className="flex justify-center items-center pt-10">
@@ -72,8 +90,40 @@ export default function JobPage() {
             />
           </div>
           <button className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">
-            Search Jobs
+            ค้นหางาน
           </button>
+        </div>{" "}
+        <div className="flex gap-2 overflow-x-auto pb-1 mt-4 scrollbar-hide">
+          {TAGS.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => toggleTag(tag)}
+              className={`
+        inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
+        whitespace-nowrap border transition-all duration-150 flex-shrink-0
+        ${
+          selectedTags.includes(tag)
+            ? "bg-primary text-white border-primary shadow-sm scale-105"
+            : "bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary"
+        }
+      `}
+            >
+              {selectedTags.includes(tag) && (
+                <svg
+                  className="w-3 h-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+              {tag}
+            </button>
+          ))}
         </div>
         <div className="grid grid-cols-[0.5fr_2fr] gap-5 pt-10">
           <div className="w-full ">
@@ -167,7 +217,9 @@ export default function JobPage() {
                 <JobListSkeleton />
               ) : (
                 filteredJob.map((j) => {
-                  return <JobList jobs={j} key={j.id} />;
+                  return (
+                    <JobList jobs={j} keywords={selectedTags} key={j.id} />
+                  );
                 })
               )}
             </div>

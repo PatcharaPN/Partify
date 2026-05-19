@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
@@ -27,6 +28,11 @@ export class JobsController {
   @Get()
   getJobs(@Req() req) {
     return this.jobsService.getJobs(req.user?.sub);
+  }
+
+  @Get()
+  seachJob(@Query('skills') skills: string, @Query('page') page?: string) {
+    return this.jobsService.seachJob(skills.split(','), Number(page) || 1);
   }
 
   @Get('/related/:id')

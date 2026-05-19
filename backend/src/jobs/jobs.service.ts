@@ -181,8 +181,23 @@ export class JobsService {
           },
         },
       },
-
+      include: {
+        company: true,
+      },
       take: 10,
+    });
+    return jobs;
+  }
+  async seachJob(keyword: string[], page: number = 1) {
+    const limit = 10;
+    const jobs = await this.prisma.job.findMany({
+      where: {
+        skills: {
+          hasSome: keyword,
+        },
+      },
+      take: 10,
+      skip: (page - 1) * limit,
     });
     return jobs;
   }

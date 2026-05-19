@@ -3,10 +3,16 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 
 type JobListProps = {
+  keywords: string[];
   jobs: Job;
 };
 
-const JobList = ({ jobs }: JobListProps) => {
+const JobList = ({ jobs, keywords }: JobListProps) => {
+  const displayKeyword = jobs.skills.filter(
+    (skills) =>
+      keywords.length === 0 ||
+      keywords.some((k) => skills.toLowerCase().includes(k.toLowerCase())),
+  );
   return (
     <Link href={`/jobs/${jobs.id}`} className="block">
       <div className="bg-white border border-neutral-200/70 rounded-2xl p-4 flex flex-col gap-3 hover:border-neutral-300 hover:bg-neutral-50/50 transition-all">
@@ -57,6 +63,25 @@ const JobList = ({ jobs }: JobListProps) => {
           {jobs.description}
         </p>
 
+        <div className="flex flex-wrap gap-2">
+          {displayKeyword.map((skill) => {
+            const isMatch = keywords.some((k) =>
+              skill.toLowerCase().includes(k.toLowerCase()),
+            );
+            return (
+              <span
+                key={skill}
+                className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                  isMatch
+                    ? "bg-blue-50 text-blue-600 border border-blue-200"
+                    : "bg-neutral-100 text-neutral-500"
+                }`}
+              >
+                {skill}
+              </span>
+            );
+          })}
+        </div>
         <div className="flex items-center justify-between pt-2.5 border-t border-neutral-100">
           <div>
             <p className="text-base font-semibold text-blue-600">
