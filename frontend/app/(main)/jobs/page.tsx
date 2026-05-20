@@ -22,9 +22,9 @@ const TAGS = [
 ];
 export default function JobPage() {
   const searchParams = useSearchParams();
+  const searchjobs = searchParams.get("searchjobs");
   const category = searchParams.get("category");
   const dispatch = useAppDispatch();
-  const { currentUser } = useCurrentUser();
   const {
     search,
     handleSearch,
@@ -39,7 +39,7 @@ export default function JobPage() {
     searchChips,
     addChip,
     removeChip,
-  } = useSearch(category);
+  } = useSearch(category, searchjobs);
   const [sortedBy, setSortedBy] = useState("newest");
   const [salary, setSalary] = useState(0);
   useEffect(() => {

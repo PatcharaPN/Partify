@@ -5,43 +5,44 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-bold mb-10">Partify</h3>
           <p className="w-72 text-neutral-500">
-            The Professional Curator of Part-Time Work. We believe in quality
-            employment, regardless of the hours worked.
+            ผู้คัดสรรงานพาร์ทไทม์คุณภาพ
+            เพราะเราเชื่อว่างานที่ดีไม่ควรถูกจำกัดด้วยจำนวนชั่วโมงการทำงาน
           </p>
         </div>
+
         <div>
-          <h3 className="text-lg font-bold mb-10">Company</h3>
+          <h3 className="text-lg font-bold mb-10">บริษัท</h3>
           <ul className="text-neutral-500 gap-5 flex flex-col">
-            <li>About Us</li>
-            <li>Careers</li>
-            <li>Blog</li>
-            <li>Contact</li>
+            <li>เกี่ยวกับเรา</li>
+            <li>ร่วมงานกับเรา</li>
+            <li>บทความ</li>
+            <li>ติดต่อเรา</li>
           </ul>
         </div>
+
         <div>
-          <h3 className="text-lg font-bold mb-10">Resource</h3>
+          <h3 className="text-lg font-bold mb-10">แหล่งข้อมูล</h3>
           <ul className="text-neutral-500 gap-5 flex flex-col">
-            <li>Job Board</li>
-            <li>Career Tips</li>
-            <li>Hire Guide</li>
+            <li>ค้นหางาน</li>
+            <li>เคล็ดลับการทำงาน</li>
+            <li>คู่มือการจ้างงาน</li>
           </ul>
         </div>
+
         <div>
-          {" "}
-          <h3 className="text-lg font-bold mb-10">Legal</h3>
+          <h3 className="text-lg font-bold mb-10">ข้อกฎหมาย</h3>
           <ul className="text-neutral-500 gap-5 flex flex-col">
-            <li>Privacy Policy</li>
-            <li>Terms of Service</li>
-            <li>Cookie Policy</li>
+            <li>นโยบายความเป็นส่วนตัว</li>
+            <li>ข้อกำหนดการใช้งาน</li>
+            <li>นโยบายคุกกี้</li>
           </ul>
         </div>
       </div>
+
       <div className="w-full max-w-350 h-[0.1] bg-neutral-400 mb-10"></div>
 
       <div className="flex justify-start items-start w-full max-w-350 gap-20">
-        <p className="mb-10">
-          © 2024 Partify. The Professional Curator of Part-Time Work.
-        </p>
+        <p className="mb-10">© 2026 Partify. ผู้คัดสรรงานพาร์ทไทม์คุณภาพ</p>
       </div>
     </div>
   );

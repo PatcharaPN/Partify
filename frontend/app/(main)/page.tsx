@@ -3,39 +3,31 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import Button from "../components/ui/Button";
 import CountUp from "../components/ui/CountUp";
-import { useToast } from "../providers/ToastProvider";
-import { useEffect } from "react";
-
+import { useSearch } from "../hooks/useSearch";
+import { useState } from "react";
+const categories = [
+  {
+    title: "สายครีเอทีฟ",
+    sub: "ดีไซน์, คอนเทนต์, ตัดต่อวิดีโอ",
+    img: "./images/bg/creative.jpg",
+    chip: "creative",
+  },
+  {
+    title: "ค้าปลีก",
+    sub: "สินค้าแบรนด์เนม, บูติก",
+    img: "./images/bg/retail.jpg",
+    chip: "retail",
+  },
+  {
+    title: "ขนส่งและเดลิเวอรี่",
+    sub: "โลจิสติกส์, ส่งของในเมือง",
+    img: "./images/bg/delivery.jpg",
+    chip: "delivery",
+  },
+];
 export default function Home() {
-  const { showToast } = useToast();
-  const categories = [
-    {
-      title: "สายครีเอทีฟ",
-      sub: "ดีไซน์, คอนเทนต์, ตัดต่อวิดีโอ",
-      img: "./images/bg/creative.jpg",
-      chip: "creative",
-    },
-    {
-      title: "ค้าปลีก",
-      sub: "สินค้าแบรนด์เนม, บูติก",
-      img: "./images/bg/retail.jpg",
-      chip: "retail",
-    },
-    {
-      title: "ขนส่งและเดลิเวอรี่",
-      sub: "โลจิสติกส์, ส่งของในเมือง",
-      img: "./images/bg/delivery.jpg",
-      chip: "delivery",
-    },
-  ];
+  const [search, setSearch] = useState<string>("");
 
-  // useEffect(() => {
-  //   showToast({
-  //     title: "สำเร็จ",
-  //     message: "สมัครงานเรียบร้อยแล้ว",
-  //     type: "SUCCESS",
-  //   });
-  // }, []);
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
       <div className="grid grid-cols-2 gap-10 py-50">
@@ -54,29 +46,31 @@ export default function Home() {
                 <Icon icon={"mingcute:search-line"} />
               </span>
               <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 type="text"
                 placeholder="ชื่อตำแหน่งหรือคำค้นหา"
                 className="w-full outline-none text-sm text-gray-600"
               />
             </div>
             <div className="w-px h-8 bg-gray-200" />
-            <div className="flex items-center gap-2 flex-1 px-3">
-              <span className="text-gray-400">
-                <Icon icon={"mingcute:location-line"} />
-              </span>
-              <input
-                type="text"
-                placeholder="เมืองหรือรีโมท"
-                className="w-full outline-none text-sm text-gray-600"
-              />
-            </div>
-            <button className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">
-              Search
-            </button>
+
+            <Link
+              href={{
+                pathname: "/jobs",
+                query: {
+                  searchjobs: search,
+                },
+              }}
+            >
+              <button className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">
+                ค้นหางาน
+              </button>
+            </Link>
           </div>
           <div className="flex gap-5 pt-5">
             <div>
-              <h1 className="text-4xl font-bold">10,000+</h1>
+              <h1 className="text-4xl font-bold">คัดสรรแล้ว</h1>
               <p className="text-neutral-400">งานที่เปิดรับ</p>
             </div>
             <div className="w-px h-15 bg-gray-200" />
@@ -86,7 +80,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* Working Pic */}
         <div className="relative">
           <img
             src="./images/bg/workingPic.webp"
@@ -143,6 +136,7 @@ export default function Home() {
         <div className="pt-20 grid grid-cols-3 gap-4">
           {categories.map((cat) => (
             <Link
+              key={cat.title}
               href={{
                 pathname: "/jobs",
                 query: {
@@ -186,12 +180,14 @@ export default function Home() {
         <h1 className="text-white font-bold text-5xl w-160 text-center">
           พร้อมหางานที่เหมาะกับคุณแล้วหรือยัง?
         </h1>
-        <Button
-          variant="custom"
-          className="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
-        >
-          เริ่มต้นฟรี
-        </Button>
+        <Link href={"/jobs"}>
+          <Button
+            variant="custom"
+            className="bg-white text-primary font-extrabold text-xl mt-10 p-4 cursor-pointer hover:bg-gray-200"
+          >
+            เริ่มต้นฟรี
+          </Button>
+        </Link>
       </div>
     </main>
   );

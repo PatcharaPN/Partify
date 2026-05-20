@@ -10,6 +10,7 @@ import { formatDate } from "@/app/lib/formatDate";
 import StatusBadge from "@/app/components/ui/StatusBadge";
 import Link from "next/link";
 import { fetchRecomandJob } from "@/app/store/slices/jobSlice";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 
 const navItems = [
   { label: "Dashboard", icon: "mdi:view-dashboard" },
@@ -22,19 +23,6 @@ const navItems = [
   { label: "Messages", icon: "mdi:message-outline" },
 ];
 
-const checklist = [
-  {
-    label: "Add a portfolio link",
-    sub: "Showcase your best work",
-    done: false,
-  },
-  {
-    label: "Verify your identity",
-    sub: "Increase trust score by 15%",
-    done: true,
-  },
-  { label: "Upload video intro", sub: "Stand out to curators", done: false },
-];
 const statusMap = {
   PENDING: "รอดำเนินการ",
   ACCEPTED: "ผ่านการคัดเลือก",
@@ -45,6 +33,7 @@ export default function DashboardPage() {
   const { candidateApplication } = useAppSelector(
     (state) => state.ApplicationReducer,
   );
+  const { currentUser } = useCurrentUser();
 
   const { recomandJobs } = useAppSelector((state) => state.jobReducer);
   const [activeNav, setActiveNav] = useState("Dashboard");
@@ -69,7 +58,36 @@ export default function DashboardPage() {
   if (fetchLoading || !profile || !candidateApplication) {
     return <SkeletonCandidate />;
   }
-
+  const checklist = [
+    {
+      label: "เพิ่มรูปโปรไฟล์",
+      sub: "ช่วยให้นายจ้างจดจำคุณได้",
+      done: !!profile?.avatarUrl,
+    },
+    {
+      label: "กรอกข้อมูลส่วนตัว",
+      sub: "ชื่อ เบอร์โทร จังหวัด",
+      done: !!profile?.firstName && !!profile?.phone && !!profile?.province,
+    },
+    {
+      label: "เพิ่มทักษะ",
+      sub: "ช่วยให้ระบบแนะนำงานได้ตรงขึ้น",
+      done: (profile?.skills?.length ?? 0) > 0,
+    },
+    {
+      label: "เขียน Bio",
+      sub: "แนะนำตัวเองสั้นๆ",
+      done: !!profile?.summary,
+    },
+    {
+      label: "อัปโหลด Resume",
+      sub: "เพิ่มโอกาสได้รับการติดต่อ",
+      done: !!currentUser?.resume,
+    },
+  ];
+  const strength = Math.round(
+    (checklist.filter((c) => c.done).length / checklist.length) * 100,
+  );
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Sidebar */}
@@ -134,7 +152,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
+          {/* <div className="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl" />
             <div className="flex items-start justify-between mb-3">
               <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center">
@@ -150,7 +168,7 @@ export default function DashboardPage() {
                   .length
               }
             </p>
-          </div>
+          </div> */}
 
           <div className="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-orange-400 rounded-l-2xl" />
@@ -275,16 +293,18 @@ export default function DashboardPage() {
                 <span className="text-sm font-semibold text-gray-900">
                   Profile Strength
                 </span>
-                <span className="text-sm font-semibold text-blue-600">75%</span>
+                <span className="text-sm font-semibold text-blue-600">
+                  {strength}%
+                </span>
               </div>
-              <div className="h-1.5 bg-gray-100 rounded-full my-2">
+              <div className="h-1.5 bg-gray-100 rounded-full my-2 overflow-hidden">
                 <div
-                  className="h-full bg-blue-600 rounded-full"
-                  style={{ width: "75%" }}
+                  className="h-full bg-blue-600 transition-all duration-300"
+                  style={{ width: `${strength}%` }}
                 />
               </div>
               <p className="text-[11px] text-gray-400 mb-3">
-                Complete these to reach 100%:
+                เติมข้อมูลอีกนิดเพื่อเพิ่มโอกาสในการได้งาน:
               </p>
               <div className="flex flex-col gap-2.5">
                 {checklist.map((item) => (
@@ -317,66 +337,9 @@ export default function DashboardPage() {
                 ))}
               </div>
             </div>
-
-            {/* Next Interview */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-4">
-              <div className="flex items-center gap-1.5 mb-2 text-[11px] text-gray-400 uppercase tracking-wider">
-                <Icon
-                  icon="material-symbols:calendar-month-outline-rounded"
-                  width="12"
-                  height="12"
-                  color="#2563EB"
-                />
-                Next Interview
-              </div>
-              <p className="text-[11px] text-gray-400 uppercase tracking-wide">
-                Tomorrow at 10:30 AM
-              </p>
-              <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                Design Studio Co.
-              </p>
-              <p className="text-xs text-gray-400">Technical Round • Zoom</p>
-              <button className="w-full mt-3 border border-gray-200 text-xs text-gray-600 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
-                Prepare Notes
-              </button>
-            </div>
-
-            {/* Editorial Tip
-            <div className="bg-blue-600 rounded-2xl p-4 text-white">
-              <div className="flex items-center gap-1.5 mb-1.5 text-[11px] uppercase tracking-wider opacity-75">
-                <Icon
-                  icon="material-symbols:info-outline-rounded"
-                  width="12"
-                  height="12"
-                  color="white"
-                />
-                Editorial Tip
-              </div>
-              <p className="text-xs opacity-90 leading-relaxed">
-                Personalize your cover message for every curation. It increases
-                your match score by up to 25%!
-              </p>
-            </div> */}
           </div>
         </div>
       </main>
     </div>
   );
 }
-
-// function Avatar({ initials, color }: { initials: string; color: string }) {
-//   const colors: Record<string, string> = {
-//     blue: "bg-blue-50 text-blue-600",
-//     amber: "bg-amber-50 text-amber-600",
-//     green: "bg-green-50 text-green-600",
-//   };
-//   return (
-//     <div
-//       className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-semibold flex-shrink-0 ${
-//         colors[color] || colors.blue
-//       }`}
-//     >
-//       {initials}
-//     </div>
-//   );
-// }

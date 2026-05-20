@@ -4,7 +4,10 @@ import { searchJob } from "@/app/store/slices/jobSlice";
 import { useEffect, useState } from "react";
 import { useDebounce } from "./useDebounce";
 
-export const useSearch = (category?: string | null) => {
+export const useSearch = (
+  category?: string | null,
+  initialSearch?: string | null,
+) => {
   const dispatch = useAppDispatch();
 
   const categoryMap: Record<string, string[]> = {
@@ -18,7 +21,7 @@ export const useSearch = (category?: string | null) => {
 
   const [searchChips, setSearchChips] = useState<string[]>(mappedCategory);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch ?? "");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
