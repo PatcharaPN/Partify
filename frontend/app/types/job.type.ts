@@ -142,6 +142,7 @@ export type Profile = {
   avatarUrl?: string;
   birthDate?: string;
   reliabilityScore?: number;
+  updatedAt: string;
 };
 
 export type ApplicationStatus =

@@ -85,19 +85,10 @@ export default function JobPage() {
               placeholder="ชื่อตำแหน่งหรือคำค้นหา"
             />
           </div>
-          <div className="w-px h-8 bg-gray-200" />
-          <div className="flex items-center gap-2 flex-1 px-3">
-            <span className="text-gray-400">
-              <Icon icon={"mingcute:location-line"} />
-            </span>
-            <input
-              type="text"
-              placeholder="City or remote"
-              className="w-full outline-none text-sm text-gray-600"
-            />
-          </div>
+          <div className="w-px h-8 " />
+
           <Button onClick={() => addChip(search)}>ค้นหางาน</Button>
-        </div>{" "}
+        </div>
         <div className="flex gap-2 overflow-x-auto pb-1 mt-4 scrollbar-hide">
           {searchChips.length > 0 && (
             <div className="flex gap-2 flex-wrap mt-2">

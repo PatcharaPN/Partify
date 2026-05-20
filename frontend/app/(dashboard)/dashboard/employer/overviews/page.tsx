@@ -16,7 +16,6 @@ export default function EmployerDashboard() {
 
   const [search, setSearch] = useState("");
 
-  console.log(jobs);
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) =>
       job.title.toLowerCase().includes(search.toLowerCase()),
@@ -35,7 +34,6 @@ export default function EmployerDashboard() {
         />
 
         <div className="px-8 py-6 space-y-6">
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
             <StatCard
               icon="mdi:eye-outline"

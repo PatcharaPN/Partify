@@ -11,16 +11,18 @@ import StatusBadge from "@/app/components/ui/StatusBadge";
 import Link from "next/link";
 import { fetchRecomandJob } from "@/app/store/slices/jobSlice";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
+import { useRouter } from "next/navigation";
+import ProfileStrengthCard from "@/app/components/ui/ProfileStrengthCard";
 
 const navItems = [
   { label: "Dashboard", icon: "mdi:view-dashboard" },
-  { label: "My Jobs", icon: "mdi:briefcase-outline" },
-  {
-    label: "Applicants",
-    badge: 12,
-    icon: "mdi:account-group-outline",
-  },
-  { label: "Messages", icon: "mdi:message-outline" },
+  // { label: "My Jobs", icon: "mdi:briefcase-outline" },
+  // {
+  //   label: "Applicants",
+  //   badge: 12,
+  //   icon: "mdi:account-group-outline",
+  // },
+  // { label: "Messages", icon: "mdi:message-outline" },
 ];
 
 const statusMap = {
@@ -33,14 +35,20 @@ export default function DashboardPage() {
   const { candidateApplication } = useAppSelector(
     (state) => state.ApplicationReducer,
   );
-  const { currentUser } = useCurrentUser();
-
+  const { currentUser, isAuthenticated, isLoading } = useCurrentUser();
   const { recomandJobs } = useAppSelector((state) => state.jobReducer);
   const [activeNav, setActiveNav] = useState("Dashboard");
+  const router = useRouter();
   const { profile, fetchLoading } = useAppSelector(
     (state) => state.profileReducer,
   );
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   useEffect(() => {
     dispatch(fetchCandidateApplication());
@@ -49,11 +57,6 @@ export default function DashboardPage() {
   useEffect(() => {
     dispatch(fetchRecomandJob());
   }, [dispatch]);
-  useEffect(() => {
-    if (!profile) {
-      dispatch(fetchProfile());
-    }
-  }, [dispatch, profile]);
 
   if (fetchLoading || !profile || !candidateApplication) {
     return <SkeletonCandidate />;
@@ -85,9 +88,7 @@ export default function DashboardPage() {
       done: !!currentUser?.resume,
     },
   ];
-  const strength = Math.round(
-    (checklist.filter((c) => c.done).length / checklist.length) * 100,
-  );
+
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Sidebar */}
@@ -107,11 +108,11 @@ export default function DashboardPage() {
               >
                 <Icon icon={item.icon} width="16" height="16" />
                 <span>{item.label}</span>
-                {item.badge && (
+                {/* {item.badge && (
                   <span className="ml-auto bg-blue-100 text-blue-600 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
                     {item.badge}
                   </span>
-                )}
+                )} */}
               </button>
             );
           })}
@@ -284,60 +285,7 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-
-          {/* Right sidebar */}
-          <div className="flex flex-col gap-3">
-            {/* Profile Strength */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-semibold text-gray-900">
-                  Profile Strength
-                </span>
-                <span className="text-sm font-semibold text-blue-600">
-                  {strength}%
-                </span>
-              </div>
-              <div className="h-1.5 bg-gray-100 rounded-full my-2 overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 transition-all duration-300"
-                  style={{ width: `${strength}%` }}
-                />
-              </div>
-              <p className="text-[11px] text-gray-400 mb-3">
-                เติมข้อมูลอีกนิดเพื่อเพิ่มโอกาสในการได้งาน:
-              </p>
-              <div className="flex flex-col gap-2.5">
-                {checklist.map((item) => (
-                  <div key={item.label} className="flex items-start gap-2">
-                    <div
-                      className={`w-4 h-4 rounded-full shrink-0 mt-0.5 flex items-center justify-center ${
-                        item.done ? "bg-green-100" : "bg-gray-100"
-                      }`}
-                    >
-                      {item.done ? (
-                        <Icon
-                          icon="material-symbols:check-rounded"
-                          width="10"
-                          height="10"
-                          color="#16A34A"
-                        />
-                      ) : (
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                      )}
-                    </div>
-                    <div>
-                      <div className="text-xs font-medium text-gray-800">
-                        {item.label}
-                      </div>
-                      <div className="text-[11px] text-gray-400">
-                        {item.sub}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <ProfileStrengthCard />
         </div>
       </main>
     </div>

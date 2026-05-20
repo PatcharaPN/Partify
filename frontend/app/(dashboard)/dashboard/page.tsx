@@ -1,26 +1,34 @@
 "use client";
+
 import { useAppSelector } from "@/app/lib/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
-  const navigate = useRouter();
+  const router = useRouter();
+
   const { user, isLoading, isAuthenticated } = useAppSelector(
     (state) => state.AuthReducer,
   );
 
   useEffect(() => {
     if (isLoading) return;
+
     if (!user || !isAuthenticated) {
-      navigate.replace("/login");
+      router.replace("/login");
       return;
     }
-    if (user?.role === "CANDIDATE") {
-      navigate.replace("/dashboard/candidate");
+
+    if (user.role === "CANDIDATE") {
+      router.replace("/dashboard/candidate");
+      return;
     }
-    if (user?.role === "EMPLOYER") {
-      navigate.replace("/dashboard/employer/overviews");
+
+    if (user.role === "EMPLOYER") {
+      router.replace("/dashboard/employer/overviews");
+      return;
     }
-  }, [user, isAuthenticated, isLoading, navigate]);
-  return <div className="">Redirecting...</div>;
+  }, [user, isAuthenticated, isLoading, router]);
+
+  return null;
 }

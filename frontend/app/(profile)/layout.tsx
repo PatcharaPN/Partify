@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/app/lib/hooks";
 import { fetchProfile } from "@/app/store/slices/profileSlice";
 import ProfileSidebar from "@/app/components/ui/ProfileSidebar";
 import TopBar from "../components/layouts/TopBar";
+import ProfileStrengthCard from "../components/ui/ProfileStrengthCard";
 
 export default function ProfileLayout({
   children,

@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/app/lib/hooks";
 import { upsertProfile } from "@/app/store/slices/profileSlice";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 import { useState } from "react";
+import ProfileStrengthCard from "./ProfileStrengthCard";
 
 const SIDEBAR_ELEMENTS = [
   {
@@ -137,6 +138,8 @@ export default function ProfileSidebar() {
           })}
         </ul>
       </div>
+
+      <ProfileStrengthCard />
     </div>
   );
 }
