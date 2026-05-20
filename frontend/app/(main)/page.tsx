@@ -13,16 +13,19 @@ export default function Home() {
       title: "สายครีเอทีฟ",
       sub: "ดีไซน์, คอนเทนต์, ตัดต่อวิดีโอ",
       img: "./images/bg/creative.jpg",
+      chip: "creative",
     },
     {
       title: "ค้าปลีก",
       sub: "สินค้าแบรนด์เนม, บูติก",
       img: "./images/bg/retail.jpg",
+      chip: "retail",
     },
     {
       title: "ขนส่งและเดลิเวอรี่",
       sub: "โลจิสติกส์, ส่งของในเมือง",
       img: "./images/bg/delivery.jpg",
+      chip: "delivery",
     },
   ];
 
@@ -139,20 +142,29 @@ export default function Home() {
 
         <div className="pt-20 grid grid-cols-3 gap-4">
           {categories.map((cat) => (
-            <div
-              key={cat.title}
-              className="relative rounded-2xl overflow-hidden cursor-pointer group"
+            <Link
+              href={{
+                pathname: "/jobs",
+                query: {
+                  category: cat.chip,
+                },
+              }}
             >
-              <img
-                src={cat.img}
-                alt={cat.title}
-                className="w-full h-64 object-cover brightness-60 group-hover:brightness-90 transition"
-              />
-              <div className="absolute bottom-0 left-0 p-5 text-white">
-                <h2 className="text-2xl font-bold">{cat.title}</h2>
-                <p className="text-sm text-gray-300">{cat.sub}</p>
+              <div
+                key={cat.title}
+                className="relative rounded-2xl overflow-hidden cursor-pointer group"
+              >
+                <img
+                  src={cat.img}
+                  alt={cat.title}
+                  className="w-full h-64 object-cover brightness-60 group-hover:brightness-90 transition"
+                />
+                <div className="absolute bottom-0 left-0 p-5 text-white">
+                  <h2 className="text-2xl font-bold">{cat.title}</h2>
+                  <p className="text-sm text-gray-300">{cat.sub}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="relative rounded-2xl overflow-hidden cursor-pointer group my-5">

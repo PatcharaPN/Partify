@@ -128,7 +128,11 @@ export class ApplicationService {
         userId,
       },
       include: {
-        job: true,
+        job: {
+          include: {
+            company: true,
+          },
+        },
       },
     });
   }

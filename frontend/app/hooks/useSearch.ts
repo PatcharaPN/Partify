@@ -4,13 +4,20 @@ import { searchJob } from "@/app/store/slices/jobSlice";
 import { useEffect, useState } from "react";
 import { useDebounce } from "./useDebounce";
 
-export const useSearch = () => {
+export const useSearch = (category?: string | null) => {
   const dispatch = useAppDispatch();
 
+  const categoryMap: Record<string, string[]> = {
+    creative: ["Photoshop", "Figma", "Canva"],
+    retail: ["การขาย", "บริการลูกค้า"],
+  };
+
+  const mappedCategory = category ? categoryMap[category] || [] : [];
   const { searchResults, isLoading, total, totalPages, currentPage } =
     useAppSelector((state) => state.jobReducer);
 
-  const [searchChips, setSearchChips] = useState<string[]>([]);
+  const [searchChips, setSearchChips] = useState<string[]>(mappedCategory);
+
   const [search, setSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [page, setPage] = useState(1);
@@ -39,13 +46,22 @@ export const useSearch = () => {
     setPage(1);
   };
   const addChip = (value: string) => {
-    if (!value.trim()) return;
-    if (searchChips.includes(value.trim())) return;
-    setSearchChips((prev) => [...prev, value.trim()]);
+    const trimmed = value.trim();
+
+    if (!trimmed) return;
+
+    setSearchChips((prev) => {
+      if (prev.includes(trimmed)) return prev;
+
+      return [...prev, trimmed];
+    });
+
     handleSearch("");
     setPage(1);
   };
-
+  useEffect(() => {
+    console.log({ total, totalPages, page });
+  }, [total, totalPages]);
   const removeChip = (chip: string) => {
     setSearchChips((prev) => prev.filter((c) => c !== chip));
     setPage(1);

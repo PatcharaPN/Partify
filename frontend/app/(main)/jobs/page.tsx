@@ -9,6 +9,7 @@ import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import JobList from "@/app/components/ui/JobList";
 import { useSearch } from "@/app/hooks/useSearch";
 import Button from "@/app/components/ui/Button";
+import { useParams, useSearchParams } from "next/navigation";
 
 const TAGS = [
   "React",
@@ -20,6 +21,8 @@ const TAGS = [
   "งานออฟฟิศ",
 ];
 export default function JobPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
   const dispatch = useAppDispatch();
   const { currentUser } = useCurrentUser();
   const {
@@ -36,10 +39,9 @@ export default function JobPage() {
     searchChips,
     addChip,
     removeChip,
-  } = useSearch();
+  } = useSearch(category);
   const [sortedBy, setSortedBy] = useState("newest");
   const [salary, setSalary] = useState(0);
-  const { jobs, error } = useAppSelector((state) => state.jobReducer);
   useEffect(() => {
     dispatch(fetchJobs());
   }, []);
@@ -210,6 +212,19 @@ export default function JobPage() {
                   );
                 })
               )}
+            </div>
+            <div className="flex gap-2 justify-center mt-5">
+              <button onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                ก่อนหน้า
+              </button>
+              <span>
+                {page} / {totalPages}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              >
+                ถัดไป
+              </button>
             </div>
           </div>
         </div>

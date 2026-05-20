@@ -187,7 +187,7 @@ export default function DashboardPage() {
                   <Link key={app.id} href={`/jobs/${app.job?.id}`}>
                     <div className="flex items-center gap-3 py-3">
                       <img
-                        src={app.job?.company.companyImageURL}
+                        src={app.job?.company?.companyImageURL}
                         className="w-15 h-15"
                       />
                       <div className="flex-1 min-w-0">

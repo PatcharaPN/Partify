@@ -390,9 +390,9 @@ export default function JobDetail() {
                   งานอื่นจากบริษัทนี้
                 </h2>
 
-                <div className="flex flex-col gap-3">
-                  {relatedJobs.map((job) => (
-                    <RelatedJobCard job={job} />
+                <div className="flex gap-3">
+                  {relatedJobs.map((job, i) => (
+                    <RelatedJobCard job={job} key={i} />
                   ))}
                 </div>
               </section>

@@ -190,7 +190,7 @@ export class JobsService {
     return jobs;
   }
   async searchJob(keyword: string[], page: number = 1, search?: string) {
-    const limit = 10;
+    const limit = 5;
     const skip = (page - 1) * limit;
 
     const where = {
