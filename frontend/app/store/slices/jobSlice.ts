@@ -8,6 +8,10 @@ interface JobState {
   recomandJobs: Job[];
   employeeJob: Job[];
   relatedJobs: Job[];
+  searchResults: Job[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
   isLoading: boolean;
   selectedJob: Job | null;
   error: string | null;
@@ -18,6 +22,10 @@ const initialState: JobState = {
   employeeJob: [],
   recomandJobs: [],
   relatedJobs: [],
+  searchResults: [],
+  total: 0,
+  totalPages: 0,
+  currentPage: 1,
   selectedJob: null,
   isLoading: false,
   error: null,
@@ -112,6 +120,32 @@ export const fetchOwnerRelatedJobs = createAsyncThunk(
   },
 );
 
+export const searchJob = createAsyncThunk(
+  "jobs/search",
+  async (
+    {
+      search,
+      skills,
+      page,
+    }: { search?: string; skills?: string[]; page?: number } = {},
+    thunkAPI,
+  ) => {
+    try {
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      if (skills?.length) params.set("skills", skills.join(","));
+      if (page) params.set("page", String(page));
+
+      const res = await axiosInstance(`/jobs/search?${params}`);
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to search jobs",
+      );
+    }
+  },
+);
+
 const jobSlice = createSlice({
   name: "jobs",
   initialState,
@@ -201,6 +235,23 @@ const jobSlice = createSlice({
       })
       .addCase(fetchRelatedJob.fulfilled, (state, action) => {
         state.relatedJobs = action.payload;
+      })
+      .addCase(searchJob.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+
+      .addCase(searchJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.searchResults = action.payload.data;
+        state.total = action.payload.total;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.page;
+      })
+
+      .addCase(searchJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) ?? "Failed to search jobs";
       });
   },
 });

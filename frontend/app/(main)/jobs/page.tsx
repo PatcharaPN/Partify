@@ -7,6 +7,8 @@ import { useEffect, useMemo, useState } from "react";
 import JobListSkeleton from "./JobListSkeleton";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import JobList from "@/app/components/ui/JobList";
+import { useSearch } from "@/app/hooks/useSearch";
+import Button from "@/app/components/ui/Button";
 
 const TAGS = [
   "React",
@@ -20,45 +22,45 @@ const TAGS = [
 export default function JobPage() {
   const dispatch = useAppDispatch();
   const { currentUser } = useCurrentUser();
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const {
+    search,
+    handleSearch,
+    selectedTags,
+    toggleTag,
+    page,
+    setPage,
+    searchResults,
+    isLoading,
+    total,
+    totalPages,
+    searchChips,
+    addChip,
+    removeChip,
+  } = useSearch();
   const [sortedBy, setSortedBy] = useState("newest");
   const [salary, setSalary] = useState(0);
-  const { jobs, isLoading, error } = useAppSelector(
-    (state) => state.jobReducer,
-  );
+  const { jobs, error } = useAppSelector((state) => state.jobReducer);
   useEffect(() => {
     dispatch(fetchJobs());
-    console.log(jobs);
   }, []);
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  };
-  const filteredJob = useMemo(() => {
+
+  const displayJobs = useMemo(() => {
     let result =
-      salary === 0 ? jobs : jobs.filter((j) => Number(j.salaryMin) >= salary);
-    if (selectedTags.length > 0) {
-      result = result.filter((j) =>
-        selectedTags.every((tag) => j.skills?.includes(tag)),
-      );
-    }
+      salary === 0
+        ? searchResults
+        : searchResults.filter((j) => Number(j.salaryMin) >= salary);
+
     if (sortedBy === "salary_desc")
       return [...result].sort(
         (a, b) => Number(b.salaryMin) - Number(a.salaryMin),
       );
-
     if (sortedBy === "salary_asc")
       return [...result].sort(
         (a, b) => Number(a.salaryMin) - Number(b.salaryMin),
       );
 
-    return [...result].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-  }, [jobs, salary, sortedBy, selectedTags]);
-
+    return result;
+  }, [searchResults, salary, sortedBy]);
   return (
     <div className="flex justify-center items-center pt-10">
       <main className="w-full max-w-290">
@@ -73,9 +75,12 @@ export default function JobPage() {
               <Icon icon={"mingcute:search-line"} />
             </span>
             <input
+              className="outline-none"
               type="text"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addChip(search)}
               placeholder="ชื่อตำแหน่งหรือคำค้นหา"
-              className="w-full outline-none text-sm text-gray-600"
             />
           </div>
           <div className="w-px h-8 bg-gray-200" />
@@ -89,41 +94,24 @@ export default function JobPage() {
               className="w-full outline-none text-sm text-gray-600"
             />
           </div>
-          <button className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">
-            ค้นหางาน
-          </button>
+          <Button onClick={() => addChip(search)}>ค้นหางาน</Button>
         </div>{" "}
         <div className="flex gap-2 overflow-x-auto pb-1 mt-4 scrollbar-hide">
-          {TAGS.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => toggleTag(tag)}
-              className={`
-        inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
-        whitespace-nowrap border transition-all duration-150 flex-shrink-0
-        ${
-          selectedTags.includes(tag)
-            ? "bg-primary text-white border-primary shadow-sm scale-105"
-            : "bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary"
-        }
-      `}
-            >
-              {selectedTags.includes(tag) && (
-                <svg
-                  className="w-3 h-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+          {searchChips.length > 0 && (
+            <div className="flex gap-2 flex-wrap mt-2">
+              {searchChips.map((chip) => (
+                <span
+                  key={chip}
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
-              {tag}
-            </button>
-          ))}
+                  {chip}
+                  <button onClick={() => removeChip(chip)}>
+                    <Icon icon="mingcute:close-line" className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-[0.5fr_2fr] gap-5 pt-10">
           <div className="w-full ">
@@ -202,7 +190,7 @@ export default function JobPage() {
           </div>
           <div className="flex flex-col gap-5 w-full px-5">
             <div className="w-full flex justify-between">
-              <span>{filteredJob.length} งานที่แสดง</span>
+              <span>{displayJobs.length} งานที่แสดง</span>
               <span>
                 เรียงตาม:{" "}
                 <select className="outline-none text-sm ml-1 bg-transparent">
@@ -216,7 +204,7 @@ export default function JobPage() {
               {isLoading ? (
                 <JobListSkeleton />
               ) : (
-                filteredJob.map((j) => {
+                displayJobs.map((j) => {
                   return (
                     <JobList jobs={j} keywords={selectedTags} key={j.id} />
                   );

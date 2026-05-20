@@ -30,9 +30,17 @@ export class JobsController {
     return this.jobsService.getJobs(req.user?.sub);
   }
 
-  @Get()
-  seachJob(@Query('skills') skills: string, @Query('page') page?: string) {
-    return this.jobsService.seachJob(skills.split(','), Number(page) || 1);
+  @Get('search')
+  seachJob(
+    @Query('skills') skills?: string,
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+  ) {
+    return this.jobsService.searchJob(
+      skills ? skills.split(',') : [],
+      Number(page) || 1,
+      search,
+    );
   }
 
   @Get('/related/:id')

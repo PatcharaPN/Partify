@@ -7,6 +7,7 @@ import {
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
@@ -188,17 +189,53 @@ export class JobsService {
     });
     return jobs;
   }
-  async seachJob(keyword: string[], page: number = 1) {
+  async searchJob(keyword: string[], page: number = 1, search?: string) {
     const limit = 10;
-    const jobs = await this.prisma.job.findMany({
-      where: {
-        skills: {
-          hasSome: keyword,
+    const skip = (page - 1) * limit;
+
+    const where = {
+      AND: [
+        keyword.length > 0 ? { skills: { hasSome: keyword } } : {},
+        search
+          ? {
+              OR: [
+                {
+                  title: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  company: {
+                    companyName: {
+                      contains: search,
+                      mode: Prisma.QueryMode.insensitive,
+                    },
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    };
+
+    const [jobs, total] = await this.prisma.$transaction([
+      this.prisma.job.findMany({
+        where,
+        take: limit,
+        skip,
+        include: {
+          company: true,
         },
-      },
-      take: 10,
-      skip: (page - 1) * limit,
-    });
-    return jobs;
+      }),
+      this.prisma.job.count({ where }),
+    ]);
+
+    return {
+      data: jobs,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }
