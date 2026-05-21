@@ -6,6 +6,7 @@ import { User } from "@/app/types/job.type";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { applyJob } from "@/app/store/slices/applicationSlice";
 import { useParams } from "next/navigation";
+import { formatDate } from "@/app/lib/formatDate";
 
 interface QuickApplyModalProps {
   isOpen?: boolean;
@@ -96,7 +97,9 @@ export default function QuickApplyModal({
                   {user?.resume ? "อัพโหลดเรซูเม่แล้ว" : "No Resume"}
                 </span>
                 <span className="text-gray-300">·</span>
-                <span className="text-xs text-gray-400">Updated 2d ago</span>
+                <span className="text-xs text-gray-400">
+                  ล่าสุด {formatDate(user?.profile?.updatedAt)}
+                </span>
               </div>
             </div>
           </div>
@@ -104,40 +107,6 @@ export default function QuickApplyModal({
           <button className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
             Edit
           </button>
-        </div>
-
-        {/* Schedule Match Card */}
-        <div className="mx-6 mb-4 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3.5">
-          <div className="flex items-center gap-2.5 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <Icon
-                icon="mdi:calendar-check"
-                width={16}
-                height={16}
-                className="text-blue-600"
-              />
-            </div>
-            <p className="text-sm font-semibold text-gray-900">
-              Perfect Schedule Match
-            </p>
-          </div>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Based on your profile, you match the{" "}
-            <span className="font-semibold text-gray-900">
-              Tue/Thu 4pm – 10pm
-            </span>{" "}
-            shift schedule perfectly.
-          </p>
-          <div className="flex gap-2">
-            {["Tuesday", "Thursday"].map((day) => (
-              <span
-                key={day}
-                className="text-xs font-bold tracking-wide bg-blue-600 text-white px-3 py-1 rounded-full uppercase"
-              >
-                {day}
-              </span>
-            ))}
-          </div>
         </div>
 
         {/* Say Hello */}

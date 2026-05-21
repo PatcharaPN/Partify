@@ -86,7 +86,7 @@ model Profile {
   birthDate    DateTime?
   reliabilityScore Int? @default(100)
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  updatedAt DateTime @updatedAt
   @@map("profiles")
 }
 
@@ -132,6 +132,7 @@ model Job {
   applications      Application[]
   notifications Notification[]
   skills            String[]    
+  updatedAt DateTime @updatedAt
   @@map("jobs")
 }
 
@@ -185,7 +186,7 @@ model Application {
   createdAt DateTime           @default(now())
   job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
   user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  updatedAt DateTime @updatedAt
   @@unique([jobId, userId])
   @@map("applications")
 }

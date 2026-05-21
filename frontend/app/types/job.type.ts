@@ -48,7 +48,7 @@ export interface Job {
   applications: Application[];
   isApplied: boolean;
   createdAt: string;
-
+  updatedAt: string;
   province?: string;
   district?: string;
   locationDetail?: string;
@@ -61,6 +61,7 @@ export interface Application {
   status: ApplicationStatus;
   job?: Job;
   user?: User;
+  updatedAt: string;
 }
 // Redux Slice
 export interface JobState {
