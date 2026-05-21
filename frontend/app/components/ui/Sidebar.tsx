@@ -1,5 +1,4 @@
 "use client";
-import { useEmployerJobs } from "@/app/hooks/useEmployerJobs";
 import { useJobApplications } from "@/app/hooks/useJobApplications";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -21,11 +20,6 @@ const getNavItems = (total: number) => [
     label: "Applicants",
     badge: total > 0 ? total : undefined,
     icon: <Icon icon="mdi:account-group-outline" className="w-4 h-4" />,
-  },
-  {
-    path: "",
-    label: "Messages",
-    icon: <Icon icon="mdi:message-outline" className="w-4 h-4" />,
   },
 ];
 

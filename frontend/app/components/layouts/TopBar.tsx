@@ -23,7 +23,7 @@ export default function TopBar() {
   const dispatch = useAppDispatch();
   const [openMenu, setOpenMenu] = useState(false);
   return (
-    <header className="sticky top-0 z-1 w-full shadow-md bg-white px-2 py-3">
+    <header className="sticky top-0 z-20 w-full shadow-md bg-white px-2 py-3">
       <div className="mx-auto grid grid-cols-3">
         <Link
           className="inline-block text-primary text-xl font-bold font-headline px-4 py-2"

@@ -15,7 +15,7 @@ import { usePagination } from "@/app/hooks/usePagination";
 export default function ApplicantsPage() {
   const params = useParams();
   const jobId = params.jobId as string;
-  const { jobDetail, approveApplication, totalApplicants } =
+  const { jobDetail, approveApplication, rejectApplication, totalApplicants } =
     useJobApplications(jobId);
   const applications = jobDetail?.applications ?? [];
   const sorted = [...applications]
@@ -54,8 +54,15 @@ export default function ApplicantsPage() {
   const handleApproveApps = async (id: string, status: ApplicationStatus) => {
     setLoadingState("loading");
     try {
-      if (status === "ACCEPTED") {
-        await approveApplication(id);
+      switch (status) {
+        case "ACCEPTED":
+          await approveApplication(id);
+          break;
+        case "REJECTED":
+          await rejectApplication(id);
+          break;
+        default:
+          break;
       }
       setLoadingState("success");
       setTimeout(() => {
@@ -68,7 +75,6 @@ export default function ApplicantsPage() {
         setLoadingState(null);
         setSelectedApplicant(null);
       }, 1500);
-      console.error(error);
     }
   };
   return (

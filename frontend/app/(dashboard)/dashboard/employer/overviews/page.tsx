@@ -36,14 +36,6 @@ export default function EmployerDashboard() {
         <div className="px-8 py-6 space-y-6">
           <div className="grid grid-cols-3 gap-4">
             <StatCard
-              icon="mdi:eye-outline"
-              color="blue"
-              label="Total Views"
-              value="2,482"
-              change="+12%"
-            />
-
-            <StatCard
               icon="mdi:account-group-outline"
               color="violet"
               label="Total Applicants"

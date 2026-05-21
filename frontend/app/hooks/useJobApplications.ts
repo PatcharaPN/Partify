@@ -14,6 +14,16 @@ export const useJobApplications = (jobId?: string) => {
       dispatch(fetchApplicationsByJob(jobId));
     }
   }, [jobId, dispatch]);
+
+  const rejectApplication = async (id: string) => {
+    try {
+      await axiosInstance.post(`/applications/${id}/reject`);
+      await dispatch(fetchApplicationsByJob(jobId!));
+    } catch (error) {
+      console.error("Approve failed:", error);
+      throw error;
+    }
+  };
   const approveApplication = async (id: string) => {
     try {
       await axiosInstance.post(`/applications/${id}/approve`);
@@ -29,6 +39,7 @@ export const useJobApplications = (jobId?: string) => {
     jobDetail,
     loading,
     approveApplication,
+    rejectApplication,
     totalApplicants,
   };
 };

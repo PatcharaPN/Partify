@@ -58,6 +58,14 @@ export class ApplicationService {
     return await this.processApproval(applicationId, application);
   }
 
+  async rejectApplication(applicationId: string, employerId: string) {
+    const application = await this.findApplicationOrThrow(applicationId);
+    this.validateOwnerShip(employerId, application);
+    this.validateStatus(application);
+    await this.findExistingEmployee(application);
+    return await this.processRejection(applicationId, application);
+  }
+
   async getStatus(jobId: string, userId: string) {
     return this.prisma.application.findUnique({
       where: {
@@ -156,6 +164,22 @@ export class ApplicationService {
         createdAt: 'desc',
       },
     });
+  }
+
+  private async processRejection(applicationId: string, application: any) {
+    const updatedApplication = await this.prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: 'REJECTED',
+      },
+    });
+    await this.notificationService.pushNotification(
+      `ขออภัย คุณไม่ผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.name}`,
+      'REJECTED',
+      application.userId,
+      application.jobId,
+    );
+    return updatedApplication;
   }
 
   private async processApproval(applicationId: string, application: any) {
