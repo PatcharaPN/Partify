@@ -12,6 +12,9 @@ export default function DashboardPage() {
   );
 
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token && !user) return;
+
     if (isLoading) return;
 
     if (!user || !isAuthenticated) {
@@ -21,12 +24,8 @@ export default function DashboardPage() {
 
     if (user.role === "CANDIDATE") {
       router.replace("/dashboard/candidate");
-      return;
-    }
-
-    if (user.role === "EMPLOYER") {
+    } else if (user.role === "EMPLOYER") {
       router.replace("/dashboard/employer/overviews");
-      return;
     }
   }, [user, isAuthenticated, isLoading, router]);
 

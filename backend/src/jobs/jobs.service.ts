@@ -111,7 +111,6 @@ export class JobsService {
     if (!jobs) {
       throw new NotFoundException();
     }
-    console.log('user:', user);
     return {
       ...jobs,
       isOwner: user ? jobs.company.userId === user.sub : false,

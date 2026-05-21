@@ -79,7 +79,6 @@ export const applyJob = createAsyncThunk(
         jobId,
         userId,
       });
-      console.log(res.status);
 
       return res.data;
     } catch (error: any) {

@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
-import React from "react";
+import React, { useState } from "react";
 import PostJobForm from "./PostJobForm";
 import { useRouter } from "next/navigation";
+import AlertModal from "./AlertModal";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 
 type DashboardHeaderProps = {
   title: string;
@@ -9,7 +11,22 @@ type DashboardHeaderProps = {
 };
 
 const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
+  const [alertOpen, setAlertOpen] = useState(false);
   const router = useRouter();
+  const { currentUser } = useCurrentUser();
+
+  const isProfileComplete =
+    !!currentUser?.company?.companyName &&
+    !!currentUser?.company?.companyImageURL &&
+    !!currentUser?.company?.companyBio;
+
+  const handlePostJob = () => {
+    if (!isProfileComplete) {
+      setAlertOpen(true);
+      return;
+    }
+    router.push("?modal=post-job");
+  };
   return (
     <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
       <div>
@@ -20,13 +37,22 @@ const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
       </div>
       <div className="flex items-center gap-3">
         <button
-          onClick={() => router.push("?modal=post-job")}
+          onClick={handlePostJob}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm"
         >
           <Icon icon="mdi:plus" className="w-4 h-4" />
           ลงประกาศหางาน
         </button>
       </div>
+      <AlertModal
+        isOpen={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        onConfirm={() => router.push("/profile/company")}
+        variant="error"
+        title="ข้อมูลบริษัทไม่ครบถ้วน"
+        description="กรุณากรอกชื่อบริษัท โลโก้ และรายละเอียดบริษัทก่อนลงประกาศงาน"
+        confirmLabel="ไปกรอกข้อมูล"
+      />
       {<PostJobForm />}
     </header>
   );

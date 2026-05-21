@@ -17,7 +17,6 @@ export class BookmarksController {
 
   @Post(':jobId')
   addBookmark(@Param('jobId') jobId: string, @Request() req) {
-    console.log('user', req.user);
     return this.bookmarksService.addBookmarks(req.user.sub, jobId);
   }
 

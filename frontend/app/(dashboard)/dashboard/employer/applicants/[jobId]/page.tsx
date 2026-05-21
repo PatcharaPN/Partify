@@ -206,7 +206,7 @@ export default function ApplicantsPage() {
                         {c.user?.profile?.avatarUrl ? (
                           <img
                             src={c.user?.profile?.avatarUrl}
-                            alt={c.user?.profile?.name || "Avatar"}
+                            alt={c.user?.profile?.firstName || "Avatar"}
                             className="w-11 h-11 rounded-xl object-cover"
                           />
                         ) : (
@@ -221,7 +221,7 @@ export default function ApplicantsPage() {
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-semibold text-gray-900 text-[15px]">
-                            {c.user?.profile?.name}
+                            {c.user?.profile?.firstName}
                           </span>
                           {/* {c.priority && (
                           <span

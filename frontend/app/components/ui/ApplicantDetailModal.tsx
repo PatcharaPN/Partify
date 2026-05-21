@@ -67,8 +67,6 @@ export default function ApplicantDetailModal({
 
   const cfg = STATUS_CONFIG[status];
 
-  console.log(applicants);
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/15 backdrop-blur-[5px]"
@@ -84,17 +82,17 @@ export default function ApplicantDetailModal({
             {profile?.avatarUrl ? (
               <img
                 src={profile.avatarUrl}
-                alt={profile.name}
+                alt={profile.firstName}
                 className="w-11 h-11 rounded-xl object-cover border-2 border-white/10"
               />
             ) : (
               <div className="w-11 h-11 rounded-xl bg-gray-800 border-2 border-white/10 flex items-center justify-center text-lg font-semibold ">
-                {profile?.name?.[0] ?? "?"}
+                {profile?.firstName?.[0] ?? "?"}
               </div>
             )}
             <div>
               <p className="m-0 text-base font-bold leading-tight">
-                {profile?.name ?? "ไม่ระบุชื่อ"}
+                {profile?.firstName ?? "ไม่ระบุชื่อ"}
               </p>
               <p className="m-0 text-xs text-gray-400 mt-0.5">
                 สมัครวันที่ {appliedDate}

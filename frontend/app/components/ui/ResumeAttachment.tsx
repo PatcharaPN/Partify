@@ -8,7 +8,6 @@ interface ResumeAttachmentProps {
 
 export default function ResumeAttachment({ resumeUrl }: ResumeAttachmentProps) {
   const fileName = resumeUrl;
-  console.log(resumeUrl);
 
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-[#2563EB]/40 hover:bg-blue-50/40 transition-all group">

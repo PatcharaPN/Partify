@@ -23,8 +23,6 @@ export default function QuickApplyModal({
   const dispatch = useAppDispatch();
 
   const handleApply = async () => {
-    console.log(jobId);
-    console.log(user!.id);
     try {
       await dispatch(
         applyJob({
@@ -34,7 +32,7 @@ export default function QuickApplyModal({
       ).unwrap();
       onClose?.();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   if (!isOpen) return null;
@@ -85,7 +83,7 @@ export default function QuickApplyModal({
 
             <div>
               <p className="text-sm font-semibold text-gray-900">
-                {user?.profile?.name ?? "Unknown Applicant"}
+                {user?.profile?.firstName ?? "Unknown Applicant"}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Icon
@@ -95,7 +93,7 @@ export default function QuickApplyModal({
                   className="text-blue-500"
                 />
                 <span className="text-xs text-blue-600 font-medium">
-                  {user?.profile?.resumeUrl ? "Resume Uploaded" : "No Resume"}
+                  {user?.resume ? "อัพโหลดเรซูเม่แล้ว" : "No Resume"}
                 </span>
                 <span className="text-gray-300">·</span>
                 <span className="text-xs text-gray-400">Updated 2d ago</span>

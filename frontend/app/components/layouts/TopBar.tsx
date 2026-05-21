@@ -43,16 +43,18 @@ export default function TopBar() {
           >
             ค้นหางาน
           </Link>
-          <Link
-            className={`${
-              isActive("/dashboard")
-                ? "decoration-primary underline underline-offset-2 text-primary"
-                : ""
-            } decoration-2 font-headline px-4 py-2`}
-            href="/dashboard"
-          >
-            แดชบอร์ด
-          </Link>
+          {user?.role === "EMPLOYER" ? (
+            <Link
+              className={`${
+                isActive("/dashboard")
+                  ? "decoration-primary underline underline-offset-2 text-primary"
+                  : ""
+              } decoration-2 font-headline px-4 py-2`}
+              href="/dashboard"
+            >
+              แดชบอร์ด
+            </Link>
+          ) : null}
         </nav>
         <div className="flex items-center justify-end gap-5">
           {" "}

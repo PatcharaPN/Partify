@@ -20,6 +20,12 @@ const SIDEBAR_ELEMENTS = [
     role: ["ADMIN", "CANDIDATE", "EMPLOYER"],
   },
   {
+    name: "กิจกรรม",
+    path: "/profile/activity",
+    icon: "fluent:shifts-activity-16-filled",
+    role: ["CANDIDATE"],
+  },
+  {
     name: "บริษัท",
     path: "/profile/company",
     icon: "mdi:office-building-outline",

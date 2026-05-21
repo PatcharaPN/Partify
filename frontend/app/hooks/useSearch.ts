@@ -62,9 +62,7 @@ export const useSearch = (
     handleSearch("");
     setPage(1);
   };
-  useEffect(() => {
-    console.log({ total, totalPages, page });
-  }, [total, totalPages]);
+
   const removeChip = (chip: string) => {
     setSearchChips((prev) => prev.filter((c) => c !== chip));
     setPage(1);

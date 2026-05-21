@@ -39,7 +39,7 @@ const ProfileStrengthCard = () => {
     {
       label: "อัปโหลด Resume",
       sub: "เพิ่มโอกาสได้รับการติดต่อ",
-      done: !!currentUser?.resume,
+      done: !!currentUser?.resume.length,
     },
   ];
   const strength = Math.round(

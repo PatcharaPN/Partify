@@ -18,7 +18,6 @@ export const fetchProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/users/me");
-      console.log(res.data.profile);
 
       return res.data.profile;
     } catch (err: any) {
@@ -32,7 +31,6 @@ export const upsertProfile = createAsyncThunk(
   async (data: Partial<Profile>, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.patch("users/me/profile", data);
-      console.log("Sent");
 
       return res.data;
     } catch (err: any) {

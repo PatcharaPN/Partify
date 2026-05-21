@@ -1,5 +1,6 @@
 import Footer from "../components/layouts/Footer";
 import TopBar from "../components/layouts/TopBar";
+import { AuthProvider } from "../providers/AuthProvider";
 
 export default function MainLayout({
   children,
@@ -9,9 +10,11 @@ export default function MainLayout({
   return (
     <div>
       {" "}
-      <TopBar />
-      {children}
-      <Footer />
+      <AuthProvider>
+        <TopBar />
+        {children}
+        <Footer />
+      </AuthProvider>
     </div>
   );
 }

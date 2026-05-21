@@ -8,7 +8,6 @@ type JobRowProps = {
 };
 
 const JobRow = ({ href, job }: JobRowProps) => {
-  console.log(job);
   const pendingApps =
     job.applications?.filter((a) => a.status === "PENDING") ?? [];
 

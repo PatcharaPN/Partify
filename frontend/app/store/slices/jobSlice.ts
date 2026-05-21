@@ -234,6 +234,7 @@ const jobSlice = createSlice({
         state.error = (action.payload as string) ?? "Failed to post job";
       })
       .addCase(fetchRelatedJob.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.relatedJobs = action.payload;
       })
       .addCase(searchJob.pending, (state) => {
