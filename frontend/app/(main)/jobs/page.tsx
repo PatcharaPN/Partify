@@ -10,20 +10,34 @@ import JobList from "@/app/components/ui/JobList";
 import { useSearch } from "@/app/hooks/useSearch";
 import Button from "@/app/components/ui/Button";
 import { useParams, useSearchParams } from "next/navigation";
+import { label } from "framer-motion/client";
 
-const TAGS = [
-  "React",
-  "Node.js",
-  "ขับรถ",
-  "บัญชี",
-  "ดูแลเด็ก",
-  "IT Support",
-  "งานออฟฟิศ",
-];
+const CATEGORY = {
+  FULLTIME: {
+    label: "เต็มเวลา",
+    value: "FULLTIME",
+  },
+  CONTRACT: {
+    label: "สัญญาจ้าง",
+    value: "CONTRACT",
+  },
+  PARTTIME: {
+    label: "พาร์ทไทม์",
+    value: "PARTTIME",
+  },
+  FREELANCE: {
+    label: "ฟรีแลนซ์",
+    value: "FREELANCE",
+  },
+};
+
 export default function JobPage() {
+  type Jobtype = keyof typeof CATEGORY;
+
   const searchParams = useSearchParams();
   const searchjobs = searchParams.get("searchjobs");
   const category = searchParams.get("category");
+  const [jobType, setJobType] = useState<Jobtype[]>([]);
   const dispatch = useAppDispatch();
   const {
     search,
@@ -39,8 +53,9 @@ export default function JobPage() {
     searchChips,
     addChip,
     removeChip,
-  } = useSearch(category, searchjobs);
+  } = useSearch(category, searchjobs, jobType);
   const [sortedBy, setSortedBy] = useState("newest");
+
   const [salary, setSalary] = useState(0);
   useEffect(() => {
     dispatch(fetchJobs());
@@ -112,12 +127,13 @@ export default function JobPage() {
               <p className="font-bold">ฟิลเตอร์</p>
               <p
                 className="text-primary cursor-pointer"
-                onClick={() => setSalary(0)}
+                onClick={() => {
+                  setSalary(0);
+                }}
               >
                 Clear all
               </p>
             </div>
-            {/* Salary range slider */}
             <div className="bg-neutral-200/50 p-5 rounded-2xl mt-5">
               <div className="flex justify-between items-center">
                 <label
@@ -148,22 +164,30 @@ export default function JobPage() {
               {" "}
               <span className="font-bold">ลักษณะงาน</span>
               <ul className="mt-2 ">
-                {[
-                  "เต็มเวลา",
-                  "สัญญาจ้าง",
-                  "พาร์ทไทม์",
-                  "วันหยุดเท่านั้น",
-                  "ฟรีแลนซ์",
-                ].map((label) => (
-                  <li key={label}>
+                {Object.entries(CATEGORY).map(([key, value]) => (
+                  <li key={key}>
                     <label className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition">
                       <input
+                        onChange={(e) => {
+                          const selected = e.target.value as Jobtype;
+
+                          setJobType((prev) => {
+                            if (prev.includes(selected)) {
+                              return prev.filter((item) => item !== selected);
+                            }
+                            return [...prev, selected];
+                          });
+                        }}
+                        checked={jobType.includes(value.value as Jobtype)}
+                        value={value.value}
                         className="w-4 h-4 accent-blue-600"
                         type="checkbox"
                         name=""
                         id=""
                       />
-                      <span className="text-sm text-zinc-700">{label}</span>
+                      <span className="text-sm text-zinc-700">
+                        {value.label}
+                      </span>
                     </label>
                   </li>
                 ))}
@@ -186,7 +210,10 @@ export default function JobPage() {
               <span>{displayJobs.length} งานที่แสดง</span>
               <span>
                 เรียงตาม:{" "}
-                <select className="outline-none text-sm ml-1 bg-transparent">
+                <select
+                  onChange={(e) => setSortedBy(e.target.value)}
+                  className="outline-none text-sm ml-1 bg-transparent"
+                >
                   <option value="newest">ล่าสุด</option>
                   <option value="salary_desc">เงินเดือนสูง-ต่ำ</option>
                   <option value="salary_asc">เงินเดือนต่ำ-สูง</option>

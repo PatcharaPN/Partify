@@ -15,6 +15,8 @@ const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
   const router = useRouter();
   const { currentUser } = useCurrentUser();
 
+  console.log(currentUser);
+
   const isProfileComplete =
     !!currentUser?.company?.companyName &&
     !!currentUser?.company?.companyImageURL &&

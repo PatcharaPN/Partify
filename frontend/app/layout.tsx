@@ -4,6 +4,7 @@ import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import Providers from "./provider";
 import { ToastProvider } from "./providers/ToastProvider";
+import { AlertModalProvider } from "./contexts/AlertModalContext";
 
 const kanit = Kanit({
   weight: ["200", "400"],
@@ -40,9 +41,9 @@ export default function RootLayout({
     >
       <body className="min-h-screen">
         <Providers>
-          <ToastProvider>
+          <AlertModalProvider>
             <StoreProvider>{children}</StoreProvider>
-          </ToastProvider>
+          </AlertModalProvider>
         </Providers>
       </body>
     </html>

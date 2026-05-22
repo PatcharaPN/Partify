@@ -124,8 +124,13 @@ export default function TopBar() {
                     <button
                       onClick={() => {
                         localStorage.removeItem("access_token");
-                        dispatch(logout());
-                        router.push("/login");
+                        try {
+                          dispatch(logout());
+                          router.replace("/login");
+                          router.refresh();
+                        } catch (error) {
+                          console.error(error);
+                        }
                       }}
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50"
                     >

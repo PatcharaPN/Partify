@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
+import { AnimatePresence, motion } from "framer-motion";
 
-type AlertVariant = "error" | "warning" | "info";
+type AlertVariant = "error" | "warning" | "info" | "success";
 
 type AlertModalProps = {
   isOpen: boolean;
@@ -18,19 +19,25 @@ const VARIANT_CONFIG = {
     icon: "mdi:alert-circle-outline",
     iconClass: "text-red-500",
     bgClass: "bg-red-50",
-    confirmClass: "bg-primary text-white hover:bg-gray-700",
+    confirmClass: "bg-red-500 text-white hover:bg-red-600",
   },
   warning: {
     icon: "mdi:alert-outline",
     iconClass: "text-amber-500",
     bgClass: "bg-amber-50",
-    confirmClass: "bg-red-500 text-white hover:bg-red-600",
+    confirmClass: "bg-amber-500 text-white hover:bg-amber-600",
   },
   info: {
     icon: "mdi:information-outline",
     iconClass: "text-blue-500",
     bgClass: "bg-blue-50",
-    confirmClass: "bg-primary text-white hover:bg-gray-700",
+    confirmClass: "bg-blue-500 text-white hover:bg-blue-600",
+  },
+  success: {
+    icon: "mdi:check-circle-outline",
+    iconClass: "text-green-500",
+    bgClass: "bg-green-50",
+    confirmClass: "bg-green-500 text-white hover:bg-green-600",
   },
 };
 
@@ -44,61 +51,79 @@ export default function AlertModal({
   confirmLabel = "ตกลง",
   cancelLabel = "ยกเลิก",
 }: AlertModalProps) {
-  if (!isOpen) return null;
-
   const config = VARIANT_CONFIG[variant];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl border border-gray-100 p-6 w-full max-w-sm mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-9 h-9 ${config.bgClass} rounded-xl flex items-center justify-center shrink-0`}
-            >
-              <Icon
-                icon={config.icon}
-                width="20"
-                className={config.iconClass}
-              />
-            </div>
-            <p className="text-sm font-medium text-gray-900">{title}</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-gray-300 hover:text-gray-500"
-          >
-            <Icon icon="mdi:close" width="18" />
-          </button>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          onClick={onClose}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/30" />
 
-        <p className="text-xs text-gray-500 leading-relaxed mb-5 ml-12">
-          {description}
-        </p>
-
-        <div className="flex gap-2 justify-end">
-          <button
-            onClick={onClose}
-            className="text-xs px-4 py-2 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+          {/* Modal */}
+          <motion.div
+            className="relative bg-white rounded-2xl border border-gray-100 p-6 w-full max-w-sm mx-4 shadow-xl"
+            exit={{ opacity: 0, scale: 0.95, y: 8 }}
+            transition={{ type: "spring", duration: 0.3, bounce: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
           >
-            {cancelLabel}
-          </button>
-          {onConfirm && (
+            {/* Close button */}
             <button
-              onClick={onConfirm}
-              className={`text-xs px-4 py-2 rounded-xl font-medium transition-colors ${config.confirmClass}`}
+              onClick={onClose}
+              className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 transition-colors"
             >
-              {confirmLabel}
+              <Icon icon="mdi:close" width="18" />
             </button>
-          )}
-        </div>
-      </div>
-    </div>
+
+            {/* Icon + Title */}
+            <div className="flex flex-col items-center text-center gap-3 mb-4">
+              <motion.div
+                className={`w-12 h-12 ${config.bgClass} rounded-2xl flex items-center justify-center`}
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.05, type: "spring", bounce: 0.4 }}
+              >
+                <Icon
+                  icon={config.icon}
+                  width="26"
+                  className={config.iconClass}
+                />
+              </motion.div>
+              <p className="text-sm font-semibold text-gray-900">{title}</p>
+            </div>
+
+            <div className="h-px bg-gray-100 mb-4" />
+
+            {/* Description */}
+            <p className="text-xs text-gray-500 leading-relaxed text-center mb-5">
+              {description}
+            </p>
+
+            {/* Actions */}
+            <div className="flex gap-2">
+              <button
+                onClick={onClose}
+                className="flex-1 text-xs px-4 py-2.5 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors font-medium"
+              >
+                {cancelLabel}
+              </button>
+              {onConfirm && (
+                <button
+                  onClick={onConfirm}
+                  className={`flex-1 text-xs px-4 py-2.5 rounded-xl font-medium transition-colors ${config.confirmClass}`}
+                >
+                  {confirmLabel}
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

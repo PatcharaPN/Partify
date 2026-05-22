@@ -35,11 +35,13 @@ export class JobsController {
     @Query('skills') skills?: string,
     @Query('search') search?: string,
     @Query('page') page?: string,
+    @Query('jobType') jobType?: string,
   ) {
     return this.jobsService.searchJob(
       skills ? skills.split(',') : [],
       Number(page) || 1,
       search,
+      jobType,
     );
   }
 

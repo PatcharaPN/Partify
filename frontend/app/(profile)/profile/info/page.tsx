@@ -1,5 +1,7 @@
 "use client";
 import { PROVINCES_DISTRICTS } from "@/app/constants/jobLabels";
+import { useAlert } from "@/app/contexts/AlertModalContext";
+import { useAlertModal } from "@/app/hooks/useAlertModal";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { upsertProfile } from "@/app/store/slices/profileSlice";
@@ -26,7 +28,7 @@ const PersonalInfoPage = () => {
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [workingHours, setWorkingHours] = useState("");
-
+  const alert = useAlert();
   useEffect(() => {
     const profile = currentUser?.profile;
     if (!profile || initialized) return;
@@ -59,7 +61,14 @@ const PersonalInfoPage = () => {
         district,
         workingHours,
       }),
-    );
+    ).unwrap();
+
+    alert({
+      variant: "success",
+      title: "บันทึกสำเร็จ",
+      description: "ข้อมูลส่วนตัวของคุณถูกบันทึกเรียบร้อยแล้ว",
+      confirmLabel: "",
+    });
   };
 
   const handleCancel = () => {

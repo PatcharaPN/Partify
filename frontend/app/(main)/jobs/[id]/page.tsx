@@ -399,9 +399,8 @@ export default function JobDetail() {
             )}
           </div>
 
-          {/* ── Right Column ── */}
+          {/* Right Column */}
           <div className="flex flex-col gap-4">
-            {/* Company Card */}
             <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-3">
                 {selectedJob.company.companyImageURL ? (

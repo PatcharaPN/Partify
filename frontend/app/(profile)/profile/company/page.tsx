@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { getCompany, upsertCompany } from "@/app/store/slices/companySlice";
 import { Company } from "@/app/types/job.type";
+import { useAlert } from "@/app/contexts/AlertModalContext";
 
 const CompanySectionPage = () => {
   const dispatch = useAppDispatch();
@@ -51,7 +52,7 @@ const CompanySectionPage = () => {
 
   const handleSave = async () => {
     if (!companyState.companyName.trim()) return;
-    await dispatch(upsertCompany(companyState));
+    await dispatch(upsertCompany(companyState)).unwrap();
   };
 
   return (

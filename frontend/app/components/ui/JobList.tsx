@@ -1,6 +1,7 @@
 import { Job } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import JobTypeTag, { JobType } from "./JobTypeTag";
 
 type JobListProps = {
   keywords: string[];
@@ -27,10 +28,8 @@ const JobList = ({ jobs, keywords }: JobListProps) => {
               <p className="text-sm font-semibold text-gray-800 leading-snug">
                 {jobs.title}
               </p>
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
-                <Icon icon="mingcute:time-line" className="w-2.5 h-2.5" />
-                Part-time
-              </span>
+
+              <JobTypeTag jobType={jobs.jobType as JobType} />
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5">
               <span className="flex items-center gap-1 text-xs text-neutral-500">

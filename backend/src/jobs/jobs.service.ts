@@ -188,10 +188,15 @@ export class JobsService {
     });
     return jobs;
   }
-  async searchJob(keyword: string[], page: number = 1, search?: string) {
+  async searchJob(
+    keyword: string[],
+    page: number = 1,
+    search?: string,
+    jobType?: string,
+  ) {
     const limit = 5;
     const skip = (page - 1) * limit;
-
+    const parsedJob = jobType?.split(',');
     const where = {
       AND: [
         keyword.length > 0 ? { skills: { hasSome: keyword } } : {},
@@ -213,6 +218,13 @@ export class JobsService {
                   },
                 },
               ],
+            }
+          : {},
+        jobType
+          ? {
+              jobType: {
+                in: parsedJob,
+              },
             }
           : {},
       ],

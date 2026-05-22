@@ -16,6 +16,13 @@ export class UsersService {
       },
       include: {
         profile: true,
+        company: {
+          select: {
+            companyImageURL: true,
+            companyName: true,
+            companyBio: true,
+          },
+        },
         resume: true,
       },
     });

@@ -102,7 +102,7 @@ model Job {
   salaryNegotiable  Boolean   @default(false)
   currency          String?   @default("THB")
   status            String?
-  jobType           String?
+  jobType           JobType?
   workStyle         String?
   experienceLevel   String?
   experienceYears   Int?
@@ -134,6 +134,12 @@ model Job {
   skills            String[]    
   updatedAt DateTime @updatedAt
   @@map("jobs")
+}
+enum JobType {
+ FREELANCE
+ PARTTIME
+ FULLTIME
+ CONTRACT
 }
 
 model Bookmark {

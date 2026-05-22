@@ -1,4 +1,4 @@
-// hooks/useSearch.ts
+"use client";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { searchJob } from "@/app/store/slices/jobSlice";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { useDebounce } from "./useDebounce";
 export const useSearch = (
   category?: string | null,
   initialSearch?: string | null,
+  jobType?: string[],
 ) => {
   const dispatch = useAppDispatch();
 
@@ -33,9 +34,10 @@ export const useSearch = (
         search: debouncedSearch,
         skills: [...selectedTags, ...searchChips],
         page,
+        jobType,
       }),
     );
-  }, [debouncedSearch, selectedTags, searchChips, page]);
+  }, [debouncedSearch, selectedTags, searchChips, page, jobType]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>

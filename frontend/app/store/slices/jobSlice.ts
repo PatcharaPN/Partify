@@ -127,7 +127,13 @@ export const searchJob = createAsyncThunk(
       search,
       skills,
       page,
-    }: { search?: string; skills?: string[]; page?: number } = {},
+      jobType,
+    }: {
+      search?: string;
+      skills?: string[];
+      page?: number;
+      jobType?: string[];
+    } = {},
     thunkAPI,
   ) => {
     try {
@@ -135,6 +141,7 @@ export const searchJob = createAsyncThunk(
       if (search) params.set("search", search);
       if (skills?.length) params.set("skills", skills.join(","));
       if (page) params.set("page", String(page));
+      if (jobType) params.set("jobType", jobType.join(","));
 
       const res = await axiosInstance(`/jobs/search?${params}`);
       return res.data;
