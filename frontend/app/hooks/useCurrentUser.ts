@@ -9,7 +9,7 @@ export const useCurrentUser = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchCurrentUser());
+    dispatch(fetchCurrentUser()).unwrap();
   }, [dispatch]);
   const currentUser = user;
   return { currentUser, isAuthenticated, isLoading, token, error };

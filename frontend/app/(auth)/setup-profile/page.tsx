@@ -11,7 +11,7 @@ export default function SetupProfilePage() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!user) {
-      dispatch(fetchCurrentUser());
+      dispatch(fetchCurrentUser()).unwrap();
     }
   }, []);
 

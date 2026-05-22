@@ -35,7 +35,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       await dispatch(login({ email, password })).unwrap();
-      await dispatch(fetchCurrentUser());
+      await dispatch(fetchCurrentUser()).unwrap();
     } catch (error) {
       console.log(error);
     }

@@ -30,7 +30,7 @@ export default function JobDetail() {
       dispatch(fetchJobById(id as string));
       dispatch(fetchRelatedJob(id as string));
     }
-    dispatch(fetchCurrentUser());
+    dispatch(fetchCurrentUser()).unwrap();
   }, [id]);
   useEffect(() => {
     if (id && user?.id) {
