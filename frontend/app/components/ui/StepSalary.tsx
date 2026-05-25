@@ -18,10 +18,8 @@ type StepSalaryProps = {
 
 const StepSalary = ({ step, register, control, watch }: StepSalaryProps) => {
   const currency = watch("currency");
-  const salaryNegotiable = watch("salaryNegotiable");
   const workingDays = watch("workingDays");
-  const startDate = watch("startDate");
-  const closingDate = watch("closingDate");
+
   return (
     <motion.div
       key={step}

@@ -1,5 +1,8 @@
 "use client";
-import { PROVINCES_DISTRICTS } from "@/app/constants/jobLabels";
+import {
+  PROVINCES_DISTRICTS,
+  WORKING_DAYS_OPTIONS,
+} from "@/app/constants/jobLabels";
 import { useAlert } from "@/app/contexts/AlertModalContext";
 import { useAlertModal } from "@/app/hooks/useAlertModal";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
@@ -183,7 +186,6 @@ const PersonalInfoPage = () => {
           </div>
         </div>
       </div>
-
       {/* ── ที่อยู่ ── */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
         <h2 className="text-[15px] font-medium text-gray-900">ที่อยู่</h2>
@@ -226,7 +228,6 @@ const PersonalInfoPage = () => {
           </div>
         </div>
       </div>
-
       {/* ── การทำงาน ── */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
         <h2 className="text-[15px] font-medium text-gray-900">การทำงาน</h2>
@@ -244,7 +245,27 @@ const PersonalInfoPage = () => {
           />
         </div>
       </div>
-
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
+        <label className="text-xs font-semibold text-gray-500">
+          วันทำงานที่ต้องการ
+        </label>{" "}
+        <div className="flex flex-wrap gap-2">
+          {WORKING_DAYS_OPTIONS.map((d) => (
+            <button
+              type="button"
+              key={d}
+              className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all `}
+            >
+              {d}
+            </button>
+          ))}{" "}
+          <input
+            type="text"
+            placeholder="หรือระบุเอง เช่น พุธ–อาทิตย์"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+          />
+        </div>
+      </div>
       {/* ── Professional Summary ── */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
         <div>
@@ -271,7 +292,6 @@ const PersonalInfoPage = () => {
           </p>
         </div>
       </div>
-
       {/* ── Actions ── */}
       <div className="flex justify-end gap-2">
         <button
