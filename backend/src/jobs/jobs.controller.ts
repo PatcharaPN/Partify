@@ -68,7 +68,7 @@ export class JobsController {
     return this.jobsService.getJobsByID(jobId, req.user);
   }
 
-  @UseGuards(JobOwnerGuard)
+  @UseGuards(AuthGuard, JobOwnerGuard)
   @Patch('/:id')
   upsertJobById(@Param('id') jobId, @Body() dto) {
     return this.jobsService.upsertJobById(jobId, dto);

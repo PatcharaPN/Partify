@@ -173,7 +173,7 @@ const StepPreview = ({ step, form }: StepPreviewProps) => {
             </div>
           </div>
 
-          {/* === Extra details (ไม่แสดงใน card จริง แต่ช่วย review) === */}
+          {/* Extra details (ไม่แสดงใน card จริง แต่ช่วย review) */}
           {(form.responsibilities ||
             form.qualifications ||
             (form.benefits?.length ?? 0) > 0) && (

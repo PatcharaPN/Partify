@@ -1,8 +1,8 @@
 import { Job } from "@/app/types/job.type";
 import Link from "next/link";
 import AvatarStack from "./AvatarStack";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
 import PostJobForm from "./PostJobForm";
 
 type JobRowProps = {
@@ -11,11 +11,17 @@ type JobRowProps = {
 };
 
 const JobRow = ({ href, job }: JobRowProps) => {
-  const [isModalOpen, setModalOpen] = useState(true);
+  const router = useRouter();
   const pathname = usePathname();
   const pendingApps =
     job.applications?.filter((a) => a.status === "PENDING") ?? [];
   const isJobPage = pathname.includes("/dashboard/employer/job");
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`?modal=post-job&jobId=${job.id}`);
+  };
   const content = (
     <div className="grid grid-cols-[2.5fr_1fr_1fr_1.2fr_90px] px-6 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-gray-50/50 transition-colors group">
       <div className="flex items-center gap-3">
@@ -29,7 +35,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
         <div>
           <p className="text-sm font-semibold text-gray-800">{job.title}</p>
           <p className="text-[11px] text-gray-400 mt-0.5">
-            {job.company.companyName} · {job.company.location}
+            {job.company.companyName} · {job.location}
           </p>
         </div>
       </div>
@@ -69,20 +75,29 @@ const JobRow = ({ href, job }: JobRowProps) => {
       </p>
       <div>
         {isJobPage ? (
-          <button className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all">
+          <button
+            onClick={handleEdit}
+            className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all"
+          >
             Edit
           </button>
         ) : job.status === "active" ? (
-          <button className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all">
+          <button
+            onClick={handleEdit}
+            className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all"
+          >
             Edit
           </button>
         ) : (
-          <button className="text-sm font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-xl hover:bg-blue-50 active:scale-95 transition-all">
+          <button
+            onClick={handleEdit}
+            className="text-sm font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-xl hover:bg-blue-50 active:scale-95 transition-all"
+          >
             Reopen
           </button>
         )}
       </div>
-      {isModalOpen && <PostJobForm />}
+      <PostJobForm />
     </div>
   );
   if (href) {

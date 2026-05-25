@@ -1,19 +1,24 @@
 import { CATEGORIES, EDUCATION_LEVELS } from "@/app/constants/jobLabels";
-import { PostJobFormData, WorkModel } from "@/app/types/job.type";
+import { PostJobFormData } from "@/app/types/job.type";
 import { ExperienceLevel, JobType, UrgencyLevel } from "@/app/types/ui.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import {
+  Control,
+  Controller,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 
 type StepBasicInfoProps = {
   step: number;
-  updateField: <K extends keyof PostJobFormData>(
-    key: K,
-    value: PostJobFormData[K],
-  ) => void;
-  form: PostJobFormData;
+  register: UseFormRegister<PostJobFormData>;
+  control: Control<PostJobFormData, PostJobFormData>;
+  watch: UseFormWatch<PostJobFormData>;
 };
 
-const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
+const StepBasicInfo = ({ step, register, control }: StepBasicInfoProps) => {
   return (
     <motion.div
       key={step}
@@ -30,8 +35,7 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
         </label>
         <input
           type="text"
-          value={form.title}
-          onChange={(e) => updateField("title", e.target.value)}
+          {...register("title")}
           placeholder="เช่น พนักงานชงกาแฟ, แคชเชียร์, พนักงานเสิร์ฟ"
           className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
         />
@@ -45,11 +49,10 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
           </label>
           <div className="relative">
             <select
-              value={form.category ?? ""}
-              onChange={(e) => updateField("category", e.target.value)}
+              {...register("category")}
               className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
             >
-              <option value="">เลือกหมวดหมู่</option>
+              <option>เลือกหมวดหมู่</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -69,31 +72,44 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
         <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
           ประเภทงาน
         </label>
-        <div className="grid grid-cols-4 gap-1.5">
-          {(
-            ["FULLTIME", "PARTTIME", "FREELANCE", "INTERNSHIP"] as JobType[]
-          ).map((t) => {
+        <Controller
+          control={control}
+          name="jobType"
+          render={({ field }) => {
             const labels: Record<JobType, string> = {
               FULLTIME: "ประจำ",
               PARTTIME: "พาร์ทไทม์",
               FREELANCE: "ฟรีแลนซ์",
               INTERNSHIP: "ฝึกงาน",
             };
+
             return (
-              <button
-                key={t}
-                onClick={() => updateField("jobType", t)}
-                className={`py-2 text-xs font-medium rounded-xl border transition-all ${
-                  form.jobType === t
-                    ? "bg-blue-50 text-blue-600 border-blue-200"
-                    : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
-                }`}
-              >
-                {labels[t]}
-              </button>
+              <div className="grid grid-cols-4 gap-1.5">
+                {(
+                  [
+                    "FULLTIME",
+                    "PARTTIME",
+                    "FREELANCE",
+                    "INTERNSHIP",
+                  ] as JobType[]
+                ).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => field.onChange(t)}
+                    className={`py-2 text-xs font-medium rounded-xl border transition-all ${
+                      field.value === t
+                        ? "bg-blue-50 text-blue-600 border-blue-200"
+                        : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
+                    }`}
+                  >
+                    {labels[t]}
+                  </button>
+                ))}
+              </div>
             );
-          })}
-        </div>
+          }}
+        />
       </div>
 
       {/* Experience Level + Years */}
@@ -104,8 +120,7 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
           </label>
           <div className="relative">
             <select
-              value={form.experienceLevel ?? ""}
-              onChange={(e) => updateField("experienceLevel", e.target.value)}
+              {...register("experienceLevel")}
               className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
             >
               <option value="">ไม่ระบุ</option>
@@ -137,12 +152,9 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
             ประสบการณ์ขั้นต่ำ (ปี)
           </label>
           <input
+            {...register("experienceYears", { valueAsNumber: true })}
             type="number"
             min={0}
-            value={form.experienceYears ?? ""}
-            onChange={(e) =>
-              updateField("experienceYears", Number(e.target.value))
-            }
             placeholder="0"
             className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
           />
@@ -157,8 +169,7 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
           </label>
           <div className="relative">
             <select
-              value={form.educationLevel ?? ""}
-              onChange={(e) => updateField("educationLevel", e.target.value)}
+              {...register("educationLevel")}
               className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
             >
               {EDUCATION_LEVELS.map((e) => (
@@ -179,10 +190,9 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
             จำนวนที่รับ (ตำแหน่ง)
           </label>
           <input
+            {...register("positions", { valueAsNumber: true })}
             type="number"
             min={1}
-            value={form.positions ?? 1}
-            onChange={(e) => updateField("positions", Number(e.target.value))}
             placeholder="1"
             className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
           />
@@ -195,38 +205,48 @@ const StepBasicInfo = ({ step, form, updateField }: StepBasicInfoProps) => {
           ความเร่งด่วน
         </label>
         <div className="flex gap-2">
-          {(["LOW", "MEDIUM", "HIGH"] as UrgencyLevel[]).map((u) => {
-            const config: Record<
-              UrgencyLevel,
-              { label: string; active: string }
-            > = {
-              LOW: {
-                label: "ปกติ",
-                active: "bg-green-50 text-green-600 border-green-200",
-              },
-              MEDIUM: {
-                label: "ค่อนข้างด่วน",
-                active: "bg-amber-50 text-amber-600 border-amber-200",
-              },
-              HIGH: {
-                label: "ด่วนมาก",
-                active: "bg-red-50 text-red-600 border-red-200",
-              },
-            };
-            return (
-              <button
-                key={u}
-                onClick={() => updateField("urgency", u)}
-                className={`flex-1 py-2 text-xs font-medium rounded-xl border transition-all ${
-                  form.urgency === u
-                    ? config[u].active
-                    : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
-                }`}
-              >
-                {config[u].label}
-              </button>
-            );
-          })}
+          <Controller
+            control={control}
+            name="urgency"
+            render={({ field }) => {
+              const config: Record<
+                UrgencyLevel,
+                { label: string; active: string }
+              > = {
+                LOW: {
+                  label: "ปกติ",
+                  active: "bg-green-50 text-green-600 border-green-200",
+                },
+                MEDIUM: {
+                  label: "ค่อนข้างด่วน",
+                  active: "bg-amber-50 text-amber-600 border-amber-200",
+                },
+                HIGH: {
+                  label: "ด่วนมาก",
+                  active: "bg-red-50 text-red-600 border-red-200",
+                },
+              };
+
+              return (
+                <div className="flex gap-2">
+                  {(["LOW", "MEDIUM", "HIGH"] as UrgencyLevel[]).map((u) => (
+                    <button
+                      key={u}
+                      type="button"
+                      onClick={() => field.onChange(u)}
+                      className={`flex-1 py-2 text-xs font-medium rounded-xl border transition-all ${
+                        field.value === u
+                          ? config[u].active
+                          : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
+                      }`}
+                    >
+                      {config[u].label}
+                    </button>
+                  ))}
+                </div>
+              );
+            }}
+          />
         </div>
       </div>
 

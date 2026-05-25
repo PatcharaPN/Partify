@@ -16,6 +16,14 @@ interface JobState {
   selectedJob: Job | null;
   error: string | null;
 }
+type UpsertJobPayload = Omit<
+  PostJobFormData,
+  "salaryMin" | "salaryMax" | "overviewPictureURL"
+> & {
+  salaryMin: number;
+  salaryMax: number;
+  overviewPictureURL: string[];
+};
 
 const initialState: JobState = {
   jobs: [],
@@ -59,7 +67,18 @@ export const fetchRelatedJob = createAsyncThunk(
     }
   },
 );
+export const upsertJob = createAsyncThunk(
+  "job/upsert",
+  async (payload: { id?: string } & Partial<UpsertJobPayload>) => {
+    const { id, ...data } = payload;
 
+    const res = id
+      ? await axiosInstance.patch(`/jobs/${id}`, data)
+      : await axiosInstance.post("/jobs", data);
+
+    return res.data;
+  },
+);
 export const fetchRecomandJob = createAsyncThunk(
   "jobs/fetchRecomandJob",
   async (_, thunkAPI) => {
@@ -182,6 +201,11 @@ const jobSlice = createSlice({
       .addCase(fetchJobById.fulfilled, (state, action: PayloadAction<Job>) => {
         state.selectedJob = action.payload;
         state.isLoading = false;
+
+        const exists = state.jobs.find((j) => j.id === action.payload.id);
+        if (!exists) {
+          state.jobs.push(action.payload);
+        }
       })
 
       .addCase(fetchJobById.rejected, (state, action) => {
@@ -227,18 +251,20 @@ const jobSlice = createSlice({
           (action.payload as string) ?? "Failed to fetch recommended jobs";
       })
 
-      .addCase(postJob.pending, (state) => {
+      .addCase(upsertJob.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-
-      .addCase(postJob.fulfilled, (state) => {
+      .addCase(upsertJob.fulfilled, (state, action) => {
         state.isLoading = false;
+        const index = state.jobs.findIndex((j) => j.id === action.payload.id);
+        if (index !== -1) {
+          state.jobs[index] = action.payload;
+        } else {
+          state.jobs.push(action.payload);
+        }
       })
-
-      .addCase(postJob.rejected, (state, action) => {
+      .addCase(upsertJob.rejected, (state) => {
         state.isLoading = false;
-        state.error = (action.payload as string) ?? "Failed to post job";
       })
       .addCase(fetchRelatedJob.fulfilled, (state, action) => {
         state.isLoading = false;

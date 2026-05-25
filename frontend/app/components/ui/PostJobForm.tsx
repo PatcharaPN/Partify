@@ -1,56 +1,71 @@
 "use client";
 
-import { PostJobFormData } from "@/app/types/job.type";
+import { PostJobFormData, WorkModel } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StepBasicInfo from "./StepBasicInfo";
 import StepSalary from "./StepSalary";
-import StepConditions from "./StepPreview";
-import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { RootState } from "@reduxjs/toolkit/query";
-import { postJob } from "@/app/store/slices/jobSlice";
+import { fetchJobById, postJob } from "@/app/store/slices/jobSlice";
 import { STEP_LABELS } from "@/app/constants/jobLabels";
 import StepLocation from "./StepLocation";
 import StepDetails from "./StepDetail";
+import { usePostJobForm } from "@/app/hooks/usePostJobForm";
+import StepPreview from "./StepPreview";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 
 const PostJobForm = () => {
+  const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId") ?? undefined;
+  const isOpen = searchParams.get("modal") === "post-job";
   const [step, setStep] = useState(1);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isOpen = searchParams.get("modal") === "post-job";
-  const dispatch = useAppDispatch();
 
-  const [form, setForm] = useState<PostJobFormData>({
-    title: "",
-    description: "",
-    jobType: "",
-    workStyle: "onsite",
-    salaryNegotiable: false,
-    salaryMin: "",
-    salaryMax: "",
-    workingHours: "",
-    workingDays: "",
-    benefits: [],
-    closingDate: "",
-    location: "",
-    district: "",
-    overviewPictureURL: [],
-    locationDetail: "",
-    province: "",
-    startDate: "",
-  });
-  const updateField = <K extends keyof typeof form>(
-    key: K,
-    value: (typeof form)[K],
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-  if (!isOpen) return null;
+  const existingJob = useAppSelector((state) =>
+    state.jobReducer.selectedJob?.id === jobId
+      ? state.jobReducer.selectedJob
+      : state.jobReducer.jobs.find((j) => j.id === jobId),
+  );
+  const defaultValues: Partial<PostJobFormData> | undefined = existingJob
+    ? {
+        ...existingJob,
+        workStyle: (existingJob.workStyle as WorkModel) ?? "onsite",
+        overviewPictureURL: (existingJob.overviewPictureURL ?? []).map(
+          (url) => ({
+            preview: url,
+          }),
+        ),
+        workingHours: existingJob.workingHours ?? "",
+        workingDays: existingJob.workingDays ?? "",
+        startDate: existingJob.startDate ?? "",
+        closingDate: existingJob.closingDate ?? "",
+        province: existingJob.province ?? "",
+        district: existingJob.district ?? "",
+        locationDetail: existingJob.locationDetail ?? "",
+        location: existingJob.location ?? "",
+      }
+    : undefined;
+
+  const { reset, onSubmit, register, control, watch, setValue } =
+    usePostJobForm({
+      mode: jobId ? "edit" : "create",
+      jobId,
+      defaultValues,
+    });
+  useEffect(() => {
+    if (jobId && !existingJob) {
+      dispatch(fetchJobById(jobId));
+    }
+  }, [jobId]);
+  useEffect(() => {
+    if (existingJob) {
+      reset(defaultValues);
+    }
+  }, [existingJob]);
+  const formValues = watch();
   const handleNextStep = () => {
     if (step === 5) {
       window.alert("Posted Job");
@@ -64,19 +79,7 @@ const PostJobForm = () => {
 
     setStep((prev) => prev - 1);
   };
-  const handlePostJob = async () => {
-    const payload = {
-      ...form,
-
-      overviewPictureURL: form.overviewPictureURL
-        .map((img) => img.preview)
-        .filter((url) => url.startsWith("https")),
-      salaryMin: Number(form.salaryMin),
-      salaryMax: Number(form.salaryMax),
-    };
-
-    await dispatch(postJob(payload));
-  };
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-4">
@@ -124,20 +127,37 @@ const PostJobForm = () => {
             {step === 1 && (
               <StepBasicInfo
                 step={step}
-                updateField={updateField}
-                form={form}
+                register={register}
+                control={control}
+                watch={watch}
               />
             )}
             {step === 2 && (
-              <StepSalary step={step} updateField={updateField} form={form} />
+              <StepSalary
+                step={step}
+                register={register}
+                control={control}
+                watch={watch}
+              />
             )}{" "}
             {step === 3 && (
-              <StepLocation form={form} updateField={updateField} />
+              <StepLocation
+                step={step}
+                setValue={setValue}
+                register={register}
+                control={control}
+                watch={watch}
+              />
             )}
             {step === 4 && (
-              <StepDetails updateField={updateField} step={step} form={form} />
+              <StepDetails
+                register={register}
+                step={step}
+                control={control}
+                watch={watch}
+              />
             )}
-            {step === 5 && <StepConditions step={step} form={form} />}
+            {step === 5 && <StepPreview step={step} form={formValues} />}
           </AnimatePresence>
         </div>
         {/* Footer */}
@@ -154,7 +174,7 @@ const PostJobForm = () => {
               <span>ย้อนกลับ</span>
             </button>
             <button
-              onClick={step < 5 ? handleNextStep : handlePostJob}
+              onClick={step < 5 ? handleNextStep : onSubmit}
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl active:scale-95 transition-all"
             >
               {step < 5 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}

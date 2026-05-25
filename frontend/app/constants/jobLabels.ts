@@ -62,11 +62,11 @@ export const EDUCATION_LEVELS = [
   { value: "DOCTORAL", label: "ปริญญาเอก" },
 ];
 export const STEP_LABELS = [
-  "ข้อมูลพื้นฐาน",
   "เงินเดือน",
   "เงื่อนไขงาน",
-  "สถานที่",
   "รายละเอียดงาน",
+  "ตัวอย่าง",
+  "ลงประกาศหางาน",
 ];
 
 export const SHIFT_LABEL: Record<string, string> = {

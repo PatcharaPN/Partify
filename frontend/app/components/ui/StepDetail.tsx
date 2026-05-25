@@ -1,18 +1,22 @@
 "use client";
 
-import { ImageSlot, PostJobFormData } from "@/app/types/job.type";
+import { PostJobFormData } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import JobImageUpload from "./JobImageUpload";
+import {
+  Control,
+  useController,
+  UseFormRegister,
+  UseFormWatch,
+} from "react-hook-form";
 
 type StepDetailsProps = {
   step: number;
-  updateField: <K extends keyof PostJobFormData>(
-    key: K,
-    value: PostJobFormData[K],
-  ) => void;
-  form: PostJobFormData;
+  register: UseFormRegister<PostJobFormData>;
+  control: Control<PostJobFormData>;
+  watch: UseFormWatch<PostJobFormData>;
 };
 
 const BENEFIT_SUGGESTIONS = [
@@ -32,20 +36,28 @@ const inputCls =
 const labelCls =
   "text-[11px] font-medium tracking-widest text-neutral-400 uppercase";
 
-const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
+const StepDetails = ({ step, register, control, watch }: StepDetailsProps) => {
   const [benefitInput, setBenefitInput] = useState("");
+  const { field: imageField } = useController({
+    control,
+    name: "overviewPictureURL",
+  });
+  const { field: benefitField } = useController({ control, name: "benefits" });
+
+  const description = watch("description") ?? "";
+  const responsibilities = watch("responsibilities") ?? "";
+  const qualifications = watch("qualifications") ?? "";
 
   const addBenefit = (val?: string) => {
     const v = (val ?? benefitInput).trim();
-    if (!v || (form.benefits ?? []).includes(v)) return;
-    updateField("benefits", [...(form.benefits ?? []), v]);
+    if (!v || (benefitField.value ?? []).includes(v)) return;
+    benefitField.onChange([...(benefitField.value ?? []), v]);
     setBenefitInput("");
   };
 
   const removeBenefit = (i: number) => {
-    updateField(
-      "benefits",
-      (form.benefits ?? []).filter((_, idx) => idx !== i),
+    benefitField.onChange(
+      (benefitField.value ?? []).filter((_, idx) => idx !== i),
     );
   };
 
@@ -68,20 +80,19 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
     >
       <JobImageUpload
         maxImages={3}
-        value={form.overviewPictureURL}
-        onChange={(slots) => updateField("overviewPictureURL", slots)}
+        value={imageField.value}
+        onChange={imageField.onChange}
       />
       {/* Description */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <label className={labelCls}>คำอธิบายงาน</label>
-          {charCount(form.description ?? "", 1000)}
+          {charCount(description ?? "", 1000)}
         </div>
         <textarea
+          {...register("description")}
           rows={4}
           maxLength={1000}
-          value={form.description ?? ""}
-          onChange={(e) => updateField("description", e.target.value)}
           placeholder="อธิบายลักษณะงานโดยรวม บรรยากาศที่ทำงาน และสิ่งที่พนักงานจะได้รับ..."
           className={inputCls + " resize-none"}
         />
@@ -91,13 +102,12 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <label className={labelCls}>หน้าที่ความรับผิดชอบ</label>
-          {charCount(form.responsibilities ?? "", 1000)}
+          {charCount(responsibilities ?? "", 1000)}
         </div>
         <textarea
+          {...register("responsibilities")}
           rows={4}
           maxLength={1000}
-          value={form.responsibilities ?? ""}
-          onChange={(e) => updateField("responsibilities", e.target.value)}
           placeholder={`- รับออเดอร์และเสิร์ฟอาหารให้ลูกค้า\n- ดูแลความสะอาดและเรียบร้อยในร้าน\n- ประสานงานกับทีมครัว`}
           className={inputCls + " resize-none"}
         />
@@ -110,13 +120,12 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <label className={labelCls}>คุณสมบัติที่ต้องการ</label>
-          {charCount(form.qualifications ?? "", 800)}
+          {charCount(qualifications ?? "", 800)}
         </div>
         <textarea
+          {...register("qualifications")}
           rows={3}
           maxLength={800}
-          value={form.qualifications ?? ""}
-          onChange={(e) => updateField("qualifications", e.target.value)}
           placeholder={`- อายุ 18 ปีขึ้นไป\n- สื่อสารภาษาไทยได้ดี\n- มีความรับผิดชอบและตรงต่อเวลา`}
           className={inputCls + " resize-none"}
         />
@@ -129,7 +138,7 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
         {/* Suggestions */}
         <div className="flex flex-wrap gap-1.5 mb-1">
           {BENEFIT_SUGGESTIONS.filter(
-            (s) => !(form.benefits ?? []).includes(s),
+            (s) => !(benefitField.value ?? []).includes(s),
           ).map((s) => (
             <button
               key={s}
@@ -167,9 +176,9 @@ const StepDetails = ({ step, form, updateField }: StepDetailsProps) => {
         </div>
 
         {/* Tags */}
-        {(form.benefits ?? []).length > 0 && (
+        {(benefitField.value ?? []).length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-1">
-            {(form.benefits ?? []).map((b, i) => (
+            {(benefitField.value ?? []).map((b, i) => (
               <span
                 key={i}
                 className="inline-flex items-center gap-1.5 text-xs px-3 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded-full"

@@ -1,85 +1,91 @@
 export interface Company {
-  id?: string;
+  id: string;
   companyName: string;
-  userId?: string;
+  userId: string;
   category?: string;
   companyImageURL?: string;
   companyBio?: string;
   companySize?: string;
-  createdAt?: string;
-  location?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   companyProfileURL?: string;
 }
+
+export type WorkModel = "onsite" | "hybrid" | "remote";
+export type ApplicationStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "INTERVIEW";
+export type Role = "CANDIDATE" | "EMPLOYER" | "ADMIN" | null;
+export type JobType = "FREELANCE" | "PARTTIME" | "FULLTIME" | "CONTRACT";
+
 export interface Job {
   id: string;
   isOwner: boolean;
   title: string;
-  status: string;
+  status?: string;
   description: string;
   responsibilities?: string;
   qualifications?: string;
+  category?: string;
 
   salaryMin?: number;
   salaryMax?: number;
   salaryNegotiable: boolean;
   currency?: string;
-  isBookmarked?: boolean;
-  jobType?: string;
+
+  jobType?: JobType;
   workStyle?: string;
   experienceLevel?: string;
   experienceYears?: number;
   educationLevel?: string;
-  positions: number;
-  category?: string;
+  positions?: number;
+
   workingHours?: string;
   workingDays?: string;
   startDate?: string;
   closingDate?: string;
 
+  overviewPictureURL?: string[];
   benefits: string[];
+  skills: string[];
 
   location?: string;
   urgency?: string;
-
-  company: Company;
-  overviewPictureURL?: string[];
-  skills: string[];
-  applications: Application[];
-  isApplied: boolean;
-  createdAt: string;
-  updatedAt: string;
   province?: string;
   district?: string;
   locationDetail?: string;
+
+  isBookmarked?: boolean;
+  isApplied: boolean;
+
+  company: Company;
+  applications: Application[];
+  createdAt: string;
+  updatedAt: string;
 }
+
 export interface Application {
   id: string;
   jobId: string;
   userId: string;
-  createdAt: Date;
   status: ApplicationStatus;
+  createdAt: string;
+  updatedAt: string;
   job?: Job;
   user?: User;
-  updatedAt: string;
 }
-// Redux Slice
-export interface JobState {
-  jobs: Job[];
-  selectedJob: Job | null;
-  isLoading: boolean;
-  error: string | null;
-}
+
 export interface User {
   id: string;
   email: string | null;
-  lineId: string | null;
-  role: "CANDIDATE" | "EMPLOYER" | "ADMIN";
-  companyId: string;
-  company: Company;
+  role: Role;
+  company?: Company;
   profile: Profile | null;
   resume: Resume[];
 }
+
 export type Resume = {
   id: string;
   userId: string;
@@ -87,15 +93,19 @@ export type Resume = {
   url: string;
   createdAt: string;
 };
-export type WorkModel = "onsite" | "hybrid" | "remote";
+
+export type ImageSlot = {
+  file?: File;
+  preview: string;
+};
 
 export type PostJobFormData = {
   title: string;
   description: string;
   responsibilities?: string;
   qualifications?: string;
-
   category?: string;
+
   jobType: string;
   workStyle: WorkModel;
   experienceLevel?: string;
@@ -105,10 +115,11 @@ export type PostJobFormData = {
   urgency?: string;
   status?: string;
 
-  salaryMin?: string;
-  salaryMax?: string;
+  salaryMin?: number;
+  salaryMax?: number;
   salaryNegotiable: boolean;
   currency?: string;
+
   overviewPictureURL: ImageSlot[];
   workingHours: string;
   workingDays: string;
@@ -120,6 +131,7 @@ export type PostJobFormData = {
   location: string;
   benefits: string[];
 };
+
 export type Profile = {
   id: string;
   userId: string;
@@ -146,13 +158,9 @@ export type Profile = {
   updatedAt: string;
 };
 
-export type ApplicationStatus =
-  | "PENDING"
-  | "ACCEPTED"
-  | "REJECTED"
-  | "INTERVIEW";
-export type ImageSlot = {
-  file: File;
-  preview: string;
-};
-export type Role = "CANDIDATE" | "EMPLOYER" | null;
+export interface JobState {
+  jobs: Job[];
+  selectedJob: Job | null;
+  isLoading: boolean;
+  error: string | null;
+}

@@ -2,7 +2,16 @@
 
 import { PROVINCES_DISTRICTS } from "@/app/constants/jobLabels";
 import { PostJobFormData } from "@/app/types/job.type";
+import { Icon } from "@iconify/react";
+import { name } from "next/dist/server/ci-info";
 import { useState, useEffect } from "react";
+import {
+  Control,
+  useController,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 
 type WorkModel = "onsite" | "hybrid" | "remote";
 
@@ -14,11 +23,11 @@ export type LocationFormData = {
 };
 
 type StepLocationProps = {
-  form: PostJobFormData;
-  updateField: <K extends keyof PostJobFormData>(
-    key: K,
-    value: PostJobFormData[K],
-  ) => void;
+  step: number;
+  register: UseFormRegister<PostJobFormData>;
+  control: Control<PostJobFormData>;
+  watch: UseFormWatch<PostJobFormData>;
+  setValue: UseFormSetValue<PostJobFormData>;
 };
 
 const WORK_MODELS: { value: WorkModel; label: string }[] = [
@@ -27,19 +36,26 @@ const WORK_MODELS: { value: WorkModel; label: string }[] = [
   { value: "remote", label: "Remote" },
 ];
 
-const StepLocation = ({ form, updateField }: StepLocationProps) => {
+const StepLocation = ({
+  register,
+  control,
+  setValue,
+  watch,
+}: StepLocationProps) => {
   const [districts, setDistricts] = useState<string[]>([]);
+  const { field: provinceField } = useController({ control, name: "province" });
 
+  const workStyle = watch("workStyle");
   useEffect(() => {
-    if (form.province && PROVINCES_DISTRICTS[form.province]) {
-      setDistricts(PROVINCES_DISTRICTS[form.province]);
+    if (provinceField.value && PROVINCES_DISTRICTS[provinceField.value]) {
+      setDistricts(PROVINCES_DISTRICTS[provinceField.value]);
     } else {
       setDistricts([]);
     }
-    updateField("district", "");
-  }, [form.province]);
+    setValue("district", "");
+  }, [provinceField.value]);
 
-  const isRemote = form.workStyle === "remote";
+  const isRemote = workStyle === "remote";
 
   return (
     <div className="px-6 py-5 flex flex-col gap-5">
@@ -51,11 +67,11 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
         <div className="flex bg-neutral-100 rounded-xl p-0.5 gap-0.5">
           {WORK_MODELS.map((m) => (
             <button
+              {...register("workStyle")}
               key={m.value}
               type="button"
-              onClick={() => updateField("workStyle", m.value)}
               className={`flex-1 py-2 text-xs font-medium rounded-[10px] transition-all ${
-                form.workStyle === m.value
+                workStyle === m.value
                   ? "bg-white text-blue-600 border border-neutral-200 shadow-sm"
                   : "text-neutral-500 hover:text-neutral-700"
               }`}
@@ -95,8 +111,7 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
               </label>
               <div className="relative">
                 <select
-                  value={form.province}
-                  onChange={(e) => updateField("province", e.target.value)}
+                  {...register("province")}
                   className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
                 >
                   <option value="">เลือกจังหวัด</option>
@@ -106,7 +121,10 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
                     </option>
                   ))}
                 </select>
-                <ChevronIcon />
+                <Icon
+                  icon="mdi:chevron-down"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
+                />
               </div>
             </div>
 
@@ -116,8 +134,7 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
               </label>
               <div className="relative">
                 <select
-                  value={form.district}
-                  onChange={(e) => updateField("district", e.target.value)}
+                  {...register("district")}
                   disabled={districts.length === 0}
                   className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
@@ -128,7 +145,10 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
                     </option>
                   ))}
                 </select>
-                <ChevronIcon />
+                <Icon
+                  icon="mdi:chevron-down"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
+                />
               </div>
             </div>
           </div>
@@ -140,8 +160,7 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
             </label>
             <input
               type="text"
-              value={form.locationDetail}
-              onChange={(e) => updateField("locationDetail", e.target.value)}
+              {...register("locationDetail")}
               placeholder="เช่น Siam Center ชั้น 2 ใกล้ BTS สยาม"
               className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
             />
@@ -151,19 +170,5 @@ const StepLocation = ({ form, updateField }: StepLocationProps) => {
     </div>
   );
 };
-
-// ---- helper ----
-const ChevronIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-  </svg>
-);
 
 export default StepLocation;

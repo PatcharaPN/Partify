@@ -23,13 +23,15 @@ export class JobOwnerGuard implements CanActivate {
 
     const job = await this.prisma.job.findUnique({
       where: { id: jobId },
-      select: { companyId: true },
+      include: {
+        company: true,
+      },
     });
     if (!job) {
       throw new NotFoundException();
     }
 
-    if (job.companyId !== user.id) {
+    if (job.company.userId !== user.sub) {
       throw new ForbiddenException();
     }
     return true;
