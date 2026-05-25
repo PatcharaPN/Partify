@@ -1,4 +1,5 @@
 import TopBar from "../components/layouts/TopBar";
+import PostJobForm from "../components/ui/PostJobForm";
 import Sidebar from "../components/ui/Sidebar";
 
 export default function DashboardLayout({
@@ -9,6 +10,7 @@ export default function DashboardLayout({
   return (
     <div>
       <TopBar />
+      <PostJobForm />
       {children}
     </div>
   );

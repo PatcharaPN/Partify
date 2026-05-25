@@ -57,7 +57,6 @@ const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
         description="กรุณากรอกชื่อบริษัท โลโก้ และรายละเอียดบริษัทก่อนลงประกาศงาน"
         confirmLabel="ไปกรอกข้อมูล"
       />
-      <PostJobForm />
     </>
   );
 };

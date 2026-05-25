@@ -2,13 +2,12 @@
 
 import { PostJobFormData, WorkModel } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import StepBasicInfo from "./StepBasicInfo";
 import StepSalary from "./StepSalary";
-import { RootState } from "@reduxjs/toolkit/query";
-import { fetchJobById, postJob } from "@/app/store/slices/jobSlice";
+import { fetchJobById } from "@/app/store/slices/jobSlice";
 import { STEP_LABELS } from "@/app/constants/jobLabels";
 import StepLocation from "./StepLocation";
 import StepDetails from "./StepDetail";
@@ -40,8 +39,12 @@ const PostJobForm = () => {
         ),
         workingHours: existingJob.workingHours ?? "",
         workingDays: existingJob.workingDays ?? "",
-        startDate: existingJob.startDate ?? "",
-        closingDate: existingJob.closingDate ?? "",
+        startDate: existingJob.startDate
+          ? new Date(existingJob.startDate).toISOString().split("T")[0]
+          : "",
+        closingDate: existingJob.closingDate
+          ? new Date(existingJob.closingDate).toISOString().split("T")[0]
+          : "",
         province: existingJob.province ?? "",
         district: existingJob.district ?? "",
         locationDetail: existingJob.locationDetail ?? "",

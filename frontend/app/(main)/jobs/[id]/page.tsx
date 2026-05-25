@@ -334,7 +334,7 @@ export default function JobDetail() {
                     </p>
                   </div>
                 )}
-                {selectedJob.positions > 0 && (
+                {selectedJob?.positions && selectedJob.positions > 0 && (
                   <div>
                     <p className="text-gray-400 text-xs mb-1">Open Positions</p>
                     <p className="font-medium text-gray-800">

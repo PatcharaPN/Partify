@@ -97,7 +97,6 @@ const JobRow = ({ href, job }: JobRowProps) => {
           </button>
         )}
       </div>
-      <PostJobForm />
     </div>
   );
   if (href) {

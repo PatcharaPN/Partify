@@ -123,8 +123,8 @@ export type PostJobFormData = {
   overviewPictureURL: ImageSlot[];
   workingHours: string;
   workingDays: string;
-  startDate: string;
-  closingDate: string;
+  startDate: string | null;
+  closingDate: string | null;
   province: string;
   district: string;
   locationDetail: string;

@@ -39,6 +39,7 @@ export const usePostJobForm = ({
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
+    console.log("submit data", data);
     const payload = {
       title: data.title,
       description: data.description,
@@ -61,8 +62,10 @@ export const usePostJobForm = ({
         .filter((url) => url.startsWith("https")),
       workingHours: data.workingHours,
       workingDays: data.workingDays,
-      startDate: data.startDate,
-      closingDate: data.closingDate,
+      startDate: data.startDate ? new Date(data.startDate).toISOString() : null,
+      closingDate: data.closingDate
+        ? new Date(data.closingDate).toISOString()
+        : null,
       province: data.province,
       district: data.district,
       locationDetail: data.locationDetail,
