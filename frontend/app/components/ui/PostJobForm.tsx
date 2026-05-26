@@ -4,7 +4,7 @@ import { PostJobFormData, WorkModel } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StepBasicInfo from "./StepBasicInfo";
 import StepSalary from "./StepSalary";
 import { fetchJobById } from "@/app/store/slices/jobSlice";
@@ -21,6 +21,7 @@ const PostJobForm = () => {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId") ?? undefined;
   const isOpen = searchParams.get("modal") === "post-job";
+  const hasReset = useRef(false);
 
   const [step, setStep] = useState(1);
   const router = useRouter();
@@ -39,6 +40,7 @@ const PostJobForm = () => {
             preview: url,
           }),
         ),
+        skills: existingJob.skills ?? [],
         workingHours: existingJob.workingHours ?? "",
         workingDays: existingJob.workingDays ?? "",
         startDate: existingJob.startDate
@@ -58,7 +60,10 @@ const PostJobForm = () => {
     usePostJobForm({
       mode: jobId ? "edit" : "create",
       jobId,
-      defaultValues,
+      defaultValues: {
+        workStyle: "onsite",
+        ...defaultValues,
+      },
     });
   useEffect(() => {
     if (jobId && !existingJob) {
@@ -66,8 +71,9 @@ const PostJobForm = () => {
     }
   }, [jobId]);
   useEffect(() => {
-    if (existingJob) {
+    if (existingJob && !hasReset.current) {
       reset(defaultValues);
+      hasReset.current = true;
     }
   }, [existingJob]);
   const formValues = watch();
@@ -198,7 +204,7 @@ const PostJobForm = () => {
               }
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl active:scale-95 transition-all"
             >
-              {step < 6 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}
+              {step < 6 ? `ถัดไป ${STEP_LABELS[step]}` : `ลงประกาศหางาน`}
               <Icon icon="mdi:arrow-right" className="w-4 h-4" />
             </button>
           </div>

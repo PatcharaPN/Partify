@@ -40,35 +40,8 @@ const StepSkill = ({
   const qualifications = watch("qualifications") ?? "";
   const responsibilities = watch("responsibilities") ?? "";
   const skillFilter = [...new Set(Object.values(EXPERIENCE_SKILL_MAP).flat())];
-  const handleOnChangeSkill = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setInput(input);
-    if (input.length > 0) {
-      setSuggestions(
-        skillFilter
-          .filter(
-            (s) =>
-              s.toLowerCase().includes(input.toLowerCase()) &&
-              !skills.includes(s),
-          )
-          .slice(0, 5),
-      );
-    } else {
-      setSuggestions([]);
-    }
-  };
+  const handleOnChangeSkill = (e: React.ChangeEvent<HTMLInputElement>) => {};
 
-  const addSkill = (skill: string) => {
-    setValue("skills", [...skills, skill]);
-    setInput("");
-    setSuggestions([]);
-  };
-  const removeSkill = (skill: string) => {
-    setValue(
-      "skills",
-      skills.filter((s) => s !== skill),
-    );
-  };
   return (
     <motion.div
       key={step}
@@ -110,39 +83,82 @@ const StepSkill = ({
             <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
               ทักษะที่ต้องการ
             </label>{" "}
-            <input
-              value={input}
-              onChange={handleOnChangeSkill}
-              placeholder="พิมพ์เพื่อค้นหาทักษะ..."
-              className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
+            <Controller
+              control={control}
+              name="skills"
+              render={({ field }) => {
+                const currentSkills = field.value ?? [];
+                const addSkill = (skill: string) => {
+                  const next = [...(field.value ?? []), skill];
+                  console.log("addSkill →", next);
+                  field.onChange(next);
+                  setInput("");
+                  setSuggestions([]);
+                };
+                return (
+                  <>
+                    <input
+                      value={input}
+                      onChange={(e) => {
+                        const input = e.target.value;
+                        setInput(input);
+                        if (input.length > 0) {
+                          setSuggestions(
+                            skillFilter
+                              .filter(
+                                (s) =>
+                                  s
+                                    .toLowerCase()
+                                    .includes(input.toLowerCase()) &&
+                                  !currentSkills.includes(s),
+                              )
+                              .slice(0, 5),
+                          );
+                        } else {
+                          setSuggestions([]);
+                        }
+                      }}
+                      placeholder="พิมพ์เพื่อค้นหาทักษะ..."
+                      className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
+                    />
+                    {suggestions.length > 0 && (
+                      <div className="absolute top-15 z-10 w-full mt-1 bg-white border border-neutral-200 rounded-xl overflow-hidden">
+                        {suggestions.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => addSkill(s)}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50"
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-2 my-2">
+                      {currentSkills.map((s) => (
+                        <span
+                          key={s}
+                          className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full"
+                        >
+                          {s}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              field.onChange(
+                                currentSkills.filter((x) => x !== s),
+                              )
+                            }
+                          >
+                            <Icon icon="mdi:close" className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                );
+              }}
             />
-            {suggestions.length > 0 && (
-              <div className="absolute top-15 z-10 w-full mt-1 bg-white border border-neutral-200 rounded-xl overflow-hidden">
-                {suggestions.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => addSkill(s)}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2 my-2">
-              {skills.map((s) => (
-                <span
-                  key={s}
-                  className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full"
-                >
-                  {s}
-                  <button type="button" onClick={() => removeSkill(s)}>
-                    <Icon icon="mdi:close" className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         {/* Experience Level + Years */}

@@ -152,7 +152,7 @@ export class JobsService {
 
     return this.prisma.job.update({
       where: { id: jobId },
-      data: { ...jobData, jobType: (dto.jobType as JobType) || null },
+      data: { ...jobData, skills, jobType: (dto.jobType as JobType) || null },
     });
   }
 

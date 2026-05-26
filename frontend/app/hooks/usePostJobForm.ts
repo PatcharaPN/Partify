@@ -3,6 +3,7 @@ import { PostJobFormData } from "../types/job.type";
 import { useAppDispatch } from "../lib/hooks";
 import { postJob, upsertJob } from "../store/slices/jobSlice";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 type UsePostJobFormOptions = {
   mode?: "create" | "edit";
   jobId?: string;
@@ -38,9 +39,19 @@ export const usePostJobForm = ({
       ...defaultValues,
     },
   });
-
+  useEffect(() => {
+    if (defaultValues) {
+      form.reset({
+        skills: [],
+        workStyle: "onsite",
+        benefits: [],
+        overviewPictureURL: [],
+        ...defaultValues,
+      });
+    }
+  }, [JSON.stringify(defaultValues)]);
   const onSubmit = form.handleSubmit(async (data) => {
-    console.log("submit data", data);
+    console.log("skills at submit →", data.skills);
     const payload = {
       title: data.title,
       description: data.description,

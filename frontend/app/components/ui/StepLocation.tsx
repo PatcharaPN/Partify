@@ -7,6 +7,7 @@ import { name } from "next/dist/server/ci-info";
 import { useState, useEffect } from "react";
 import {
   Control,
+  Controller,
   useController,
   UseFormRegister,
   UseFormSetValue,
@@ -65,22 +66,31 @@ const StepLocation = ({
         <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
           รูปแบบงาน
         </label>
-        <div className="flex bg-neutral-100 rounded-xl p-0.5 gap-0.5">
-          {WORK_MODELS.map((m) => (
-            <button
-              {...register("workStyle")}
-              key={m.value}
-              type="button"
-              className={`flex-1 py-2 text-xs font-medium rounded-[10px] transition-all ${
-                workStyle === m.value
-                  ? "bg-white text-blue-600 border border-neutral-200 shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-700"
-              }`}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
+        <Controller
+          control={control}
+          name="workStyle"
+          render={({ field }) => {
+            return (
+              <div className="flex bg-neutral-100 rounded-xl p-0.5 gap-0.5">
+                {WORK_MODELS.map((m) => (
+                  <button
+                    aria-pressed={field.value === m.value}
+                    onClick={() => field.onChange(m.value)}
+                    key={m.value}
+                    type="button"
+                    className={`flex-1 py-2 text-xs font-medium rounded-[10px] transition-all ${
+                      field.value === m.value
+                        ? "bg-white text-blue-600 border border-neutral-200 shadow-sm"
+                        : "text-neutral-500 hover:text-neutral-700"
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            );
+          }}
+        />
       </div>
 
       {/* Location fields — hidden when remote */}
