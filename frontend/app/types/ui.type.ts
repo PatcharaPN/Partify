@@ -45,3 +45,8 @@ export type WorkModel = "onsite" | "hybrid" | "remote";
 export type JobType = "FULLTIME" | "PARTTIME" | "FREELANCE" | "INTERNSHIP";
 export type ExperienceLevel = "ENTRY" | "JUNIOR" | "MID" | "SENIOR";
 export type UrgencyLevel = "LOW" | "MEDIUM" | "HIGH";
+export const inputCls =
+  "w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all";
+
+export const labelCls =
+  "text-[11px] font-medium tracking-widest text-neutral-400 uppercase";

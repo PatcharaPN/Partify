@@ -28,6 +28,7 @@ export const usePostJobForm = ({
       workingDays: "",
       benefits: [],
       closingDate: "",
+      skills: [],
       location: "",
       district: "",
       overviewPictureURL: [],
@@ -67,6 +68,7 @@ export const usePostJobForm = ({
         ? new Date(data.closingDate).toISOString()
         : null,
       province: data.province,
+      skills: data.skills,
       district: data.district,
       locationDetail: data.locationDetail,
       location: data.location,

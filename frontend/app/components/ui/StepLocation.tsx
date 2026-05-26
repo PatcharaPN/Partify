@@ -42,18 +42,19 @@ const StepLocation = ({
   setValue,
   watch,
 }: StepLocationProps) => {
-  const [districts, setDistricts] = useState<string[]>([]);
-  const { field: provinceField } = useController({ control, name: "province" });
-
+  const province = watch("province");
+  const [districts, setDistricts] = useState<string[]>(
+    province ? (PROVINCES_DISTRICTS[province] ?? []) : [],
+  );
+  const provinceRegister = register("province");
   const workStyle = watch("workStyle");
   useEffect(() => {
-    if (provinceField.value && PROVINCES_DISTRICTS[provinceField.value]) {
-      setDistricts(PROVINCES_DISTRICTS[provinceField.value]);
+    if (province && PROVINCES_DISTRICTS[province]) {
+      setDistricts(PROVINCES_DISTRICTS[province]);
     } else {
       setDistricts([]);
     }
-    setValue("district", "");
-  }, [provinceField.value]);
+  }, [province]);
 
   const isRemote = workStyle === "remote";
 
@@ -111,7 +112,11 @@ const StepLocation = ({
               </label>
               <div className="relative">
                 <select
-                  {...register("province")}
+                  {...provinceRegister}
+                  onChange={(e) => {
+                    provinceRegister.onChange(e);
+                    setValue("district", "");
+                  }}
                   className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
                 >
                   <option value="">เลือกจังหวัด</option>

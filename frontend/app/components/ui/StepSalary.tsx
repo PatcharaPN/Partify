@@ -1,4 +1,8 @@
-import { CURRENCIES, WORKING_DAYS_OPTIONS } from "@/app/constants/jobLabels";
+import {
+  CURRENCIES,
+  WORKING_DAYS_OPTIONS,
+  WORKING_HOURS,
+} from "@/app/constants/jobLabels";
 import { PostJobFormData } from "@/app/types/job.type";
 import { motion } from "framer-motion";
 import {
@@ -19,7 +23,7 @@ type StepSalaryProps = {
 const StepSalary = ({ step, register, control, watch }: StepSalaryProps) => {
   const currency = watch("currency");
   const workingDays = watch("workingDays");
-
+  const workingHours = watch("workingHours");
   return (
     <motion.div
       key={step}
@@ -116,11 +120,29 @@ const StepSalary = ({ step, register, control, watch }: StepSalaryProps) => {
         <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
           ชั่วโมงทำงาน
         </label>
-        <input
-          {...register("workingHours")}
-          type="text"
-          placeholder="เช่น 09:00–17:00, กะเช้า 06:00–14:00"
-          className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+        <Controller
+          control={control}
+          name="workingHours"
+          render={({ field }) => {
+            return (
+              <div className="flex flex-wrap gap-2">
+                {WORKING_HOURS.map((h) => (
+                  <button
+                    onClick={(e) => field.onChange(h)}
+                    type="button"
+                    key={h}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all ${
+                      field.value === h
+                        ? "bg-blue-50 text-blue-600 border-blue-200"
+                        : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
+                    }`}
+                  >
+                    {h}
+                  </button>
+                ))}{" "}
+              </div>
+            );
+          }}
         />
       </div>
 
@@ -149,46 +171,10 @@ const StepSalary = ({ step, register, control, watch }: StepSalaryProps) => {
                     {d}
                   </button>
                 ))}{" "}
-                <input
-                  onChange={(e) => field.onChange(e.target.value)}
-                  type="text"
-                  value={
-                    WORKING_DAYS_OPTIONS.includes(workingDays ?? "")
-                      ? ""
-                      : (workingDays ?? "")
-                  }
-                  placeholder="หรือระบุเอง เช่น พุธ–อาทิตย์"
-                  className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-                />
               </div>
             );
           }}
         />
-        {/* Custom input */}
-      </div>
-
-      {/* Start Date + Closing Date */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            วันเริ่มงาน
-          </label>
-          <input
-            {...register("startDate")}
-            type="date"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            ปิดรับสมัคร
-          </label>
-          <input
-            {...register("closingDate")}
-            type="date"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-          />
-        </div>
       </div>
     </motion.div>
   );

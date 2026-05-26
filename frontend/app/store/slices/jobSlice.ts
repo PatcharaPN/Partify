@@ -74,7 +74,7 @@ export const upsertJob = createAsyncThunk(
 
     const res = id
       ? await axiosInstance.patch(`/jobs/${id}`, data)
-      : await axiosInstance.post("/jobs", data);
+      : await axiosInstance.post("/jobs/add", data);
 
     return res.data;
   },

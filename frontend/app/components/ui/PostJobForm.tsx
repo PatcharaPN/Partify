@@ -14,12 +14,14 @@ import StepDetails from "./StepDetail";
 import { usePostJobForm } from "@/app/hooks/usePostJobForm";
 import StepPreview from "./StepPreview";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import StepSkill from "./StepSkill";
 
 const PostJobForm = () => {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId") ?? undefined;
   const isOpen = searchParams.get("modal") === "post-job";
+
   const [step, setStep] = useState(1);
   const router = useRouter();
 
@@ -70,10 +72,10 @@ const PostJobForm = () => {
   }, [existingJob]);
   const formValues = watch();
   const handleNextStep = () => {
-    if (step === 5) {
+    if (step === 6) {
       window.alert("Posted Job");
     }
-    if (step >= 5) return;
+    if (step >= 6) return;
 
     setStep((prev) => prev + 1);
   };
@@ -160,7 +162,16 @@ const PostJobForm = () => {
                 watch={watch}
               />
             )}
-            {step === 5 && <StepPreview step={step} form={formValues} />}
+            {step === 5 && (
+              <StepSkill
+                setValue={setValue}
+                register={register}
+                step={step}
+                control={control}
+                watch={watch}
+              />
+            )}
+            {step === 6 && <StepPreview step={step} form={formValues} />}
           </AnimatePresence>
         </div>
         {/* Footer */}
@@ -177,10 +188,17 @@ const PostJobForm = () => {
               <span>ย้อนกลับ</span>
             </button>
             <button
-              onClick={step < 5 ? handleNextStep : onSubmit}
+              onClick={
+                step < 6
+                  ? handleNextStep
+                  : () => {
+                      onSubmit();
+                      router.push("?");
+                    }
+              }
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl active:scale-95 transition-all"
             >
-              {step < 5 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}
+              {step < 6 ? `ถัดไป ${STEP_LABELS[step - 1]}` : `ลงประกาศหางาน`}
               <Icon icon="mdi:arrow-right" className="w-4 h-4" />
             </button>
           </div>

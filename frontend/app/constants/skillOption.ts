@@ -40,6 +40,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การบริหารเวลา",
     "การวางแผนเมนู",
     "การทำงานเป็นทีม",
+    "การควบคุมต้นทุน",
   ],
 
   เบเกอร์: [
@@ -79,6 +80,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การสื่อสาร",
     "การจัดการสินค้าคงคลัง",
     "ความรู้เกี่ยวกับสินค้า",
+    "การปิดการขาย",
   ],
 
   การป้อนข้อมูล: [
@@ -107,6 +109,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การยื่นภาษี",
     "การจัดทำงบประมาณ",
     "ความใส่ใจในรายละเอียด",
+    "QuickBooks",
   ],
 
   ฝ่ายทรัพยากรบุคคล: [
@@ -116,6 +119,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การจัดการเงินเดือน",
     "การดูแลพนักงาน",
     "การสื่อสาร",
+    "กฎหมายแรงงาน",
   ],
 
   นักสรรหา: [
@@ -125,6 +129,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การสื่อสาร",
     "LinkedIn",
     "การจัดหาบุคลากร",
+    "ATS",
   ],
 
   ผู้จัดการโครงการ: [
@@ -135,6 +140,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Agile",
     "Scrum",
     "การบริหารเวลา",
+    "Project Management Tools",
   ],
 
   นักวิเคราะห์ธุรกิจ: [
@@ -144,6 +150,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การจัดทำเอกสาร",
     "การปรับปรุงกระบวนการ",
     "Microsoft Excel",
+    "Power BI",
   ],
 
   นักเขียนคอนเทนต์: [
@@ -178,6 +185,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Facebook Ads",
     "Instagram",
     "TikTok",
+    "Canva",
   ],
 
   นักออกแบบกราฟิก: [
@@ -189,6 +197,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Layout Design",
     "Logo Design",
     "Figma",
+    "Adobe InDesign",
   ],
 
   "นักออกแบบ UI": [
@@ -198,6 +207,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Color Theory",
     "Responsive Design",
     "Prototyping",
+    "User Interface",
   ],
 
   "นักออกแบบ UX": [
@@ -207,6 +217,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Usability Testing",
     "Figma",
     "Information Architecture",
+    "User Journey Mapping",
   ],
 
   นักตัดต่อวิดีโอ: [
@@ -217,6 +228,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Adobe Premiere Pro",
     "CapCut",
     "YouTube Editing",
+    "DaVinci Resolve",
   ],
 
   ช่างภาพ: [
@@ -226,6 +238,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Adobe Photoshop",
     "Lighting",
     "Composition",
+    "Portrait Photography",
   ],
 
   วิดีโอกราเฟอร์: [
@@ -235,6 +248,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Storytelling",
     "Video Editing",
     "Audio Recording",
+    "Drone Operation",
   ],
 
   นักแปล: [
@@ -269,6 +283,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การสื่อสาร",
     "Medication Administration",
     "การทำงานเป็นทีม",
+    "การเฝ้าระวังอาการ",
   ],
 
   เภสัชกร: [
@@ -310,6 +325,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Git",
     "REST API",
     "การแก้ไขปัญหา",
+    "System Design",
   ],
 
   "Frontend Developer": [
@@ -320,6 +336,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "React",
     "Next.js",
     "Tailwind CSS",
+    "Redux",
   ],
 
   "Backend Developer": [
@@ -330,6 +347,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "REST API",
     "JWT",
     "Docker",
+    "Microservices",
   ],
 
   "Mobile Developer": [
@@ -341,6 +359,21 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "API Integration",
   ],
 
+  "Fullstack Developer": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "NestJS",
+    "REST API",
+    "PostgreSQL",
+    "MongoDB",
+    "Git",
+    "Docker",
+    "การแก้ไขปัญหา",
+  ],
+
   "QA (ทดสอบซอฟต์แวร์)": [
     "Manual Testing",
     "Automation Testing",
@@ -348,9 +381,18 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Test Cases",
     "Selenium",
     "Jest",
+    "Postman",
   ],
 
-  DevOps: ["Docker", "Kubernetes", "CI/CD", "AWS", "Linux", "Monitoring"],
+  DevOps: [
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "AWS",
+    "Linux",
+    "Monitoring",
+    "Terraform",
+  ],
 
   นักการตลาดดิจิทัล: [
     "SEO",
@@ -359,6 +401,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Analytics",
     "Content Strategy",
     "Email Marketing",
+    "Google Analytics 4",
   ],
 
   "ผู้เชี่ยวชาญด้าน SEO": [
@@ -367,6 +410,7 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "Google Analytics",
     "Content Optimization",
     "Backlink Building",
+    "Technical SEO",
   ],
 
   พนักงานอีเวนต์: [
@@ -393,18 +437,164 @@ export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
     "การบริการลูกค้า",
     "การบริหารเวลา",
   ],
-  "Fullstack Developer": [
+
+  // ==================== เพิ่มใหม่ ====================
+
+  ผู้จัดการร้าน: [
+    "การบริหารร้าน",
+    "การจัดการพนักงาน",
+    "การควบคุมต้นทุน",
+    "การเพิ่มยอดขาย",
+    "การบริการลูกค้า",
+    "การจัดการสต็อก",
+    "ภาวะผู้นำ",
+  ],
+
+  พนักงานครัว: [
+    "การเตรียมอาหาร",
+    "การทำอาหาร",
+    "ความปลอดภัยด้านอาหาร",
+    "การทำความสะอาด",
+    "การทำงานเร็ว",
+    "การทำงานเป็นทีม",
+  ],
+
+  บาร์เทนเดอร์: [
+    "การผสมเครื่องดื่ม",
+    "การบริการลูกค้า",
+    "การจัดการเงินสด",
+    "ความรู้เกี่ยวกับเครื่องดื่ม",
+    "Flair Bartending",
+    "การทำงานภายใต้ความกดดัน",
+  ],
+
+  "Data Analyst": [
+    "SQL",
+    "Python",
+    "Power BI",
+    "Tableau",
+    "Google Data Studio",
+    "การวิเคราะห์ข้อมูล",
+    "Excel",
+    "Data Visualization",
+  ],
+
+  "Product Manager": [
+    "Product Strategy",
+    "Roadmap Planning",
+    "User Stories",
+    "Agile",
+    "Stakeholder Management",
+    "A/B Testing",
+    "Market Research",
+  ],
+
+  "Financial Analyst": [
+    "การวิเคราะห์การเงิน",
+    "Financial Modeling",
+    "Excel Advanced",
+    "งบการเงิน",
+    "การพยากรณ์",
+    "Valuation",
+  ],
+
+  "Graphic Designer (Senior)": [
+    "Branding",
+    "Adobe Creative Suite",
+    "Motion Graphics",
+    "Packaging Design",
+    "Brand Guideline",
+  ],
+
+  นักพัฒนาเว็บ: [
+    "HTML",
+    "CSS",
     "JavaScript",
-    "TypeScript",
     "React",
     "Next.js",
-    "Node.js",
-    "NestJS",
-    "REST API",
-    "PostgreSQL",
-    "MongoDB",
-    "Git",
-    "Docker",
+    "Tailwind CSS",
+    "Responsive Design",
+  ],
+
+  "Security Guard": [
+    "การรักษาความปลอดภัย",
+    "การเฝ้าระวัง",
+    "การรายงานเหตุการณ์",
+    "การสื่อสาร",
+    "First Aid",
+  ],
+
+  ช่างเทคนิค: [
+    "การซ่อมบำรุง",
     "การแก้ไขปัญหา",
+    "เครื่องมือช่าง",
+    "ไฟฟ้าเบื้องต้น",
+    "การบำรุงรักษา",
+  ],
+
+  พนักงานโรงงาน: [
+    "การผลิต",
+    "การควบคุมคุณภาพ",
+    "การทำงานเป็นทีม",
+    "การปฏิบัติตามมาตรฐาน",
+    "การใช้เครื่องจักร",
+  ],
+
+  "Sales Manager": [
+    "การบริหารทีมขาย",
+    "การตั้งเป้าหมาย",
+    "การวิเคราะห์ยอดขาย",
+    "การเจรจา",
+    "การปิดการขาย",
+    "CRM",
+  ],
+
+  "HR Manager": [
+    "การจัดการทรัพยากรบุคคล",
+    "การพัฒนาองค์กร",
+    "Employee Relations",
+    "Performance Management",
+    "Talent Development",
+  ],
+
+  Animator: [
+    "2D Animation",
+    "3D Animation",
+    "Adobe After Effects",
+    "Blender",
+    "Motion Graphics",
+    "Storyboarding",
+  ],
+
+  นักเขียนบท: [
+    "การเขียนบท",
+    "Storytelling",
+    "Scriptwriting",
+    "Creative Writing",
+    "Dialogue Writing",
+  ],
+
+  "Physical Therapist": [
+    "การกายภาพบำบัด",
+    "การฟื้นฟูผู้ป่วย",
+    "Anatomy Knowledge",
+    "Patient Care",
+    "Exercise Prescription",
+  ],
+
+  "Real Estate Agent": [
+    "การขายอสังหาริมทรัพย์",
+    "การเจรจา",
+    "การประเมินราคา",
+    "การบริการลูกค้า",
+    "กฎหมายอสังหาฯ",
+  ],
+
+  "Logistic Coordinator": [
+    "การจัดการคลังสินค้า",
+    "Supply Chain",
+    "การขนส่ง",
+    "Inventory Management",
+    "ERP System",
   ],
 };

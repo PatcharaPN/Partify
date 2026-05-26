@@ -108,7 +108,7 @@ model Job {
   experienceYears   Int?
   educationLevel    String?
   positions         Int?      @default(1)
-  isActive          Boolean?
+  isActive          Boolean?  @default(true)
   workingHours      String?
   workingDays       String?
   startDate         DateTime?

@@ -11,6 +11,8 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
+import { inputCls, labelCls } from "@/app/types/ui.type";
+import { charCount } from "./CharCount";
 
 type StepDetailsProps = {
   step: number;
@@ -30,12 +32,6 @@ const BENEFIT_SUGGESTIONS = [
   "เครื่องแบบ",
 ];
 
-const inputCls =
-  "w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all";
-
-const labelCls =
-  "text-[11px] font-medium tracking-widest text-neutral-400 uppercase";
-
 const StepDetails = ({ step, register, control, watch }: StepDetailsProps) => {
   const [benefitInput, setBenefitInput] = useState("");
   const { field: imageField } = useController({
@@ -43,10 +39,6 @@ const StepDetails = ({ step, register, control, watch }: StepDetailsProps) => {
     name: "overviewPictureURL",
   });
   const { field: benefitField } = useController({ control, name: "benefits" });
-
-  const description = watch("description") ?? "";
-  const responsibilities = watch("responsibilities") ?? "";
-  const qualifications = watch("qualifications") ?? "";
 
   const addBenefit = (val?: string) => {
     const v = (val ?? benefitInput).trim();
@@ -60,14 +52,6 @@ const StepDetails = ({ step, register, control, watch }: StepDetailsProps) => {
       (benefitField.value ?? []).filter((_, idx) => idx !== i),
     );
   };
-
-  const charCount = (val: string, max: number) => (
-    <span
-      className={`text-[11px] ${val.length > max * 0.9 ? "text-amber-500" : "text-neutral-300"}`}
-    >
-      {val.length}/{max}
-    </span>
-  );
 
   return (
     <motion.div
@@ -83,53 +67,6 @@ const StepDetails = ({ step, register, control, watch }: StepDetailsProps) => {
         value={imageField.value}
         onChange={imageField.onChange}
       />
-      {/* Description */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className={labelCls}>คำอธิบายงาน</label>
-          {charCount(description ?? "", 1000)}
-        </div>
-        <textarea
-          {...register("description")}
-          rows={4}
-          maxLength={1000}
-          placeholder="อธิบายลักษณะงานโดยรวม บรรยากาศที่ทำงาน และสิ่งที่พนักงานจะได้รับ..."
-          className={inputCls + " resize-none"}
-        />
-      </div>
-
-      {/* Responsibilities */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className={labelCls}>หน้าที่ความรับผิดชอบ</label>
-          {charCount(responsibilities ?? "", 1000)}
-        </div>
-        <textarea
-          {...register("responsibilities")}
-          rows={4}
-          maxLength={1000}
-          placeholder={`- รับออเดอร์และเสิร์ฟอาหารให้ลูกค้า\n- ดูแลความสะอาดและเรียบร้อยในร้าน\n- ประสานงานกับทีมครัว`}
-          className={inputCls + " resize-none"}
-        />
-        <p className="text-[11px] text-neutral-300">
-          แนะนำให้ขึ้นบรรทัดใหม่แต่ละข้อ เพื่อการแสดงผลที่ดี
-        </p>
-      </div>
-
-      {/* Qualifications */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className={labelCls}>คุณสมบัติที่ต้องการ</label>
-          {charCount(qualifications ?? "", 800)}
-        </div>
-        <textarea
-          {...register("qualifications")}
-          rows={3}
-          maxLength={800}
-          placeholder={`- อายุ 18 ปีขึ้นไป\n- สื่อสารภาษาไทยได้ดี\n- มีความรับผิดชอบและตรงต่อเวลา`}
-          className={inputCls + " resize-none"}
-        />
-      </div>
 
       {/* Benefits */}
       <div className="flex flex-col gap-1.5">

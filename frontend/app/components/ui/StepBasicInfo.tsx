@@ -1,6 +1,12 @@
 import { CATEGORIES, EDUCATION_LEVELS } from "@/app/constants/jobLabels";
 import { PostJobFormData } from "@/app/types/job.type";
-import { ExperienceLevel, JobType, UrgencyLevel } from "@/app/types/ui.type";
+import {
+  ExperienceLevel,
+  inputCls,
+  JobType,
+  labelCls,
+  UrgencyLevel,
+} from "@/app/types/ui.type";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import {
@@ -10,6 +16,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import { charCount } from "./CharCount";
 
 type StepBasicInfoProps = {
   step: number;
@@ -18,7 +25,14 @@ type StepBasicInfoProps = {
   watch: UseFormWatch<PostJobFormData>;
 };
 
-const StepBasicInfo = ({ step, register, control }: StepBasicInfoProps) => {
+const StepBasicInfo = ({
+  step,
+  register,
+  control,
+  watch,
+}: StepBasicInfoProps) => {
+  const description = watch("description") ?? "";
+
   return (
     <motion.div
       key={step}
@@ -40,163 +54,19 @@ const StepBasicInfo = ({ step, register, control }: StepBasicInfoProps) => {
           className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
         />
       </div>
-
-      {/* Category + Work Model */}
-      <div className="grid grid-cols-1 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            หมวดหมู่
-          </label>
-          <div className="relative">
-            <select
-              {...register("category")}
-              className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
-            >
-              <option>เลือกหมวดหมู่</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <Icon
-              icon="mdi:chevron-down"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Job Type */}
+      {/* Description */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-          ประเภทงาน
-        </label>
-        <Controller
-          control={control}
-          name="jobType"
-          render={({ field }) => {
-            const labels: Record<JobType, string> = {
-              FULLTIME: "ประจำ",
-              PARTTIME: "พาร์ทไทม์",
-              FREELANCE: "ฟรีแลนซ์",
-              INTERNSHIP: "ฝึกงาน",
-            };
-
-            return (
-              <div className="grid grid-cols-4 gap-1.5">
-                {(
-                  [
-                    "FULLTIME",
-                    "PARTTIME",
-                    "FREELANCE",
-                    "INTERNSHIP",
-                  ] as JobType[]
-                ).map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => field.onChange(t)}
-                    className={`py-2 text-xs font-medium rounded-xl border transition-all ${
-                      field.value === t
-                        ? "bg-blue-50 text-blue-600 border-blue-200"
-                        : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
-                    }`}
-                  >
-                    {labels[t]}
-                  </button>
-                ))}
-              </div>
-            );
-          }}
+        <div className="flex items-center justify-between">
+          <label className={labelCls}>คำอธิบายงาน</label>
+          {charCount(description ?? "", 1000)}
+        </div>
+        <textarea
+          {...register("description")}
+          rows={4}
+          maxLength={1000}
+          placeholder="อธิบายลักษณะงานโดยรวม บรรยากาศที่ทำงาน และสิ่งที่พนักงานจะได้รับ..."
+          className={inputCls + " resize-none"}
         />
-      </div>
-
-      {/* Experience Level + Years */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            ระดับประสบการณ์
-          </label>
-          <div className="relative">
-            <select
-              {...register("experienceLevel")}
-              className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
-            >
-              <option value="">ไม่ระบุ</option>
-              {(["ENTRY", "JUNIOR", "MID", "SENIOR"] as ExperienceLevel[]).map(
-                (lvl) => {
-                  const labels: Record<ExperienceLevel, string> = {
-                    ENTRY: "ไม่มีประสบการณ์",
-                    JUNIOR: "Junior (1-2 ปี)",
-                    MID: "Mid (3-5 ปี)",
-                    SENIOR: "Senior (5+ ปี)",
-                  };
-                  return (
-                    <option key={lvl} value={lvl}>
-                      {labels[lvl]}
-                    </option>
-                  );
-                },
-              )}
-            </select>
-            <Icon
-              icon="mdi:chevron-down"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            ประสบการณ์ขั้นต่ำ (ปี)
-          </label>
-          <input
-            {...register("experienceYears", { valueAsNumber: true })}
-            type="number"
-            min={0}
-            placeholder="0"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Education Level + Positions */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            วุฒิการศึกษา
-          </label>
-          <div className="relative">
-            <select
-              {...register("educationLevel")}
-              className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-700 appearance-none focus:outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
-            >
-              {EDUCATION_LEVELS.map((e) => (
-                <option key={e.value} value={e.value}>
-                  {e.label}
-                </option>
-              ))}
-            </select>
-            <Icon
-              icon="mdi:chevron-down"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
-            จำนวนที่รับ (ตำแหน่ง)
-          </label>
-          <input
-            {...register("positions", { valueAsNumber: true })}
-            type="number"
-            min={1}
-            placeholder="1"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-          />
-        </div>
       </div>
 
       {/* Urgency */}
@@ -247,7 +117,29 @@ const StepBasicInfo = ({ step, register, control }: StepBasicInfoProps) => {
           }}
         />
       </div>
-
+      {/* Start Date + Closing Date */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
+            วันเริ่มงาน
+          </label>
+          <input
+            {...register("startDate")}
+            type="date"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
+            ปิดรับสมัคร
+          </label>
+          <input
+            {...register("closingDate")}
+            type="date"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+          />
+        </div>
+      </div>
       {/* Pro Tip */}
       <div className="flex gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
         <Icon
