@@ -59,6 +59,7 @@ export interface Job {
 
   isBookmarked?: boolean;
   isApplied: boolean;
+  isActive: boolean;
 
   company: Company;
   applications: Application[];
@@ -139,6 +140,7 @@ export type Profile = {
   lastName?: string;
   phone?: string;
   summary?: string;
+  workingDays?: string;
   workingHours?: string;
   province?: string;
   district?: string;

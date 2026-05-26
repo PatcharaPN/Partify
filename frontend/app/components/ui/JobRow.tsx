@@ -40,7 +40,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
         </div>
       </div>
       <div>
-        {job.status === "active" ? (
+        {job.isActive === true ? (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             Active

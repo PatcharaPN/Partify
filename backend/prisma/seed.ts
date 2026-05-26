@@ -1,4 +1,4 @@
-import { PrismaClient, Role, ApplicationStatus } from '@prisma/client';
+import { PrismaClient, Role, ApplicationStatus, JobType } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -403,11 +403,22 @@ async function main() {
     },
   ];
 
+  function toJobType(value: string): JobType | null {
+    const map: Record<string, JobType> = {
+      'Part-time': JobType.PARTTIME,
+      'Full-time': JobType.FULLTIME,
+      Freelance: JobType.FREELANCE,
+      Contract: JobType.CONTRACT,
+    };
+    return map[value] ?? null;
+  }
+
   for (const job of jobsData) {
     const skills = getRandomSkills(job.title);
+    const { jobType, ...rest } = job;
     await prisma.job.create({
       data: {
-        ...job,
+        ...rest,
         description: `รับสมัครตำแหน่ง ${job.title}`,
         responsibilities: 'ปฏิบัติงานตามที่บริษัทกำหนด',
         qualifications: 'มีความรับผิดชอบ เรียนรู้เร็ว',
@@ -418,6 +429,8 @@ async function main() {
         positions: Math.floor(Math.random() * 3) + 1,
         workingHours: '4-8 ชั่วโมง/วัน',
         skills,
+        jobType: toJobType(jobType),
+        isActive: true,
         province: 'กรุงเทพมหานคร',
       },
     });

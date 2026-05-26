@@ -79,6 +79,10 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsString()
+  workingDays?: string;
+
+  @IsOptional()
+  @IsString()
   resumeUrl?: string;
 
   @IsOptional()

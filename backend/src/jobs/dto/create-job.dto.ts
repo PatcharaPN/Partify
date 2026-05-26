@@ -80,6 +80,10 @@ export class CreateJobDto {
   workingDays?: string;
 
   @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
   @Type(() => Date)
   @IsDate()
   startDate?: Date;

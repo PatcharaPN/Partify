@@ -34,6 +34,13 @@ export const WORKING_DAYS_OPTIONS = [
   "ยืดหยุ่น",
 ];
 
+export const WORKING_HOURS = [
+  "1-2 ชั่วโมง/วัน",
+  "3-4 ชั่วโมง/วัน",
+  "5-6 ชั่วโมง/วัน",
+  "7-8 ชั่วโมง/วัน",
+];
+
 export const SUGGESTED_BENEFITS = [
   "ประกันสังคม",
   "ค่าล่วงเวลา OT",

@@ -35,6 +35,7 @@ export class ProfileService {
         phone: dto.phone,
         summary: dto.summary,
         workingHours: dto.workingHours,
+        workingDays: dto.workingDays,
         province: dto.province,
         district: dto.district,
         skills: dto.skills,

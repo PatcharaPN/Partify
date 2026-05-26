@@ -7,7 +7,7 @@ import {
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { JobType, Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
@@ -28,7 +28,7 @@ export class JobsService {
     return this.prisma.job.create({
       data: {
         ...jobData,
-
+        jobType: (dto.jobType as JobType) ?? null,
         companyId: company.id,
         status: 'active',
         skills: skills,
@@ -152,7 +152,7 @@ export class JobsService {
 
     return this.prisma.job.update({
       where: { id: jobId },
-      data: jobData,
+      data: { ...jobData, jobType: (dto.jobType as JobType) || null },
     });
   }
 
@@ -193,7 +193,7 @@ export class JobsService {
   ) {
     const limit = 5;
     const skip = (page - 1) * limit;
-    const parsedJob = jobType?.split(',');
+    const parsedJob = jobType?.split(',') as JobType[];
     const where = {
       AND: [
         keyword.length > 0 ? { skills: { hasSome: keyword } } : {},

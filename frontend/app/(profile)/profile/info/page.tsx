@@ -2,6 +2,7 @@
 import {
   PROVINCES_DISTRICTS,
   WORKING_DAYS_OPTIONS,
+  WORKING_HOURS,
 } from "@/app/constants/jobLabels";
 import { useAlert } from "@/app/contexts/AlertModalContext";
 import { useAlertModal } from "@/app/hooks/useAlertModal";
@@ -31,6 +32,7 @@ const PersonalInfoPage = () => {
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [workingHours, setWorkingHours] = useState("");
+  const [workingDays, setWorkingDays] = useState("");
   const alert = useAlert();
   useEffect(() => {
     const profile = currentUser?.profile;
@@ -45,6 +47,7 @@ const PersonalInfoPage = () => {
     setNationality(profile.nationality || "");
     setProvince(profile.province || "");
     setDistrict(profile.district || "");
+    setWorkingDays(profile.workingDays || "");
     setWorkingHours(profile.workingHours || "");
 
     setInitialized(true);
@@ -62,6 +65,7 @@ const PersonalInfoPage = () => {
         nationality,
         province,
         district,
+        workingDays,
         workingHours,
       }),
     ).unwrap();
@@ -229,20 +233,26 @@ const PersonalInfoPage = () => {
         </div>
       </div>
       {/* ── การทำงาน ── */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="text-[15px] font-medium text-gray-900">การทำงาน</h2>
-        <div className="h-px bg-gray-100" />
-        <div className="flex flex-col gap-1.5">
+
+      <div className="flex flex-col gap-1.5">
+        {" "}
+        <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
           <label className="text-xs font-semibold text-gray-500">
             ชั่วโมงทำงานที่ต้องการ
           </label>
-          <input
-            type="text"
-            value={workingHours}
-            onChange={(e) => setWorkingHours(e.target.value)}
-            placeholder="เช่น จันทร์-ศุกร์ 9:00-18:00"
-            className="w-full px-4 py-2 text-sm text-gray-700 placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-          />
+          <div className="flex flex-wrap gap-2">
+            {WORKING_HOURS.map((h) => (
+              <button
+                value={workingHours}
+                onClick={(e) => setWorkingHours(h)}
+                type="button"
+                key={h}
+                className={`${workingHours === h ? "bg-blue-600 text-white" : ""} px-3 py-1.5 text-xs font-medium rounded-xl border border-gray-400 transition-all `}
+              >
+                {h}
+              </button>
+            ))}{" "}
+          </div>{" "}
         </div>
       </div>
       <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
@@ -252,18 +262,15 @@ const PersonalInfoPage = () => {
         <div className="flex flex-wrap gap-2">
           {WORKING_DAYS_OPTIONS.map((d) => (
             <button
+              value={workingDays}
+              onClick={(e) => setWorkingDays(d)}
               type="button"
               key={d}
-              className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all `}
+              className={`${workingDays === d ? "bg-blue-600 text-white" : ""} px-3 py-1.5 text-xs font-medium rounded-xl border border-gray-400 transition-all `}
             >
               {d}
             </button>
           ))}{" "}
-          <input
-            type="text"
-            placeholder="หรือระบุเอง เช่น พุธ–อาทิตย์"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-neutral-200 bg-neutral-50 text-gray-800 placeholder:text-neutral-300 focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
-          />
         </div>
       </div>
       {/* ── Professional Summary ── */}

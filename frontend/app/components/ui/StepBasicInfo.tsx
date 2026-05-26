@@ -204,50 +204,48 @@ const StepBasicInfo = ({ step, register, control }: StepBasicInfoProps) => {
         <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
           ความเร่งด่วน
         </label>
-        <div className="flex gap-2">
-          <Controller
-            control={control}
-            name="urgency"
-            render={({ field }) => {
-              const config: Record<
-                UrgencyLevel,
-                { label: string; active: string }
-              > = {
-                LOW: {
-                  label: "ปกติ",
-                  active: "bg-green-50 text-green-600 border-green-200",
-                },
-                MEDIUM: {
-                  label: "ค่อนข้างด่วน",
-                  active: "bg-amber-50 text-amber-600 border-amber-200",
-                },
-                HIGH: {
-                  label: "ด่วนมาก",
-                  active: "bg-red-50 text-red-600 border-red-200",
-                },
-              };
+        <Controller
+          control={control}
+          name="urgency"
+          render={({ field }) => {
+            const config: Record<
+              UrgencyLevel,
+              { label: string; active: string }
+            > = {
+              LOW: {
+                label: "ปกติ",
+                active: "bg-green-50 text-green-600 border-green-200",
+              },
+              MEDIUM: {
+                label: "ค่อนข้างด่วน",
+                active: "bg-amber-50 text-amber-600 border-amber-200",
+              },
+              HIGH: {
+                label: "ด่วนมาก",
+                active: "bg-red-50 text-red-600 border-red-200",
+              },
+            };
 
-              return (
-                <div className="flex gap-2">
-                  {(["LOW", "MEDIUM", "HIGH"] as UrgencyLevel[]).map((u) => (
-                    <button
-                      key={u}
-                      type="button"
-                      onClick={() => field.onChange(u)}
-                      className={`flex-1 py-2 text-xs font-medium rounded-xl border transition-all ${
-                        field.value === u
-                          ? config[u].active
-                          : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
-                      }`}
-                    >
-                      {config[u].label}
-                    </button>
-                  ))}
-                </div>
-              );
-            }}
-          />
-        </div>
+            return (
+              <div className="flex gap-2">
+                {(["LOW", "MEDIUM", "HIGH"] as UrgencyLevel[]).map((u) => (
+                  <button
+                    key={u}
+                    type="button"
+                    onClick={() => field.onChange(u)}
+                    className={`flex-1 py-2 text-xs font-medium rounded-xl border transition-all ${
+                      field.value === u
+                        ? config[u].active
+                        : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
+                    }`}
+                  >
+                    {config[u].label}
+                  </button>
+                ))}
+              </div>
+            );
+          }}
+        />
       </div>
 
       {/* Pro Tip */}

@@ -76,7 +76,7 @@ model Profile {
   preferredCategories String[]
   expectedSalary      Int?
   experience   String[]
-
+  workingDays String?
 
   gender       String?
   nationality  String?
@@ -108,7 +108,7 @@ model Job {
   experienceYears   Int?
   educationLevel    String?
   positions         Int?      @default(1)
-
+  isActive          Boolean?
   workingHours      String?
   workingDays       String?
   startDate         DateTime?
