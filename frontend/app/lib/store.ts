@@ -4,6 +4,7 @@ import jobReducer from "../store/slices/jobSlice";
 import profileReducer from "../store/slices/profileSlice";
 import ApplicationReducer from "../store/slices/applicationSlice";
 import CompanyReducer from "../store/slices/companySlice";
+import NotificationReducer from "../store/slices/notificationSlice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const makeStore = () => {
       profileReducer,
       CompanyReducer,
       ApplicationReducer,
+      NotificationReducer,
     },
   });
 };

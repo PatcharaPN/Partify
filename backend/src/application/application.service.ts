@@ -23,12 +23,19 @@ export class ApplicationService {
         },
       },
     });
-    if (existing) {
-      throw new Error('Already applied');
+    if (existing && existing.status !== 'REJECTED') {
+      throw new ConflictException('Already applied');
     }
 
-    const application = await this.prisma.application.create({
-      data: {
+    const application = await this.prisma.application.upsert({
+      where: {
+        jobId_userId: { jobId, userId },
+      },
+      update: {
+        status: 'PENDING',
+        createdAt: new Date(),
+      },
+      create: {
         jobId,
         userId,
       },
@@ -42,9 +49,9 @@ export class ApplicationService {
     });
 
     await this.notificationService.pushNotification(
-      `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.company} กรุณาตรวจสอบรายละเอียด`,
+      `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} กรุณาตรวจสอบรายละเอียด`,
       'PENDING',
-      application.job.companyId,
+      application.job.company.userId,
       application.jobId,
     );
     return application;
@@ -174,7 +181,7 @@ export class ApplicationService {
       },
     });
     await this.notificationService.pushNotification(
-      `ขออภัย คุณไม่ผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.name}`,
+      `ขออภัย คุณไม่ผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName}`,
       'REJECTED',
       application.userId,
       application.jobId,

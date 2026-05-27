@@ -1,39 +1,30 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Patch, Param, UseGuards, Req } from '@nestjs/common';
 import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { JwtPayload } from '../types/jwt-payload.interface';
 
 @Controller('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @UseGuards(AuthGuard)
-  @Post()
-  async pushNotification(
-    @Param('id') userId: string,
-    @Body() body: CreateNotificationDto,
-  ) {
-    return this.notificationService.pushNotification(
-      body.message,
-      body.type,
-      userId,
-      body.jobId,
-    );
-  }
-  @UseGuards(AuthGuard)
   @Get()
-  async getUserNotification(@Req() req) {
+  async getUserNotification(@Req() req: { user: JwtPayload }) {
     return this.notificationService.getUserNotification(req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('read-all')
+  readAll(@Req() req: { user: JwtPayload }) {
+    return this.notificationService.readAllNotifications(req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':id/read')
+  read(@Req() req: { user: JwtPayload }, @Param('id') notificationId: string) {
+    return this.notificationService.readNotification(
+      req.user.sub,
+      notificationId,
+    );
   }
 }

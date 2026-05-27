@@ -15,7 +15,7 @@ const JobList = ({ jobs, keywords }: JobListProps) => {
       keywords.some((k) => skills.toLowerCase().includes(k.toLowerCase())),
   );
   return (
-    <Link href={`/jobs/${jobs.id}`} className="block">
+    <Link href={`/jobs/${jobs.id}`} className="block my-2">
       <div className="bg-white border border-neutral-200/70 rounded-2xl p-4 flex flex-col gap-3 hover:border-neutral-300 hover:bg-neutral-50/50 transition-all">
         <div className="flex gap-3 items-start">
           <img

@@ -23,6 +23,16 @@ export class UsersService {
             companyBio: true,
           },
         },
+        notifications: {
+          select: {
+            id: true,
+            message: true,
+            type: true,
+            isRead: true,
+            createdAt: true,
+            jobId: true,
+          },
+        },
         resume: true,
       },
     });

@@ -15,6 +15,32 @@ export class NotificationService {
     return this.addNotification(msgContext, applicationType, userId, jobId);
   }
 
+  async readNotification(userId: string, notificationId: string) {
+    await this.validateReceiverAndThrowError(userId);
+
+    return await this.prisma.notification.updateMany({
+      where: {
+        id: notificationId,
+        userId: userId,
+      },
+      data: {
+        isRead: true,
+      },
+    });
+  }
+  async readAllNotifications(userId: string) {
+    await this.validateReceiverAndThrowError(userId);
+
+    return await this.prisma.notification.updateMany({
+      where: {
+        userId: userId,
+        isRead: false,
+      },
+      data: {
+        isRead: true,
+      },
+    });
+  }
   async getUserNotification(userId: string) {
     return await this.prisma.notification.findMany({
       where: {
@@ -31,7 +57,7 @@ export class NotificationService {
         jobId: true,
         type: true,
         job: {
-          include: {
+          select: {
             company: {
               select: {
                 companyName: true,

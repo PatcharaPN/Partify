@@ -13,6 +13,15 @@ export class ProfileService {
         user: {
           include: {
             resume: true,
+            notifications: {
+              select: {
+                isRead: true,
+                message: true,
+                sender: true,
+                type: true,
+                createdAt: true,
+              },
+            },
           },
         },
       },

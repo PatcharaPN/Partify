@@ -15,12 +15,14 @@ export default function TopBar() {
   const router = useRouter();
   const path = usePathname();
   const [openNotification, setOpenNotification] = useState(false);
-  const { data } = useNotification(openNotification);
+  const { notification, handleReadAll, handleReadOne, error } =
+    useNotification(openNotification);
   const isActive = (route: string) => path.startsWith(route);
   const { user, isAuthenticated, isLoading } = useAppSelector(
     (state) => state.AuthReducer,
   );
   const dispatch = useAppDispatch();
+
   const [openMenu, setOpenMenu] = useState(false);
   return (
     <header className="sticky top-0 z-20 w-full shadow-md bg-white px-2 py-3">
@@ -66,14 +68,18 @@ export default function TopBar() {
               >
                 <Icon icon="heroicons:bell" className="w-5 h-5" />
 
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+                {notification?.some((n) => !n.isRead) && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+                )}
               </button>
             )}
 
             {openNotification && (
               <NotificationContainer
+                onReadAll={handleReadAll}
+                onReadOne={handleReadOne}
                 onClose={() => setOpenNotification(!openNotification)}
-                notifications={data || []}
+                notifications={notification || []}
               />
             )}
           </div>

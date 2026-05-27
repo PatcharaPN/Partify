@@ -188,22 +188,9 @@ export default function ApplicantDetailModal({
             <div>
               <SectionLabel>วันที่ว่าง</SectionLabel>
               <div className="flex gap-1.5 flex-wrap">
-                {DAY_KEYS.map((key, i) => {
-                  const active = availability.includes(key);
-                  return (
-                    <div
-                      key={key}
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center text-[13px] select-none transition-all
-                        ${
-                          active
-                            ? "bg-[#2563EB] text-white font-bold"
-                            : "bg-gray-100 text-gray-400 font-normal"
-                        }`}
-                    >
-                      {DAY_SHORT[i]}
-                    </div>
-                  );
-                })}
+                <p className="m-0 text-[13px] text-gray-600 leading-relaxed">
+                  {profile?.workingDays}
+                </p>
               </div>
             </div>
             {shifts.length > 0 && (

@@ -78,6 +78,7 @@ export default function JobDetail() {
   const handleApply = () => {
     if (!isAuthenticated) {
       router.push("/login");
+      return;
     }
     setIsModalOpen(true);
   };

@@ -84,6 +84,7 @@ export interface User {
   role: Role;
   company?: Company;
   profile: Profile | null;
+  notifications: Notification[];
   resume: Resume[];
 }
 
@@ -165,4 +166,21 @@ export interface JobState {
   selectedJob: Job | null;
   isLoading: boolean;
   error: string | null;
+}
+
+export interface Notification {
+  id: string;
+  userId: string;
+
+  senderId?: string | null;
+  sender?: User | null;
+
+  message: string;
+  type: ApplicationStatus;
+
+  jobId?: string | null;
+  job?: Job | null;
+
+  isRead: boolean;
+  createdAt: string;
 }

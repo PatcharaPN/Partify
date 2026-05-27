@@ -1,22 +1,21 @@
-import { Job } from "@/app/types/job.type";
+import { Notification } from "@/app/types/job.type";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-type Notification = {
-  id: string;
-  message: string;
-  isRead: boolean;
-  createdAt: string;
-  job?: Job;
-};
-
 type Props = {
   notifications?: Notification[];
   onClose: () => void;
+  onReadAll: () => void;
+  onReadOne: (id: string) => void;
 };
 
-const NotificationContainer = ({ notifications = [], onClose }: Props) => {
+const NotificationContainer = ({
+  onReadOne,
+  onReadAll,
+  notifications = [],
+  onClose,
+}: Props) => {
   return (
     <motion.div
       className="absolute right-0 mt-2 w-80 bg-white shadow-xl rounded-2xl border border-gray-100 z-50 overflow-hidden"
@@ -26,7 +25,10 @@ const NotificationContainer = ({ notifications = [], onClose }: Props) => {
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-black/10">
         <p className="font-semibold text-gray-800">การแจ้งเตือน</p>
-        <button className="text-xs text-blue-500 hover:underline">
+        <button
+          onClick={onReadAll}
+          className="text-xs text-blue-500 hover:underline"
+        >
           อ่านทั้งหมด
         </button>
       </div>
@@ -39,7 +41,14 @@ const NotificationContainer = ({ notifications = [], onClose }: Props) => {
         )}
 
         {notifications.map((noti) => (
-          <Link key={noti.id} onClick={onClose} href={`/jobs/${noti.job?.id}`}>
+          <Link
+            key={noti.id}
+            onClick={() => {
+              onReadOne(noti.id);
+              onClose;
+            }}
+            href={`/jobs/${noti.job?.id}`}
+          >
             <div
               className={`flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${
                 !noti.isRead ? "bg-blue-50" : ""

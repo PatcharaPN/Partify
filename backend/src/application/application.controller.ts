@@ -36,7 +36,7 @@ export class ApplicationController {
   @UseGuards(AuthGuard)
   @Post(':id/reject')
   rejectApplication(@Param('id') applicationId: string, @Req() req: any) {
-    return this.applicationService.approveApplication(
+    return this.applicationService.rejectApplication(
       applicationId,
       req.user.sub,
     );

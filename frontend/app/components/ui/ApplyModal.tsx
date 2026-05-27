@@ -32,8 +32,14 @@ export default function QuickApplyModal({
         }),
       ).unwrap();
       onClose?.();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      const message = error?.response?.data?.message;
+
+      if (message === "Already applied") {
+        onClose?.();
+      }
+    } finally {
+      onClose?.();
     }
   };
   if (!isOpen) return null;
