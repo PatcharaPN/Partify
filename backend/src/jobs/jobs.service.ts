@@ -196,7 +196,9 @@ export class JobsService {
     const parsedJob = jobType?.split(',') as JobType[];
     const where = {
       AND: [
+        { status: 'active' },
         keyword.length > 0 ? { skills: { hasSome: keyword } } : {},
+
         search
           ? {
               OR: [

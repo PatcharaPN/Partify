@@ -8,24 +8,45 @@ import React, { useMemo, useState } from "react";
 import SkeletonDashboard from "../skeletonDashboard";
 import { useEmployerJobs } from "@/app/hooks/useEmployerJobs";
 import JobRow from "@/app/components/ui/JobRow";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
+import AlertModal from "@/app/components/ui/AlertModal";
+import { useRouter } from "next/navigation";
 
 const JobListPage = () => {
+  const { currentUser } = useCurrentUser();
   const { jobs, user, isLoading, totalApplicants } = useEmployerJobs();
   const [search, setSearch] = useState("");
+  const router = useRouter();
+
+  const [alertOpen, setAlertOpen] = useState(false);
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) =>
       job.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [jobs, search]);
+
+  const isProfileComplete =
+    !!currentUser?.company?.companyName &&
+    !!currentUser?.company?.companyImageURL &&
+    !!currentUser?.company?.companyBio;
+
+  const handlePostJob = () => {
+    if (!isProfileComplete) {
+      setAlertOpen(true);
+      return;
+    }
+    router.push("?modal=post-job");
+  };
   if (isLoading) {
     return <SkeletonDashboard />;
   }
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       {/* Main */}
+
       <main className="flex-1 overflow-auto">
         <div className="px-8 py-6 space-y-6">
-          {/* Manage Jobs */}
+          {/* Manage Jobs */}{" "}
           <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">
               <h2 className="text-base font-bold text-gray-900">
@@ -33,7 +54,14 @@ const JobListPage = () => {
               </h2>
               <div className="flex items-center gap-2">
                 <SearchInput value={search} onChange={setSearch} />
-              </div>
+                <button
+                  onClick={handlePostJob}
+                  className="flex items-center h-13 w-fit gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm"
+                >
+                  <Icon icon="mdi:plus" className="w-4 h-4" />
+                  ลงประกาศหางาน
+                </button>
+              </div>{" "}
             </div>
 
             <TableHeader />
@@ -46,7 +74,16 @@ const JobListPage = () => {
               </div>
             )}
           </div>
-        </div>
+        </div>{" "}
+        <AlertModal
+          isOpen={alertOpen}
+          onClose={() => setAlertOpen(false)}
+          onConfirm={() => router.push("/profile/company")}
+          variant="error"
+          title="ข้อมูลบริษัทไม่ครบถ้วน"
+          description="กรุณากรอกชื่อบริษัท โลโก้ และรายละเอียดบริษัทก่อนลงประกาศงาน"
+          confirmLabel="ไปกรอกข้อมูล"
+        />
       </main>
     </div>
   );

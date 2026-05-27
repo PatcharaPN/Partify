@@ -7,17 +7,17 @@ import React, { useState } from "react";
 const getNavItems = (total: number) => [
   {
     path: "/dashboard/employer/overviews",
-    label: "Dashboard",
+    label: "แดชบอร์ด",
     icon: <Icon icon="mdi:view-dashboard" className="w-4 h-4" />,
   },
   {
     path: "/dashboard/employer/job",
-    label: "My Jobs",
+    label: "งานที่ลงประกาศ",
     icon: <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />,
   },
   {
     path: "/dashboard/employer/applicants",
-    label: "Applicants",
+    label: "ผู้สมัคร",
     badge: total > 0 ? total : undefined,
     icon: <Icon icon="mdi:account-group-outline" className="w-4 h-4" />,
   },

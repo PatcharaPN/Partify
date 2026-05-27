@@ -16,7 +16,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
   const pendingApps =
     job.applications?.filter((a) => a.status === "PENDING") ?? [];
   const isJobPage = pathname.includes("/dashboard/employer/job");
-
+  const isApplicantPage = pathname.includes("/dashboard/employer/applicants");
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -74,14 +74,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
         })}
       </p>
       <div>
-        {isJobPage ? (
-          <button
-            onClick={handleEdit}
-            className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all"
-          >
-            Edit
-          </button>
-        ) : job.status === "active" ? (
+        {isJobPage || job.status === "active" ? (
           <button
             onClick={handleEdit}
             className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all"

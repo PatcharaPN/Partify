@@ -6,7 +6,7 @@ import { logout } from "@/app/store/slices/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import NotificationContainer from "../ui/NotificationContainer";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNotification } from "@/app/hooks/useNotification";
 import AvatarProfilePrefix from "../ui/AvatarProfilePrefix";
 import { motion } from "framer-motion";
@@ -24,6 +24,20 @@ export default function TopBar() {
   const dispatch = useAppDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(e.target as Node)
+      ) {
+        setOpenNotification(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <header className="sticky top-0 z-20 w-full shadow-md bg-white px-2 py-3">
       <div className="mx-auto grid grid-cols-3">
@@ -60,7 +74,7 @@ export default function TopBar() {
         </nav>
         <div className="flex items-center justify-end gap-5">
           {" "}
-          <div className="relative">
+          <div className="relative" ref={notificationRef}>
             {isAuthenticated && (
               <button
                 onClick={() => setOpenNotification(!openNotification)}

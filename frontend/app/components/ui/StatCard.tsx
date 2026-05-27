@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 
 type StatCardProps = {
   icon: string;
-  color: "blue" | "violet" | "orange";
+  color: "blue" | "violet" | "orange" | "yellow";
   label: string;
   value: string | number;
   change?: string;
@@ -23,6 +23,11 @@ const colorMap = {
     bar: "bg-orange-400",
     bg: "bg-orange-50",
     text: "text-orange-400",
+  },
+  yellow: {
+    bar: "bg-yellow-400",
+    bg: "bg-yellow-50",
+    text: "text-yellow-500",
   },
 };
 

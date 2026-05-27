@@ -11,24 +11,6 @@ type DashboardHeaderProps = {
 };
 
 const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
-  const [alertOpen, setAlertOpen] = useState(false);
-  const router = useRouter();
-  const { currentUser } = useCurrentUser();
-
-  console.log(currentUser);
-
-  const isProfileComplete =
-    !!currentUser?.company?.companyName &&
-    !!currentUser?.company?.companyImageURL &&
-    !!currentUser?.company?.companyBio;
-
-  const handlePostJob = () => {
-    if (!isProfileComplete) {
-      setAlertOpen(true);
-      return;
-    }
-    router.push("?modal=post-job");
-  };
   return (
     <>
       <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
@@ -38,25 +20,8 @@ const DashboardHeader = ({ name, title }: DashboardHeaderProps) => {
             ยินดีต้อนรับกลับ {name} นี่คือภาพรวมของประกาศงานที่คุณจัดการอยู่
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handlePostJob}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm"
-          >
-            <Icon icon="mdi:plus" className="w-4 h-4" />
-            ลงประกาศหางาน
-          </button>
-        </div>
+        <div className="flex items-center gap-3"></div>
       </header>{" "}
-      <AlertModal
-        isOpen={alertOpen}
-        onClose={() => setAlertOpen(false)}
-        onConfirm={() => router.push("/profile/company")}
-        variant="error"
-        title="ข้อมูลบริษัทไม่ครบถ้วน"
-        description="กรุณากรอกชื่อบริษัท โลโก้ และรายละเอียดบริษัทก่อนลงประกาศงาน"
-        confirmLabel="ไปกรอกข้อมูล"
-      />
     </>
   );
 };
