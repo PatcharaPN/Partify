@@ -11,10 +11,12 @@ import { useMemo, useState } from "react";
 import DashboardHeader from "@/app/components/ui/DashboardHeader";
 import StatCard from "@/app/components/ui/StatCard";
 import Link from "next/link";
+import ApplicantList from "@/app/components/ui/ApplicantList";
+import { useApplicant } from "@/app/hooks/useApplicant";
 
 export default function EmployerDashboard() {
   const { jobs, user, isLoading, totalApplicants } = useEmployerJobs();
-
+  const { ownerApplications } = useApplicant();
   const [search, setSearch] = useState("");
 
   const filteredJobs = useMemo(() => {
@@ -22,6 +24,15 @@ export default function EmployerDashboard() {
       job.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [jobs, search]);
+
+  const recentApllicants = useMemo(() => {
+    return [...ownerApplications]
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+      .slice(0, 5);
+  }, [ownerApplications]);
   if (isLoading) {
     return <SkeletonDashboard />;
   }
@@ -48,20 +59,24 @@ export default function EmployerDashboard() {
               icon="mdi:check-circle-outline"
               color="orange"
               label="Total Hires"
-              value="99"
+              value={
+                jobs
+                  .flatMap((j) => j.applications ?? [])
+                  .filter((a) => a.status === "ACCEPTED").length
+              }
             />
 
             <StatCard
               icon="mdi:briefcase-outline"
               color="blue"
-              label="Active Jobs"
-              value={jobs.filter((j) => j.status === "ACTIVE").length}
+              label="งานที่ลงประกาศอยู่"
+              value={jobs.filter((j) => j.status === "active").length}
             />
 
             <StatCard
               icon="mdi:clock-outline"
               color="yellow"
-              label="Pending Review"
+              label="รอการตอบกลับ"
               value={
                 jobs
                   .flatMap((j) => j.applications ?? [])
@@ -101,7 +116,15 @@ export default function EmployerDashboard() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl border border-gray-100 p-4">
-                <h2 className="font-bold text-gray-900 mb-4">ผู้สมัครล่าสุด</h2>
+                <div className="flex justify-between items-center w-full">
+                  <h2 className="flex p-2 justify-start border-b border-gray-100 font-semibold">
+                    ผู้สมัครล่าสุด
+                  </h2>
+                  <Link href={"/dashboard/employer/applicants"}>
+                    <p className="text-primary w-fit">ดูทั้งหมด</p>
+                  </Link>
+                </div>
+                <ApplicantList applications={recentApllicants} />
               </div>
             </div>
           </div>

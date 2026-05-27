@@ -43,12 +43,12 @@ const JobRow = ({ href, job }: JobRowProps) => {
         {job.isActive === true ? (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            Active
+            เปิดรับสมัคร
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-            Closed
+            ปิดรับสมัคร
           </span>
         )}
       </div>
@@ -74,7 +74,7 @@ const JobRow = ({ href, job }: JobRowProps) => {
         })}
       </p>
       <div>
-        {isJobPage || job.status === "active" ? (
+        {isJobPage || job.isActive === true ? (
           <button
             onClick={handleEdit}
             className="text-sm font-semibold text-gray-600 border border-gray-200 px-4 py-1.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all"

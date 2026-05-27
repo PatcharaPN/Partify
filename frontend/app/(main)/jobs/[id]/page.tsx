@@ -99,9 +99,9 @@ export default function JobDetail() {
                 New Position
               </span>
             )}
-            {selectedJob.status ? (
+            {selectedJob.isActive === true ? (
               <span className="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full uppercase tracking-wide">
-                {selectedJob.status}
+                active
               </span>
             ) : (
               <div></div>

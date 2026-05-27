@@ -155,7 +155,9 @@ export class ApplicationService {
     return this.prisma.application.findMany({
       where: {
         job: {
-          companyId: ownerId,
+          company: {
+            userId: ownerId,
+          },
         },
       },
       include: {

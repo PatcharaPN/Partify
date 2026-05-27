@@ -156,6 +156,31 @@ export class JobsService {
     });
   }
 
+  async toggleActiveJob(jobId: string, userId: string) {
+    const job = await this.prisma.job.findUnique({
+      where: {
+        id: jobId,
+      },
+      include: {
+        company: true,
+      },
+    });
+
+    if (!job) throw new NotFoundException('Job not found');
+
+    if (job.company.userId !== userId) {
+      throw new ForbiddenException('Access denied');
+    }
+    return this.prisma.job.update({
+      where: {
+        id: jobId,
+      },
+      data: {
+        isActive: !job.isActive,
+      },
+    });
+  }
+
   async recomandJobsBySkills(userId: string) {
     const skills = await this.prisma.user.findUnique({
       where: {
