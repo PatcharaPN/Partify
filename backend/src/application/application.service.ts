@@ -185,6 +185,45 @@ export class ApplicationService {
     });
   }
 
+  async searchApplicant(
+    page: number = 1,
+    search?: string,
+    status?: string,
+    position?: string,
+    sortBy?: 'latest' | 'oldest',
+  ) {
+    const take = 10;
+    const skip = (Number(page) - 1) * take;
+    return this.prisma.application.findMany({
+      where: {
+        ...(search && {
+          OR: [
+            {
+              user: {
+                profile: {
+                  firstName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                profile: {
+                  lastName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            },
+          ],
+        }),
+      },
+    });
+  }
+
   private async processInterview(applicationId: string, application: any) {
     const updatedApplication = await this.prisma.application.update({
       where: { id: applicationId },

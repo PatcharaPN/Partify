@@ -51,9 +51,12 @@ const NotificationContainer = ({
         ))}
       </div>
 
-      <div className="text-center text-sm py-2 border-t border-black/10 hover:bg-gray-50 cursor-pointer">
+      <Link
+        href={"/"}
+        className="text-center text-sm py-2 border-t border-black/10 hover:bg-gray-50 cursor-pointer"
+      >
         ดูทั้งหมด
-      </div>
+      </Link>
     </motion.div>
   );
 };

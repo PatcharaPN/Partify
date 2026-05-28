@@ -5,12 +5,12 @@ import StatCard from "@/app/components/ui/StatCard";
 import TableHeader from "@/app/components/ui/TableHeader";
 import { Icon } from "@iconify/react";
 import React, { useMemo, useState } from "react";
-import SkeletonDashboard from "../skeletonDashboard";
 import { useEmployerJobs } from "@/app/hooks/useEmployerJobs";
 import JobRow from "@/app/components/ui/JobRow";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import AlertModal from "@/app/components/ui/AlertModal";
 import { useRouter } from "next/navigation";
+import SkeletonJobList from "./SkeletonJobPage";
 
 const JobListPage = () => {
   const { currentUser } = useCurrentUser();
@@ -38,7 +38,7 @@ const JobListPage = () => {
     router.push("?modal=post-job");
   };
   if (isLoading) {
-    return <SkeletonDashboard />;
+    return <SkeletonJobList />;
   }
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
@@ -56,7 +56,7 @@ const JobListPage = () => {
                 <SearchInput value={search} onChange={setSearch} />
                 <button
                   onClick={handlePostJob}
-                  className="flex items-center h-13 w-fit gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm"
+                  className="flex items-center h-10 w-fit gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm"
                 >
                   <Icon icon="mdi:plus" className="w-4 h-4" />
                   ลงประกาศหางาน

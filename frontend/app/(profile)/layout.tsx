@@ -20,14 +20,15 @@ export default function ProfileLayout({
 
   return (
     <>
-      {" "}
       <TopBar />
-      <div className="flex justify-center w-full min-h-screen bg-[#F5F6FA]">
-        <div className="flex min-w-4xl">
-          <div className="w-62.5 shrink-0 bg-white  border-gray-200">
+      <div className="flex justify-center h-[calc(100vh-70px)] w-full bg-[#F5F6FA] overflow-hidden">
+        <div className="flex min-w-4xl w-full max-w-3xl">
+          {/* Sidebar — ไม่ scroll */}
+          <div className="w-62.5 shrink-0 bg-white border-r border-gray-200 h-full">
             <ProfileSidebar />
           </div>
-          <div className="flex-1 flex justify-center">
+          {/* Content — scroll ได้ */}
+          <div className="flex-1 flex justify-center h-full overflow-y-auto">
             <div className="w-full max-w-3xl">{children}</div>
           </div>
         </div>

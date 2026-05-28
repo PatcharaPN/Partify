@@ -23,7 +23,7 @@ const SIDEBAR_ELEMENTS = [
     name: "กิจกรรม",
     path: "/profile/activity",
     icon: "fluent:shifts-activity-16-filled",
-    role: ["CANDIDATE"],
+    role: ["CANDIDATE", "EMPLOYER"],
   },
   {
     name: "บริษัท",
@@ -67,7 +67,7 @@ export default function ProfileSidebar() {
     }
   };
   return (
-    <div className="flex flex-col gap-6 w-64 p-5">
+    <div className="flex flex-col  gap-6 w-64 p-5">
       <div className=" flex flex-col gap-2">
         <div className="relative w-16 h-16 group">
           <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function ProfileSidebar() {
             {currentUser?.profile?.firstName} {currentUser?.profile?.lastName}
           </p>
           <p className="text-xs text-gray-400">
-            {getRoleLabel(currentUser?.role)}
+            {getRoleLabel(currentUser?.role!)}
           </p>
         </div>
       </div>

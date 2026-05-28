@@ -2,6 +2,7 @@
 import { useApplicant } from "@/app/hooks/useJobApplications";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 const getNavItems = (total: number) => [
@@ -25,14 +26,16 @@ const getNavItems = (total: number) => [
 
 const Sidebar = () => {
   const { totalApplicants } = useApplicant();
-  const [activeNav, setActiveNav] = useState("Dashboard");
+  const [_, setActiveNav] = useState("แดชบอร์ด");
   const navItems = getNavItems(totalApplicants);
+  const pathName = usePathname();
+
   return (
     <aside className="w-60 flex flex-col bg-white border-gray-100 shrink-0">
       {/* Nav */}
       <nav className="flex-1 px-6 space-y-0.5 py-4">
         {navItems.map((item) => {
-          const isActive = activeNav === item.label;
+          const isActive = pathName === item.path;
           return (
             <Link key={item.label} href={item.path}>
               <button

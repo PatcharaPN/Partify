@@ -117,7 +117,7 @@ const ResumeSection = () => {
               <div className="mt-3 rounded-xl overflow-hidden border border-gray-100">
                 <iframe
                   src={resume.url}
-                  className="w-full h-96"
+                  className="w-full h-[70vh]"
                   title="Resume Preview"
                 />
               </div>

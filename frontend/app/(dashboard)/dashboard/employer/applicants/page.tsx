@@ -15,6 +15,7 @@ import { PopupState } from "@/app/types/ui.type";
 import { Icon } from "@iconify/react";
 import { AnimatePresence } from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import SkeletonApplicantPage from "./SkeletonApplicantPage";
 
 export default function ApplicantPage() {
   const filterRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,7 @@ export default function ApplicantPage() {
 
   const {
     ownerApplications,
+    loading,
     interviewApplication,
     approveApplication,
     rejectApplication,
@@ -83,6 +85,10 @@ export default function ApplicantPage() {
       );
     });
   }, [ownerApplications, search]);
+
+  if (loading) {
+    return <SkeletonApplicantPage />;
+  }
   return (
     <div className="bg-white border border-gray-100 ">
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">

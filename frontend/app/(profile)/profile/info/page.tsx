@@ -10,6 +10,7 @@ import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { upsertProfile } from "@/app/store/slices/profileSlice";
 import { useEffect, useState } from "react";
+import SkeletonPersonalInfoPage from "./SkeletonInfoPage";
 
 const GENDERS = [
   { label: "ชาย", value: "MALE" },
@@ -19,7 +20,7 @@ const GENDERS = [
 
 const PersonalInfoPage = () => {
   const [initialized, setInitialized] = useState(false);
-  const { currentUser } = useCurrentUser();
+  const { currentUser, isLoading } = useCurrentUser();
   const dispatch = useAppDispatch();
 
   const [firstName, setFirstName] = useState("");
@@ -95,6 +96,11 @@ const PersonalInfoPage = () => {
 
   const provinces = Object.keys(PROVINCES_DISTRICTS);
   const districts = province ? (PROVINCES_DISTRICTS[province] ?? []) : [];
+
+  if (isLoading) {
+    return <SkeletonPersonalInfoPage />;
+  }
+
   return (
     <div className="bg-gray-50 min-h-[calc(100vh-70px)] p-6 flex flex-col gap-4">
       {/* ── ข้อมูลส่วนตัว ── */}
