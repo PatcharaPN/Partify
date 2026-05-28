@@ -34,6 +34,15 @@ export class ApplicationController {
   }
 
   @UseGuards(AuthGuard)
+  @Post(':id/interview')
+  inverviewApplication(@Param('id') applicationId: string, @Req() req: any) {
+    return this.applicationService.interviewApplication(
+      applicationId,
+      req.user.sub,
+    );
+  }
+
+  @UseGuards(AuthGuard)
   @Post(':id/reject')
   rejectApplication(@Param('id') applicationId: string, @Req() req: any) {
     return this.applicationService.rejectApplication(

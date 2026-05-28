@@ -5,7 +5,6 @@ type StatCardProps = {
   color: "blue" | "violet" | "orange" | "yellow";
   label: string;
   value: string | number;
-  change?: string;
 };
 
 const colorMap = {
@@ -31,13 +30,7 @@ const colorMap = {
   },
 };
 
-export default function StatCard({
-  icon,
-  color,
-  label,
-  value,
-  change,
-}: StatCardProps) {
+export default function StatCard({ icon, color, label, value }: StatCardProps) {
   const c = colorMap[color];
 
   return (
@@ -52,17 +45,6 @@ export default function StatCard({
         >
           <Icon icon={icon} className={`w-4 h-4 ${c.text}`} />
         </div>
-
-        {change ? (
-          <span className="text-xs font-semibold text-emerald-500 flex items-center gap-1">
-            <svg className="w-3 h-3" viewBox="0 0 12 12" fill="currentColor">
-              <path d="M6 2l4 8H2z" />
-            </svg>
-            {change}
-          </span>
-        ) : (
-          <span className="text-xs text-gray-400">—</span>
-        )}
       </div>
 
       <p className="text-[11px] uppercase tracking-widest text-gray-400 font-medium mb-1">

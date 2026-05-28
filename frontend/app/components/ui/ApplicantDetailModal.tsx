@@ -12,9 +12,6 @@ interface ApplicantDetailModalProps {
   onStatusChange?: (id: string, status: ApplicationStatus) => void;
 }
 
-const DAY_SHORT = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
-const DAY_KEYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-
 const STATUS_CONFIG: Record<
   ApplicationStatus,
   { label: string; className: string }
@@ -69,7 +66,7 @@ export default function ApplicantDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/15 backdrop-blur-[5px]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/15"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
@@ -91,8 +88,8 @@ export default function ApplicantDetailModal({
               </div>
             )}
             <div>
-              <p className="m-0 text-base font-bold leading-tight">
-                {profile?.firstName ?? "ไม่ระบุชื่อ"}
+              <p className="m-0 text-base leading-tight">
+                {profile?.firstName ?? "ไม่ระบุ"} {profile?.lastName ?? ""}
               </p>
               <p className="m-0 text-xs text-gray-400 mt-0.5">
                 สมัครวันที่ {appliedDate}
@@ -102,7 +99,7 @@ export default function ApplicantDetailModal({
 
           <div className="flex items-center gap-2 shrink-0">
             <span
-              className={`text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.className}`}
+              className={`text-xs px-2.5 py-1 rounded-full ${cfg.className}`}
             >
               {cfg.label}
             </span>

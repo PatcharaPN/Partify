@@ -1,28 +1,10 @@
+import { STATUS_CONFIGS } from "@/app/constants/jobLabels";
 import { Application } from "@/app/types/job.type";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
 import { Icon } from "@iconify/react";
 
 type Props = {
   applications: Application[];
-};
-
-const statusConfig = {
-  PENDING: {
-    label: "รอพิจารณา",
-    className: "bg-yellow-50 text-yellow-600 border border-yellow-200",
-  },
-  ACCEPTED: {
-    label: "รับเข้าทำงาน",
-    className: "bg-emerald-50 text-emerald-600 border border-emerald-200",
-  },
-  REJECTED: {
-    label: "ไม่ผ่าน",
-    className: "bg-red-50 text-red-500 border border-red-200",
-  },
-  INTERVIEW: {
-    label: "นัดสัมภาษณ์",
-    className: "bg-blue-50 text-blue-600 border border-blue-200",
-  },
 };
 
 const ApplicantList = ({ applications }: Props) => {
@@ -38,7 +20,7 @@ const ApplicantList = ({ applications }: Props) => {
   return (
     <div className="divide-y divide-gray-50">
       {applications.map((app) => {
-        const status = statusConfig[app.status];
+        const status = STATUS_CONFIGS[app.status];
         return (
           <div
             key={app.id}

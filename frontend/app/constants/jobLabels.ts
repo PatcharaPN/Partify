@@ -20,6 +20,25 @@ export const JOB_TYPE_LABELS: Record<string, { label: string; color: string }> =
     },
   };
 
+export const STATUS_CONFIGS = {
+  PENDING: {
+    label: "รอพิจารณา",
+    className: "bg-yellow-50 text-yellow-600 border border-yellow-200",
+  },
+  ACCEPTED: {
+    label: "รับเข้าทำงาน",
+    className: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+  },
+  REJECTED: {
+    label: "ไม่ผ่าน",
+    className: "bg-red-50 text-red-500 border border-red-200",
+  },
+  INTERVIEW: {
+    label: "นัดสัมภาษณ์",
+    className: "bg-blue-50 text-blue-600 border border-blue-200",
+  },
+};
+
 export const CURRENCIES = [
   { value: "THB", label: "THB — บาท" },
   { value: "USD", label: "USD — ดอลลาร์" },

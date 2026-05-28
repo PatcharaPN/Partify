@@ -12,7 +12,7 @@ import DashboardHeader from "@/app/components/ui/DashboardHeader";
 import StatCard from "@/app/components/ui/StatCard";
 import Link from "next/link";
 import ApplicantList from "@/app/components/ui/ApplicantList";
-import { useApplicant } from "@/app/hooks/useApplicant";
+import { useApplicant } from "@/app/hooks/useJobApplications";
 
 export default function EmployerDashboard() {
   const { jobs, user, isLoading, totalApplicants } = useEmployerJobs();
@@ -50,15 +50,14 @@ export default function EmployerDashboard() {
             <StatCard
               icon="mdi:account-group-outline"
               color="violet"
-              label="Total Applicants"
+              label="ผู้สมัครทั้งหมด"
               value={totalApplicants}
-              change="+5%"
             />
 
             <StatCard
               icon="mdi:check-circle-outline"
               color="orange"
-              label="Total Hires"
+              label="รับเข้าทำงานทั้งหมด"
               value={
                 jobs
                   .flatMap((j) => j.applications ?? [])

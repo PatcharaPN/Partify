@@ -73,6 +73,14 @@ export class ApplicationService {
     return await this.processRejection(applicationId, application);
   }
 
+  async interviewApplication(applicationId: string, employerId: string) {
+    const application = await this.findApplicationOrThrow(applicationId);
+    this.validateOwnerShip(employerId, application);
+    this.validateStatus(application);
+    await this.findExistingEmployee(application);
+    return await this.processInterview(applicationId, application);
+  }
+
   async getStatus(jobId: string, userId: string) {
     return this.prisma.application.findUnique({
       where: {
@@ -175,6 +183,22 @@ export class ApplicationService {
     });
   }
 
+  private async processInterview(applicationId: string, application: any) {
+    const updatedApplication = await this.prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: 'INTERVIEW',
+      },
+    });
+    await this.notificationService.pushNotification(
+      `ยินดีด้วย! คุณผ่านการคัดเลือกเบื้องต้นตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} ทางบริษัทจะติดต่อกลับเพื่อนัดสัมภาษณ์เร็วๆ นี้`,
+      'INTERVIEW',
+      application.userId,
+      application.jobId,
+    );
+    return updatedApplication;
+  }
+
   private async processRejection(applicationId: string, application: any) {
     const updatedApplication = await this.prisma.application.update({
       where: { id: applicationId },
@@ -212,7 +236,7 @@ export class ApplicationService {
         }),
       ]);
     await this.notificationService.pushNotification(
-      `คุณผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.companyName} กรุณาตรวจสอบรายละเอียดเพิ่มเติม`,
+      `คุณผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} กรุณาตรวจสอบรายละเอียดเพิ่มเติม`,
       'ACCEPTED',
       application.userId,
       application.jobId,
@@ -245,7 +269,10 @@ export class ApplicationService {
     }
   }
   private validateStatus(application: any) {
-    if (application.status !== 'PENDING') {
+    if (
+      application.status === 'ACCEPTED' ||
+      application.status === 'REJECTED'
+    ) {
       throw new BadRequestException('Application has already been processed');
     }
   }

@@ -1,5 +1,5 @@
 "use client";
-import { useJobApplications } from "@/app/hooks/useJobApplications";
+import { useApplicant } from "@/app/hooks/useJobApplications";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -24,7 +24,7 @@ const getNavItems = (total: number) => [
 ];
 
 const Sidebar = () => {
-  const { totalApplicants } = useJobApplications();
+  const { totalApplicants } = useApplicant();
   const [activeNav, setActiveNav] = useState("Dashboard");
   const navItems = getNavItems(totalApplicants);
   return (
