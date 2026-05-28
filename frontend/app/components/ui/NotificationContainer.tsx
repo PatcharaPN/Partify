@@ -2,6 +2,7 @@ import { Notification } from "@/app/types/job.type";
 import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import NotificationList from "./NotificationList";
 
 type Props = {
   notifications?: Notification[];
@@ -41,45 +42,12 @@ const NotificationContainer = ({
         )}
 
         {notifications.map((noti) => (
-          <Link
+          <NotificationList
             key={noti.id}
-            onClick={() => {
-              onReadOne(noti.id);
-              onClose;
-            }}
-            href={`/jobs/${noti.job?.id}`}
-          >
-            <div
-              className={`flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${
-                !noti.isRead ? "bg-blue-50" : ""
-              }`}
-            >
-              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
-                {noti.job?.company.companyImageURL ? (
-                  <img
-                    src={noti.job.company.companyImageURL}
-                    className="w-full h-full object-cover"
-                  />
-                ) : null}
-              </div>
-
-              <div className="flex-1">
-                <p className="text-sm text-gray-800 line-clamp-3">
-                  {noti.message}
-                </p>
-
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-gray-400">
-                    {formatTimeAgo(noti.createdAt)}
-                  </span>
-
-                  {!noti.isRead && (
-                    <span className="w-2 h-2 bg-blue-500 rounded-full" />
-                  )}
-                </div>
-              </div>
-            </div>
-          </Link>
+            notification={noti}
+            onClose={onClose}
+            onReadOne={onReadOne}
+          />
         ))}
       </div>
 

@@ -73,11 +73,19 @@ export const fetchApplicationStatus = createAsyncThunk(
 
 export const applyJob = createAsyncThunk(
   "application/apply",
-  async ({ jobId, userId }: { jobId: string; userId: string }, thunkAPI) => {
+  async (
+    {
+      jobId,
+      userId,
+      messageCtx,
+    }: { jobId: string; userId: string; messageCtx: string },
+    thunkAPI,
+  ) => {
     try {
       const res = await axiosInstance.post("/applications", {
         jobId,
         userId,
+        message: messageCtx,
       });
 
       return res.data;

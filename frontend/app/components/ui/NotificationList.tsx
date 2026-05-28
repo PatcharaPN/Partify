@@ -1,0 +1,60 @@
+import { Notification } from "@/app/types/job.type";
+import { formatTimeAgo } from "@/app/utils/FormatTimeAgo";
+import Link from "next/link";
+import React from "react";
+
+type NotificationListProps = {
+  notification: Notification;
+  onClose?: () => void;
+  onReadOne?: (id: string) => void;
+};
+
+const NotificationList = ({
+  notification,
+  onReadOne,
+  onClose,
+}: NotificationListProps) => {
+  return (
+    <Link
+      key={notification.id}
+      onClick={() => {
+        onReadOne?.(notification.id);
+        onClose;
+      }}
+      href={`/jobs/${notification.job?.id}`}
+    >
+      <div
+        className={`my-2 rounded-lg flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${
+          !notification.isRead ? "bg-blue-50" : ""
+        }`}
+      >
+        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+          {notification.job?.company.companyImageURL ? (
+            <img
+              src={notification.job.company.companyImageURL}
+              className="w-full h-full object-cover"
+            />
+          ) : null}
+        </div>
+
+        <div className="flex-1">
+          <p className="text-sm text-gray-800 line-clamp-3">
+            {notification.message}
+          </p>
+
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-xs text-gray-400">
+              {formatTimeAgo(notification.createdAt)}
+            </span>
+
+            {!notification.isRead && (
+              <span className="w-2 h-2 bg-blue-500 rounded-full" />
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default NotificationList;

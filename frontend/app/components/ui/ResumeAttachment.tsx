@@ -7,11 +7,10 @@ interface ResumeAttachmentProps {
 }
 
 export default function ResumeAttachment({ resumeUrl }: ResumeAttachmentProps) {
-  const fileName = resumeUrl;
-
+  const cutFileNameUrl = resumeUrl.split("/");
+  const fileName = cutFileNameUrl[8].split("_").slice(2).join("_").toString();
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-[#2563EB]/40 hover:bg-blue-50/40 transition-all group">
-      {/* PDF Thumbnail */}
       <div className="relative shrink-0 w-10 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm">
         <div className="absolute inset-0 flex flex-col">
           <div className="flex-1 bg-white flex items-center justify-center">
@@ -33,7 +32,6 @@ export default function ResumeAttachment({ resumeUrl }: ResumeAttachmentProps) {
         <p className="m-0 text-[11px] text-gray-400 mt-0.5">Resume / CV</p>
       </div>
 
-      {/* Open button — Outlined style */}
       <a
         href={resumeUrl}
         target="_blank"

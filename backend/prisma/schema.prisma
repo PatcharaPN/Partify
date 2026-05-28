@@ -188,6 +188,7 @@ model Application {
   id        String             @id @default(uuid())
   jobId     String
   userId    String
+  message   String?
   status    ApplicationStatus  @default(PENDING)
   createdAt DateTime           @default(now())
   job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)

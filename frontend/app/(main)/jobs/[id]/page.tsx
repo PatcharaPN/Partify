@@ -3,19 +3,29 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchJobById, fetchRelatedJob } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import JobDetailSkeleton from "./JobDetailSkeleton";
 import QuickApplyModal from "@/app/components/ui/ApplyModal";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
-import { fetchApplicationStatus } from "@/app/store/slices/applicationSlice";
+import {
+  applyJob,
+  fetchApplicationStatus,
+} from "@/app/store/slices/applicationSlice";
 import ProfileMatchScoreCard from "@/app/components/ui/ProfileMatchScoreCard";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import JobRow from "@/app/components/ui/JobRow";
 import RelatedJobCard from "@/app/components/ui/RelatedJobCard";
+import PopupContainer from "@/app/components/ui/PopupContainer";
+import { PopupState } from "@/app/types/ui.type";
 
 export default function JobDetail() {
   const router = useRouter();
   const { isAuthenticated } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
+
+  const summary = currentUser?.profile?.summary;
+  const [message, setMessage] = useState("");
+  const [popUpState, setPopupState] = useState<PopupState>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
   const { appliedStatus } = useAppSelector((state) => state.ApplicationReducer);
@@ -24,6 +34,18 @@ export default function JobDetail() {
     (state) => state.jobReducer,
   );
   const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -42,6 +64,12 @@ export default function JobDetail() {
       );
     }
   }, [id, user]);
+
+  useEffect(() => {
+    if (!message && summary) {
+      setMessage(summary);
+    }
+  }, [summary]);
   if (isLoading) {
     return <JobDetailSkeleton />;
   }
@@ -73,14 +101,44 @@ export default function JobDetail() {
           day: "numeric",
         })
       : null;
-  const hasCompanyProfile = Boolean(selectedJob.company?.companyProfileURL);
 
-  const handleApply = () => {
+  // const handleApply = () => {
+
+  // };
+
+  const handleApply = async () => {
     if (!isAuthenticated) {
       router.push("/login");
       return;
     }
-    setIsModalOpen(true);
+    setIsModalOpen(false);
+    setPopupState("loading");
+    setMessage("กำลังส่งคำขอ...");
+    try {
+      await dispatch(
+        applyJob({
+          jobId: selectedJob.id,
+          userId: user!.id,
+          messageCtx: message,
+        }),
+      ).unwrap();
+      setMessage("ส่งคำขอสมัครงานสำเร็จ !");
+      setPopupState("success");
+
+      setIsModalOpen(false);
+    } catch (error: any) {
+      const message = error?.response?.data?.message;
+
+      if (message === "Already applied") {
+        setIsModalOpen(false);
+      }
+    } finally {
+      setIsModalOpen(false);
+
+      setTimeout(() => {
+        setPopupState(null);
+      }, 2000);
+    }
   };
 
   return (
@@ -419,9 +477,6 @@ export default function JobDetail() {
                   <p className="font-bold text-gray-900 text-sm">
                     {selectedJob.company.companyName}
                   </p>
-                  {/* <p className="text-yellow-500 text-xs">
-                    ★ 4.8 (2.4k reviews)
-                  </p> */}
                 </div>
               </div>
 
@@ -445,39 +500,46 @@ export default function JobDetail() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">สมัครใช้งานเมื่อ</span>
                   <span className="font-medium text-gray-700">
-                    2018 on Partify
+                    2026 on Partify
                   </span>
                 </div>
               </div>
               {selectedJob.isOwner === true ? (
-                <div className="flex flex-col gap-2.5">
-                  <div className="relative w-full">
-                    <select className="w-full appearance-none bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium py-2.5 pl-4 pr-9 rounded-xl border border-blue-600 transition cursor-pointer outline-none">
-                      <option value="">Manage job</option>
-                      <option value="applicants">View applicants</option>
-                      <option value="close">Close job</option>
-                    </select>
-                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white text-xs">
-                      ▾
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 h-px bg-gray-200" />
-                    <span className="text-xs text-gray-400">or</span>
-                    <div className="flex-1 h-px bg-gray-200" />
-                  </div>
+                <div className="relative w-full" ref={menuRef}>
                   <button
-                    disabled={!hasCompanyProfile}
-                    className={`w-full text-sm font-medium py-2.5 rounded-xl transition
-    ${
-      hasCompanyProfile
-        ? "border border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100"
-        : "border border-gray-200 text-gray-400 bg-gray-100 cursor-not-allowed"
-    }
-  `}
+                    onClick={() => setOpen(!open)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-blue-600 text-blue-600 text-sm font-medium hover:bg-blue-50 transition"
                   >
-                    View company profile
+                    <span>จัดการใบประกาศงาน</span>
+                    <Icon
+                      icon="mdi:chevron-down"
+                      className={`transition-transform ${open ? "rotate-180" : ""}`}
+                    />
                   </button>
+
+                  {open && (
+                    <div className="absolute top-full mt-1 w-full bg-white rounded-xl border border-gray-100 shadow-lg overflow-hidden z-10">
+                      <button
+                        onClick={() => {
+                          router.push(`/dashboard/employer/applicants`);
+                          setOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition"
+                      >
+                        <Icon icon="mdi:account-group-outline" width={16} />
+                        ดูผู้สมัคร
+                      </button>
+                      <button
+                        onClick={() => {
+                          /* close job */ setOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition"
+                      >
+                        <Icon icon="mdi:close-circle-outline" width={16} />
+                        ปิดรับสมัคร
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col gap-2.5">
@@ -520,14 +582,14 @@ export default function JobDetail() {
       </main>{" "}
       {isModalOpen && (
         <QuickApplyModal
-          jobId={selectedJob.id}
+          isLoading={isLoading}
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
-            window.location.reload();
           }}
         />
       )}
+      <PopupContainer message={message} state={popUpState} />
     </div>
   );
 }

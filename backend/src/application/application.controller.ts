@@ -21,7 +21,11 @@ export class ApplicationController {
   @UseGuards(AuthGuard)
   @Post()
   applyJob(@Req() req, @Body() dto: ApplyJobDto) {
-    return this.applicationService.applyJob(dto.jobId, req.user.sub);
+    return this.applicationService.applyJob(
+      dto.jobId,
+      req.user.sub,
+      dto.message,
+    );
   }
 
   @UseGuards(AuthGuard)

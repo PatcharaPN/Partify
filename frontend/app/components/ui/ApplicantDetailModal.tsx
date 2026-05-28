@@ -40,9 +40,9 @@ export default function ApplicantDetailModal({
 }: ApplicantDetailModalProps) {
   const [status, setStatus] = useState<ApplicationStatus>(applicants.status);
   const profile = applicants.user?.profile;
+  const message = applicants.message;
   const resume = applicants.user?.resume?.[0];
 
-  const availability = profile?.availability ?? [];
   const shifts = profile?.shifts ?? [];
   const skills = profile?.skills ?? [];
   const experience = profile?.experience ?? [];
@@ -175,10 +175,10 @@ export default function ApplicantDetailModal({
 
         <div className="overflow-y-auto flex-1">
           <div className="flex flex-col gap-5 px-5 py-4">
-            {profile?.summary && (
+            {message && (
               <div className="bg-gray-50 rounded-xl px-4 py-3 border-l-[3px] border-[#2563EB]">
                 <p className="m-0 text-[13px] text-gray-600 leading-relaxed">
-                  {profile.summary}
+                  {message}
                 </p>
               </div>
             )}
@@ -226,7 +226,7 @@ export default function ApplicantDetailModal({
                 <div className="flex flex-col gap-2">
                   {experience.map((exp, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span className="mt-[6px] w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
                       <p className="m-0 text-[13px] text-gray-600 leading-relaxed">
                         {exp}
                       </p>

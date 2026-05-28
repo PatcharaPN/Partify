@@ -72,6 +72,7 @@ export interface Application {
   jobId: string;
   userId: string;
   status: ApplicationStatus;
+  message: string;
   createdAt: string;
   updatedAt: string;
   job?: Job;

@@ -9,10 +9,12 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { formatDate } from "@/app/lib/formatDate";
-import { ApplicationStatus, Profile } from "@/app/types/job.type";
+import { ApplicationStatus, Notification, Profile } from "@/app/types/job.type";
 import TabButton from "@/app/components/ui/TabButton";
 import CompanyLogo from "@/app/components/ui/CompanyLogo";
 import EmptyState from "@/app/components/ui/EmptyStateTab";
+import { useNotification } from "@/app/hooks/useNotification";
+import NotificationList from "@/app/components/ui/NotificationList";
 
 const STATUS_LABEL: Record<ApplicationStatus, string> = {
   PENDING: "รอดำเนินการ",
@@ -28,7 +30,7 @@ const STATUS_COLOR: Record<ApplicationStatus, string> = {
   INTERVIEW: "bg-blue-50 text-blue-600 border-blue-200",
 };
 
-type Tab = "applications" | "saved";
+type Tab = "notification" | "applications" | "saved";
 
 function getMissingFields(profile: Profile): string[] {
   const missing: string[] = [];
@@ -44,22 +46,19 @@ export default function CandidateDashboard() {
   const router = useRouter();
 
   const { currentUser, isAuthenticated, isLoading } = useCurrentUser();
-  const { profile, fetchLoading } = useAppSelector((s) => s.profileReducer);
   const { candidateApplication, loading: appLoading } = useAppSelector(
     (s) => s.ApplicationReducer,
   );
 
   const [activeTab, setActiveTab] = useState<Tab>("applications");
-  const [profileBannerDismissed, setProfileBannerDismissed] = useState(false);
 
-  // Auth guard
+  const { notification } = useNotification(true);
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.replace("/login");
     }
   }, [isLoading, isAuthenticated, router]);
 
-  // Fetch data
   useEffect(() => {
     dispatch(fetchProfile());
     dispatch(fetchCandidateApplication());
@@ -79,10 +78,36 @@ export default function CandidateDashboard() {
     (a) => a.status === "REJECTED",
   ).length;
 
-  const hasResume = (currentUser?.resume?.length ?? 0) > 0;
+  const groupedNotification = (notifications: Notification[]) => {
+    return notifications.reduce(
+      (groups, noti) => {
+        const date = new Date(noti.createdAt);
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        let label = "";
+        if (date.toDateString() === today.toDateString()) {
+          label = "วันนี้";
+        }
+        if (date.toDateString() === yesterday.toDateString()) {
+          label = "เมื่อวาน";
+        } else {
+          label = date.toLocaleDateString("th-TH", {
+            day: "numeric",
+            month: "long",
+          });
+        }
+        if (!groups[label]) groups[label] = [];
+        groups[label].push(noti);
+        return groups;
+      },
+      {} as Record<string, Notification[]>,
+    );
+  };
 
   return (
-    <div className="min-h-[calc(100vh-70px)] bg-white">
+    <div className="min-h-[calc(100vh-70px)] bg-white ">
       <div className="max-w-3xl mx-auto px-4 py-10 space-y-5">
         {interviewApps.length > 0 && (
           <div className="bg-white border border-blue-200 rounded-2xl px-5 py-4">
@@ -178,6 +203,14 @@ export default function CandidateDashboard() {
         <div className="w-full flex justify-center items-center">
           <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit ">
             <TabButton
+              active={activeTab === "notification"}
+              onClick={() => setActiveTab("notification")}
+              icon="material-symbols:bookmark-outline"
+              label="การแจ้งเตือน"
+              count={notification.length}
+              countColor="bg-orange-100 text-orange-600"
+            />
+            <TabButton
               active={activeTab === "applications"}
               onClick={() => setActiveTab("applications")}
               icon="material-symbols:send-outline"
@@ -192,12 +225,12 @@ export default function CandidateDashboard() {
               label="งานที่บันทึกไว้"
               count={savedJobs.length}
               countColor="bg-orange-100 text-orange-600"
-            />
+            />{" "}
           </div>
         </div>
 
         {activeTab === "applications" && (
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden max-h-[60vh] overflow-y-auto">
             {candidateApplication.length === 0 ? (
               <EmptyState
                 icon="material-symbols:send-outline"
@@ -243,7 +276,7 @@ export default function CandidateDashboard() {
         )}
 
         {activeTab === "saved" && (
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden max-h-[60vh] overflow-y-auto">
             {savedJobs.length === 0 ? (
               <EmptyState
                 icon="material-symbols:bookmark-outline"
@@ -280,6 +313,25 @@ export default function CandidateDashboard() {
                 ))}
               </ul>
             )}
+          </div>
+        )}
+
+        {activeTab === "notification" && (
+          <div className="bg-white rounded-2xl border border-gray-100 max-h-[60vh] overflow-y-auto w-full max-w-xl">
+            <div className="p-2">
+              {Object.entries(groupedNotification(notification)).map(
+                ([label, notis]) => (
+                  <div key={label} className="mb-3">
+                    <label className="block text-[11px] font-semibold tracking-widest text-slate-400 mb-2">
+                      {label}
+                    </label>
+                    {notis.map((noti) => (
+                      <NotificationList key={noti.id} notification={noti} />
+                    ))}
+                  </div>
+                ),
+              )}
+            </div>
           </div>
         )}
       </div>

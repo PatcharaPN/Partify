@@ -1,47 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { User } from "@/app/types/job.type";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { applyJob } from "@/app/store/slices/applicationSlice";
-import { useParams } from "next/navigation";
 import { formatDate } from "@/app/lib/formatDate";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 
 interface QuickApplyModalProps {
   isOpen?: boolean;
-  jobId: string;
+  message?: string;
+  onSetMessage?: (value: string) => void;
+  isLoading: boolean;
+  onApply?: () => void;
   onClose?: () => void;
 }
 
 export default function QuickApplyModal({
   isOpen = true,
   onClose,
-  jobId,
+  onApply,
+  message,
+  isLoading,
+  onSetMessage,
 }: QuickApplyModalProps) {
-  const [note, setNote] = useState("");
-  const { user, isLoading } = useAppSelector((state) => state.AuthReducer);
-  const dispatch = useAppDispatch();
+  const { currentUser } = useCurrentUser();
 
-  const handleApply = async () => {
-    try {
-      await dispatch(
-        applyJob({
-          jobId,
-          userId: user!.id,
-        }),
-      ).unwrap();
-      onClose?.();
-    } catch (error: any) {
-      const message = error?.response?.data?.message;
-
-      if (message === "Already applied") {
-        onClose?.();
-      }
-    } finally {
-      onClose?.();
-    }
-  };
   if (!isOpen) return null;
 
   return (
@@ -51,7 +33,7 @@ export default function QuickApplyModal({
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-xl font-bold text-gray-900 tracking-tight">
-                Quick Apply
+                สมัครแบบรวดเร็ว
               </h2>
               <p className="mt-0.5 text-sm text-gray-500">
                 Review your details for{" "}
@@ -76,7 +58,7 @@ export default function QuickApplyModal({
             <div className="relative shrink-0">
               <div className="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
                 {/* Simple avatar illustration */}
-                <img src={user?.profile?.avatarUrl} alt="" />
+                <img src={currentUser?.profile?.avatarUrl} alt="" />
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
                 <Icon
@@ -90,7 +72,7 @@ export default function QuickApplyModal({
 
             <div>
               <p className="text-sm font-semibold text-gray-900">
-                {user?.profile?.firstName ?? "Unknown Applicant"}
+                {currentUser?.profile?.firstName ?? "Unknown Applicant"}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Icon
@@ -100,11 +82,11 @@ export default function QuickApplyModal({
                   className="text-blue-500"
                 />
                 <span className="text-xs text-blue-600 font-medium">
-                  {user?.resume ? "อัพโหลดเรซูเม่แล้ว" : "No Resume"}
+                  {currentUser?.resume ? "อัพโหลดเรซูเม่แล้ว" : "No Resume"}
                 </span>
                 <span className="text-gray-300">·</span>
                 <span className="text-xs text-gray-400">
-                  ล่าสุด {formatDate(user?.profile?.updatedAt)}
+                  ล่าสุด {formatDate(currentUser?.profile?.updatedAt)}
                 </span>
               </div>
             </div>
@@ -118,14 +100,14 @@ export default function QuickApplyModal({
         {/* Say Hello */}
         <div className="mx-6 mb-5">
           <label className="block text-xs font-semibold tracking-widest text-gray-400 uppercase mb-2">
-            Say Hello{" "}
+            แนะนำตัว
             <span className="text-gray-300 font-normal normal-case tracking-normal">
-              (Optional)
+              (ไม่บังคับ)
             </span>
           </label>
           <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
+            value={message}
+            onChange={(e) => onSetMessage?.(e.target.value)}
             rows={3}
             placeholder="Add a quick note about why you're interested..."
             className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition"
@@ -135,27 +117,28 @@ export default function QuickApplyModal({
         {/* Footer */}
         <div className="px-6 pb-6">
           <button
-            onClick={handleApply}
+            type="button"
+            onClick={onApply}
             disabled={isLoading}
             className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold text-sm py-3.5 rounded-xl transition-colors duration-150"
           >
-            Confirm Application
+            ยืนยันการสมัคร
             <Icon icon="mdi:arrow-right" width={16} height={16} />
           </button>
           <p className="mt-3 text-center text-xs text-gray-400">
-            By applying, you agree to Partify's{" "}
+            เมื่อสมัครงาน คุณยอมรับ, Partify's{" "}
             <a
               href="#"
               className="underline hover:text-gray-600 transition-colors"
             >
-              Terms of Service
+              ข้อกำหนดในการให้บริการ
             </a>{" "}
-            and{" "}
+            และ{" "}
             <a
               href="#"
               className="underline hover:text-gray-600 transition-colors"
             >
-              Data Sharing Policy
+              นโยบายการแบ่งปันข้อมูล
             </a>
             .
           </p>

@@ -6,4 +6,7 @@ export class ApplyJobDto {
 
   @IsString()
   userId!: string;
+
+  @IsString()
+  message!: string;
 }

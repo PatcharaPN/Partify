@@ -14,7 +14,7 @@ export class ApplicationService {
     private prisma: PrismaService,
     private notificationService: NotificationService,
   ) {}
-  async applyJob(jobId: string, userId: string) {
+  async applyJob(jobId: string, userId: string, messageCtx?: string) {
     const existing = await this.prisma.application.findUnique({
       where: {
         jobId_userId: {
@@ -34,10 +34,12 @@ export class ApplicationService {
       update: {
         status: 'PENDING',
         createdAt: new Date(),
+        message: messageCtx ?? null,
       },
       create: {
         jobId,
         userId,
+        message: messageCtx ?? null,
       },
       include: {
         job: {

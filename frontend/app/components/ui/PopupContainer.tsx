@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PopupState } from "@/app/types/ui.type";
 
 interface PopupContainerProps {
-  state: PopupState;
+  state: PopupState | undefined;
   onClose?: () => void;
+  message?: string;
 }
 
 const CONFIG = {
@@ -53,7 +54,7 @@ const CONFIG = {
   },
 };
 
-const PopupContainer = ({ state, onClose }: PopupContainerProps) => {
+const PopupContainer = ({ state, onClose, message }: PopupContainerProps) => {
   if (!state) return null;
   const cfg = CONFIG[state];
 
@@ -94,8 +95,10 @@ const PopupContainer = ({ state, onClose }: PopupContainerProps) => {
             transition={{ delay: 0.15 }}
             className="text-center"
           >
-            <p className={`text-lg font-bold ${cfg.color}`}>{cfg.title}</p>
-            <p className="text-sm text-gray-400 mt-1">{cfg.subtitle}</p>
+            <p className={`text-lg font-bold ${cfg.color}`}> {cfg.title}</p>
+            <p className="text-sm text-gray-400 mt-1">
+              {message ? message : cfg.subtitle}
+            </p>
           </motion.div>
 
           {state === "error" && onClose && (

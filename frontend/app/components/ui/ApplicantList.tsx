@@ -10,7 +10,7 @@ type Props = {
 const ApplicantList = ({ applications }: Props) => {
   if (applications.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 text-gray-400 gap-2">
+      <div className="flex h-full flex-col items-center justify-center py-10 text-gray-400 gap-2">
         <Icon icon="mdi:account-off-outline" className="w-8 h-8" />
         <p className="text-sm">ยังไม่มีผู้สมัคร</p>
       </div>
