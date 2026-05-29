@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CompanyController } from './company.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
         signOptions: { expiresIn: '7d' },
       }),
     }),
+    NotificationModule,
   ],
   controllers: [CompanyController],
   providers: [CompanyService],

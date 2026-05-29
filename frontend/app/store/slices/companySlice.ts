@@ -1,5 +1,10 @@
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { Company } from "@/app/types/job.type";
+import {
+  Company,
+  CompanyInvite,
+  CompanyMember,
+  CompanyRole,
+} from "@/app/types/job.type";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface CreateCompanyPayload {
@@ -11,13 +16,17 @@ interface CreateCompanyPayload {
 
 interface CompanyState {
   company: Company | null;
-  loading: boolean;
+  members: CompanyMember[];
+  pendingInvites: CompanyInvite[];
+  isLoading: boolean;
   error: string | null;
 }
 
 const initialState: CompanyState = {
   company: null,
-  loading: false,
+  pendingInvites: [],
+  members: [],
+  isLoading: false,
   error: null,
 };
 
@@ -50,6 +59,32 @@ export const upsertCompany = createAsyncThunk(
   },
 );
 
+export const getAllMember = createAsyncThunk(
+  "company/member",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/company/members");
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create company",
+      );
+    }
+  },
+);
+export const inviteMember = createAsyncThunk(
+  "company/inviteMember",
+  async (dto: { email: string; role: CompanyRole }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post("/company/invite", dto);
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to invite member",
+      );
+    }
+  },
+);
 const companySlice = createSlice({
   name: "company",
   initialState,
@@ -57,22 +92,22 @@ const companySlice = createSlice({
     resetCompanyState: (state) => {
       state.company = null;
       state.error = null;
-      state.loading = false;
+      state.isLoading = false;
     },
   },
 
   extraReducers: (builder) => {
     builder
       .addCase(getCompany.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
       .addCase(getCompany.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.company = action.payload;
       })
       .addCase(getCompany.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error =
           typeof action.payload === "string"
             ? action.payload
@@ -80,19 +115,43 @@ const companySlice = createSlice({
       })
 
       .addCase(upsertCompany.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
       .addCase(upsertCompany.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.company = action.payload;
       })
       .addCase(upsertCompany.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error =
           typeof action.payload === "string"
             ? action.payload
             : "Failed to create company";
+      })
+      .addCase(getAllMember.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getAllMember.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.members = action.payload.companyMember;
+        state.pendingInvites = action.payload.pendingInvites;
+      })
+      .addCase(getAllMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(inviteMember.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(inviteMember.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(inviteMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });

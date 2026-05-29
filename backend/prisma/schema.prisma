@@ -240,7 +240,7 @@ model Company {
   members         CompanyMember[]
   jobs            Job[]
   employees       Employee[]
-
+  invites CompanyInvite[]
   createdBy String @unique 
   creator   User?  @relation(fields: [createdBy], references: [id])
   @@map("company")
@@ -269,4 +269,25 @@ enum CompanyRole {
   HR
   RECRUITER
   VIEWER
+}
+
+model CompanyInvite{
+  id        String   @id @default(uuid())
+  companyId String
+  email     String
+  role      CompanyRole
+  status    InviteStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  expiresAt DateTime?
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("company_invites")
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
 }

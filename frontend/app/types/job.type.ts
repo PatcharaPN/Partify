@@ -195,3 +195,12 @@ export interface CompanyMember {
   user?: User;
   company?: Company;
 }
+export interface CompanyInvite {
+  id: string;
+  companyId: string;
+  email: string;
+  role: CompanyRole;
+  status: "PENDING" | "ACCEPTED" | "DECLINED" | "EXPIRED";
+  createdAt: string;
+  expiresAt?: string;
+}

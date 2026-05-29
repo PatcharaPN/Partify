@@ -8,10 +8,15 @@ import {
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { CompanyRole } from '@prisma/client';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class CompanyService {
-  constructor(readonly prisma: PrismaService) {}
+  constructor(
+    readonly prisma: PrismaService,
+    private notificationService: NotificationService,
+  ) {}
   async upsertCompany(userId: string, dto: CreateCompanyDto) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -41,6 +46,72 @@ export class CompanyService {
       throw new InternalServerErrorException('Failed to upsert company');
     }
   }
+
+  async getAllMembers(userId: string) {
+    const member = await this.prisma.companyMember.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
+    if (!member) throw new ForbiddenException('No access');
+
+    if (!['OWNER', 'ADMIN'].includes(member.role)) {
+    }
+
+    const companyMember = await this.prisma.companyMember.findMany({
+      where: { companyId: member.companyId },
+      include: {
+        user: {
+          include: {
+            profile: true,
+          },
+        },
+      },
+    });
+
+    const pendingMemberInvite = await this.prisma.companyInvite.findMany({
+      where: {
+        companyId: member.companyId,
+        status: 'PENDING',
+      },
+    });
+    return { companyMember, pendingInvites: pendingMemberInvite };
+  }
+
+  async inviteMember(
+    ownerId: string,
+    dto: { email: string; role: CompanyRole },
+  ) {
+    const company = await this.prisma.company.findUnique({
+      where: {
+        createdBy: ownerId,
+      },
+    });
+    if (!company) throw new NotFoundException('Company not found');
+
+    const targetUser = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!targetUser) throw new NotFoundException('User not found');
+
+    const invite = await this.prisma.companyInvite.create({
+      data: {
+        companyId: company.id,
+        email: dto.email,
+        role: dto.role,
+      },
+    });
+
+    await this.notificationService.pushNotification(
+      `คุณได้รับคำเชิญเข้าร่วมทีม ${company.companyName}`,
+      'PENDING',
+      targetUser.id,
+    );
+    return invite;
+  }
+
   async getCompany(userId: string) {
     try {
       const user = await this.prisma.user.findUnique({

@@ -16,7 +16,7 @@ const getNavItems = (total: number) => [
     role: ["OWNER", "ADMIN", "HR", "RECRUITER", "VIEWER"],
   },
   {
-    path: "/dashboard/employer/job",
+    path: "/dashboard/employer/jobs",
     label: "งานที่ลงประกาศ",
     icon: <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />,
     role: ["OWNER", "ADMIN", "HR"],
@@ -29,7 +29,7 @@ const getNavItems = (total: number) => [
     role: ["OWNER", "ADMIN", "HR", "RECRUITER"],
   },
   {
-    path: "/dashboard/employer/member",
+    path: "/dashboard/employer/members",
     label: "จัดการสมาชิก",
     badge: total > 0 ? total : undefined,
     icon: <Icon icon="fluent-mdl2:group" className="w-4 h-4" />,
