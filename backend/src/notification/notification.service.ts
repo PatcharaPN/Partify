@@ -10,9 +10,16 @@ export class NotificationService {
     applicationType: any,
     userId: string,
     jobId?: string,
+    inviteId?: string,
   ) {
     await this.validateReceiverAndThrowError(userId);
-    return this.addNotification(msgContext, applicationType, userId, jobId);
+    return this.addNotification(
+      msgContext,
+      applicationType,
+      userId,
+      jobId,
+      inviteId,
+    );
   }
 
   async readNotification(userId: string, notificationId: string) {
@@ -55,6 +62,7 @@ export class NotificationService {
         isRead: true,
         createdAt: true,
         jobId: true,
+        inviteId: true,
         type: true,
         job: {
           select: {
@@ -85,6 +93,7 @@ export class NotificationService {
     applicationType: ApplicationStatus,
     userId: string,
     jobId?: string,
+    inviteId?: string,
   ) {
     const notification = await this.prisma.notification.create({
       data: {
@@ -92,6 +101,7 @@ export class NotificationService {
         type: applicationType,
         userId: userId,
         jobId: jobId,
+        inviteId,
       },
     });
     return notification;

@@ -51,6 +51,26 @@ const NotificationList = ({
               <span className="w-2 h-2 bg-blue-500 rounded-full" />
             )}
           </div>
+          {notification.type === "INVITE" && (
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className="text-xs px-3 py-1 bg-blue-600 text-white rounded-lg"
+              >
+                ตอบรับ
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className="text-xs px-3 py-1 border border-gray-200 text-gray-500 rounded-lg"
+              >
+                ปฏิเสธ
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </Link>

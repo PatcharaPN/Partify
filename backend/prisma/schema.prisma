@@ -25,8 +25,15 @@ enum ApplicationStatus {
   ACCEPTED
   REJECTED
   INTERVIEW
+  INVITE
 }
-
+enum NotificationType {
+  PENDING
+  ACCEPTED
+  REJECTED
+  INTERVIEW
+  INVITE
+}
 model User {
   id          String   @id @default(uuid())
   email       String?   @unique
@@ -208,9 +215,10 @@ model Notification {
   sender     User?    @relation("SenderNotifications", fields: [senderId], references: [id])
 
   message    String
-  type       ApplicationStatus
+  type       NotificationType
 
-
+  inviteId  String?
+  invite    CompanyInvite? @relation(fields: [inviteId], references: [id])
   jobId String?
   job   Job? @relation(fields: [jobId], references: [id])
   isRead     Boolean  @default(false)
@@ -276,6 +284,7 @@ model CompanyInvite{
   companyId String
   email     String
   role      CompanyRole
+  notification Notification[]
   status    InviteStatus @default(PENDING)
   createdAt DateTime @default(now())
   expiresAt DateTime?

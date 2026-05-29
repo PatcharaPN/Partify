@@ -17,6 +17,12 @@ export type ApplicationStatus =
   | "ACCEPTED"
   | "REJECTED"
   | "INTERVIEW";
+export type NotificationStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "INTERVIEW"
+  | "INVITE";
 export type Role = "CANDIDATE" | "EMPLOYER" | "ADMIN" | null;
 export type JobType = "FREELANCE" | "PARTTIME" | "FULLTIME" | "CONTRACT";
 
@@ -176,7 +182,7 @@ export interface Notification {
   sender?: User | null;
 
   message: string;
-  type: ApplicationStatus;
+  type: NotificationStatus;
 
   jobId?: string | null;
   job?: Job | null;

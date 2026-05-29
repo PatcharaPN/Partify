@@ -108,6 +108,8 @@ export class CompanyService {
       `คุณได้รับคำเชิญเข้าร่วมทีม ${company.companyName}`,
       'PENDING',
       targetUser.id,
+      undefined,
+      invite.id,
     );
     return invite;
   }
