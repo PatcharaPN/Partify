@@ -1,5 +1,8 @@
 "use client";
+import { useCompany } from "@/app/hooks/useCompany";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { useApplicant } from "@/app/hooks/useJobApplications";
+import { CompanyRole } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,26 +13,42 @@ const getNavItems = (total: number) => [
     path: "/dashboard/employer/overviews",
     label: "แดชบอร์ด",
     icon: <Icon icon="mdi:view-dashboard" className="w-4 h-4" />,
+    role: ["OWNER", "ADMIN", "HR", "RECRUITER", "VIEWER"],
   },
   {
     path: "/dashboard/employer/job",
     label: "งานที่ลงประกาศ",
     icon: <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />,
+    role: ["OWNER", "ADMIN", "HR"],
   },
   {
     path: "/dashboard/employer/applicants",
     label: "ผู้สมัคร",
     badge: total > 0 ? total : undefined,
     icon: <Icon icon="mdi:account-group-outline" className="w-4 h-4" />,
+    role: ["OWNER", "ADMIN", "HR", "RECRUITER"],
+  },
+  {
+    path: "/dashboard/employer/member",
+    label: "จัดการสมาชิก",
+    badge: total > 0 ? total : undefined,
+    icon: <Icon icon="fluent-mdl2:group" className="w-4 h-4" />,
+    role: ["OWNER", "ADMIN"],
   },
 ];
 
 const Sidebar = () => {
+  const { currentUser } = useCurrentUser();
   const { totalApplicants } = useApplicant();
   const [_, setActiveNav] = useState("แดชบอร์ด");
-  const navItems = getNavItems(totalApplicants);
   const pathName = usePathname();
 
+  const currentRole = currentUser?.company?.members?.find(
+    (m) => m.userId === currentUser.id,
+  );
+  const navItems = getNavItems(totalApplicants).filter((item) =>
+    item.role.includes(currentRole?.role ?? ""),
+  );
   return (
     <aside className="w-60 flex flex-col bg-white border-gray-100 shrink-0">
       {/* Nav */}

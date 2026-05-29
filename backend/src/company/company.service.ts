@@ -25,10 +25,12 @@ export class CompanyService {
       }
 
       return await this.prisma.company.upsert({
-        where: { userId },
+        where: {
+          id: userId,
+        },
         create: {
           ...dto,
-          userId,
+          createdBy: userId,
         },
         update: {
           ...dto,
@@ -58,9 +60,9 @@ export class CompanyService {
         throw new ForbiddenException('Only employer can access company');
       }
 
-      const company = await this.prisma.company.findUnique({
+      const company = await this.prisma.company.findFirst({
         where: {
-          userId,
+          createdBy: userId,
         },
         select: {
           id: true,

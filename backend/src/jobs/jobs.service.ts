@@ -15,7 +15,7 @@ export class JobsService {
   async postJob(dto: CreateJobDto, userId: string) {
     const company = await this.prisma.company.findFirst({
       where: {
-        userId: userId,
+        createdBy: userId,
       },
     });
 
@@ -97,7 +97,7 @@ export class JobsService {
       include: {
         company: {
           select: {
-            userId: true,
+            createdBy: true,
             category: true,
             companyBio: true,
             companyImageURL: true,
@@ -113,14 +113,14 @@ export class JobsService {
     }
     return {
       ...jobs,
-      isOwner: user ? jobs.company.userId === user.sub : false,
+      isOwner: user ? jobs.company.createdBy === user.sub : false,
     };
   }
   async getJobsByOwnerId(ownerId: string) {
     const jobs = await this.prisma.job.findMany({
       where: {
         company: {
-          userId: ownerId,
+          createdBy: ownerId,
         },
       },
       include: {
@@ -168,7 +168,7 @@ export class JobsService {
 
     if (!job) throw new NotFoundException('Job not found');
 
-    if (job.company.userId !== userId) {
+    if (job.company.createdBy !== userId) {
       throw new ForbiddenException('Access denied');
     }
     return this.prisma.job.update({

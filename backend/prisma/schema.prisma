@@ -40,7 +40,8 @@ model User {
   applications Application[]
   employed  Employee[] @relation("UserEmployment")
   resume    Resume[]  
-  company   Company?
+  company Company?
+  companyMembers CompanyMember[]
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
   @@map("users")
@@ -225,18 +226,47 @@ model Resume {
  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 model Company {
-  id                String @id @default(uuid())
-  companyName       String
-  userId            String @unique
-  category          String?
-  companyImageURL   String?
+  id              String @id @default(uuid())
+  companyName     String
+  category        String?
+  companyImageURL String?
   companyProfileURL String?
-  companyBio        String?
-  companySize       String?
-  createdAt         DateTime @default(now()) 
-  updatedAt         DateTime @updatedAt 
-  jobs              Job[]
-  employees         Employee[]
-  user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  @@map("companies")
+  companyBio      String?
+  companySize     String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  members         CompanyMember[]
+  jobs            Job[]
+  employees       Employee[]
+
+  createdBy String @unique 
+  creator   User?  @relation(fields: [createdBy], references: [id])
+  @@map("company")
+}
+
+model CompanyMember {
+  id         String @id @default(uuid())
+
+  userId     String
+  companyId  String 
+
+  role       CompanyRole
+  createdAt  DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+enum CompanyRole {
+  OWNER
+  ADMIN
+  HR
+  RECRUITER
+  VIEWER
 }

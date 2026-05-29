@@ -1,16 +1,6 @@
 import { axiosInstance } from "@/app/lib/axiosInstance";
+import { Company } from "@/app/types/job.type";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
-export interface Company {
-  id: string;
-  companyName: string;
-  userId: string;
-  companyImageURL?: string;
-  companyBio?: string;
-  companySize?: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface CreateCompanyPayload {
   companyName: string;

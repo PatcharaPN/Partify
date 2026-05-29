@@ -19,7 +19,7 @@ export default function DemoAccountCard() {
             บัญชีนายจ้าง
           </p>
           <p className="text-sm font-medium text-white">
-            employer1@techcorp.com
+            employer1@syntech.com
           </p>
         </div>
       </div>

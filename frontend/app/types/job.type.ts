@@ -1,16 +1,16 @@
 export interface Company {
-  id: string;
-  companyName: string;
-  userId: string;
+  id?: string;
+  companyName?: string;
   category?: string;
   companyImageURL?: string;
+  companyProfileURL?: string;
   companyBio?: string;
   companySize?: string;
-  createdAt: string;
-  updatedAt: string;
-  companyProfileURL?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  members?: CompanyMember[];
 }
-
 export type WorkModel = "onsite" | "hybrid" | "remote";
 export type ApplicationStatus =
   | "PENDING"
@@ -72,7 +72,7 @@ export interface Application {
   jobId: string;
   userId: string;
   status: ApplicationStatus;
-  message: string;
+  message?: string;
   createdAt: string;
   updatedAt: string;
   job?: Job;
@@ -85,7 +85,6 @@ export interface User {
   role: Role;
   company?: Company;
   profile: Profile | null;
-  notifications: Notification[];
   resume: Resume[];
 }
 
@@ -184,4 +183,15 @@ export interface Notification {
 
   isRead: boolean;
   createdAt: string;
+}
+export type CompanyRole = "OWNER" | "ADMIN" | "HR" | "RECRUITER" | "VIEWER";
+
+export interface CompanyMember {
+  id: string;
+  userId: string;
+  companyId: string;
+  role: CompanyRole;
+  createdAt: string;
+  user?: User;
+  company?: Company;
 }

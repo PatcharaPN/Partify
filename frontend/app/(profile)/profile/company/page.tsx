@@ -6,11 +6,19 @@ import { getCompany, upsertCompany } from "@/app/store/slices/companySlice";
 import { Company } from "@/app/types/job.type";
 import { useAlert } from "@/app/contexts/AlertModalContext";
 
+type CompanyFormState = {
+  companyName: string;
+  companyImageURL: string;
+  companyBio: string;
+  companySize: string;
+  category?: string;
+};
+
 const CompanySectionPage = () => {
   const dispatch = useAppDispatch();
   const { company } = useAppSelector((state) => state.CompanyReducer);
 
-  const [companyState, setCompanyState] = useState<Company>({
+  const [companyState, setCompanyState] = useState<CompanyFormState>({
     companyName: "",
     companyImageURL: "",
     companyBio: "",
@@ -51,7 +59,7 @@ const CompanySectionPage = () => {
   };
 
   const handleSave = async () => {
-    if (!companyState.companyName.trim()) return;
+    if (!companyState?.companyName?.trim()) return;
     await dispatch(upsertCompany(companyState)).unwrap();
   };
 

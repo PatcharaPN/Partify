@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-// ==================== SKILL MAP ====================
 export const EXPERIENCE_SKILL_MAP: Record<string, string[]> = {
   บาริสต้า: [
     'การบริการลูกค้า',
@@ -117,7 +116,6 @@ async function main() {
 
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  // ── Users ─────────────────────────────────────────────────
   const admin = await prisma.user.create({
     data: {
       email: 'admin@partify.com',
@@ -136,63 +134,16 @@ async function main() {
 
   const employer1 = await prisma.user.create({
     data: {
-      email: 'employer1@techcorp.com',
+      email: 'employer1@syntech.com',
       password: hashedPassword,
       role: Role.EMPLOYER,
       profile: {
         create: {
-          firstName: 'สมศักดิ์',
-          lastName: 'วงศ์ใหญ่',
+          firstName: 'Ethan',
+          lastName: 'Walker',
           phone: '081-234-5678',
-          avatarUrl: 'https://i.pravatar.cc/150?img=2',
-        },
-      },
-    },
-  });
-
-  const employer2 = await prisma.user.create({
-    data: {
-      email: 'employer2@cafebrand.com',
-      password: hashedPassword,
-      role: Role.EMPLOYER,
-      profile: {
-        create: {
-          firstName: 'วิภา',
-          lastName: 'สุขใจ',
-          phone: '082-345-6789',
-          avatarUrl: 'https://i.pravatar.cc/150?img=3',
-        },
-      },
-    },
-  });
-
-  const employer3 = await prisma.user.create({
-    data: {
-      email: 'hr@retailthai.com',
-      password: hashedPassword,
-      role: Role.EMPLOYER,
-      profile: {
-        create: {
-          firstName: 'อรุณ',
-          lastName: 'ค้าขาย',
-          phone: '089-111-2222',
-          avatarUrl: 'https://i.pravatar.cc/150?img=7',
-        },
-      },
-    },
-  });
-
-  const employer4 = await prisma.user.create({
-    data: {
-      email: 'recruit@logistics.co.th',
-      password: hashedPassword,
-      role: Role.EMPLOYER,
-      profile: {
-        create: {
-          firstName: 'วิชัย',
-          lastName: 'ขนส่ง',
-          phone: '088-222-3333',
-          avatarUrl: 'https://i.pravatar.cc/150?img=8',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         },
       },
     },
@@ -218,96 +169,33 @@ async function main() {
     },
   });
 
-  const candidate2 = await prisma.user.create({
-    data: {
-      email: 'jane@example.com',
-      password: hashedPassword,
-      role: Role.CANDIDATE,
-      profile: {
-        create: {
-          firstName: 'สุดา',
-          lastName: 'รักงาน',
-          phone: '084-567-8901',
-          summary: 'บัณฑิตใหม่ สาขาบริหารธุรกิจ',
-          province: 'กรุงเทพมหานคร',
-          district: 'ลาดพร้าว',
-          skills: ['การขาย', 'การบริการลูกค้า'],
-          avatarUrl: 'https://i.pravatar.cc/150?img=5',
-        },
-      },
-    },
-  });
-
-  const candidate3 = await prisma.user.create({
-    data: {
-      email: 'tom@example.com',
-      password: hashedPassword,
-      role: Role.CANDIDATE,
-      profile: {
-        create: {
-          firstName: 'ธนกร',
-          lastName: 'มีแสง',
-          phone: '085-678-9012',
-          summary: 'นักศึกษาโท สาขาการตลาด',
-          province: 'เชียงใหม่',
-          district: 'เมือง',
-          skills: ['Photoshop', 'Content Writing'],
-          avatarUrl: 'https://i.pravatar.cc/150?img=6',
-        },
-      },
-    },
-  });
-
   // ── Companies ─────────────────────────────────────────────
   const company1 = await prisma.company.create({
     data: {
-      companyName: 'TechCorp Thailand',
-      userId: employer1.id,
-      companyImageURL: 'https://picsum.photos/seed/techcorp/200',
-      companyBio: 'บริษัทเทคโนโลยีชั้นนำ',
+      companyName: 'Syntech Corporation',
+      category: 'Technology',
+      createdBy: employer1.id,
+      companyImageURL:
+        'https://static.vecteezy.com/system/resources/previews/043/269/413/non_2x/tech-logo-technology-logo-vector.jpg',
+      companyBio: 'A startup tech consulting',
       companySize: '50-200',
+      members: {
+        create: {
+          role: 'OWNER',
+          userId: employer1.id,
+        },
+      },
     },
   });
 
-  const company2 = await prisma.company.create({
-    data: {
-      companyName: 'Café Delight',
-      userId: employer2.id,
-      companyImageURL: 'https://picsum.photos/seed/cafe/200',
-      companyBio: 'ร้านกาแฟ specialty',
-      companySize: '10-50',
-    },
-  });
-
-  const company3 = await prisma.company.create({
-    data: {
-      companyName: 'BigMart Thailand',
-      userId: employer3.id,
-      companyImageURL: 'https://picsum.photos/seed/bigmart/200',
-      companyBio: 'เครือร้านค้าปลีก',
-      companySize: '500+',
-    },
-  });
-
-  const company4 = await prisma.company.create({
-    data: {
-      companyName: 'FastMove Logistics',
-      userId: employer4.id,
-      companyImageURL: 'https://picsum.photos/seed/logistics/200',
-      companyBio: 'บริษัทขนส่ง',
-      companySize: '200-500',
-    },
-  });
-
-  // ── Jobs ──────────────────────────────────────────────────
   const jobsData = [
     {
       title: 'Frontend Developer (Part-time)',
       companyId: company1.id,
       category: 'IT',
-      salaryMin: 400,
-      salaryMax: 600,
-      jobType: 'Part-time',
+      salaryMin: 40,
+      salaryMax: 60,
+      jobType: 'PARTTIME',
       workStyle: 'Hybrid',
       location: 'สีลม',
     },
@@ -315,9 +203,9 @@ async function main() {
       title: 'Backend Developer (Part-time)',
       companyId: company1.id,
       category: 'IT',
-      salaryMin: 450,
-      salaryMax: 650,
-      jobType: 'Part-time',
+      salaryMin: 45,
+      salaryMax: 65,
+      jobType: 'PARTTIME',
       workStyle: 'Remote',
       location: 'Remote',
     },
@@ -325,81 +213,11 @@ async function main() {
       title: 'Fullstack Developer',
       companyId: company1.id,
       category: 'IT',
-      salaryMin: 600,
-      salaryMax: 900,
-      jobType: 'Freelance',
+      salaryMin: 60,
+      salaryMax: 90,
+      jobType: 'FULLTIME',
       workStyle: 'Remote',
       location: 'Remote',
-    },
-    {
-      title: 'บาริสต้า Part-time',
-      companyId: company2.id,
-      category: 'Food & Beverage',
-      salaryMin: 300,
-      salaryMax: 350,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'สยาม',
-    },
-    {
-      title: 'พนักงานเสิร์ฟ Part-time',
-      companyId: company2.id,
-      category: 'Food & Beverage',
-      salaryMin: 280,
-      salaryMax: 320,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'สยาม',
-    },
-    {
-      title: 'พนักงานขาย Part-time',
-      companyId: company3.id,
-      category: 'Retail',
-      salaryMin: 280,
-      salaryMax: 350,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'MBK Center',
-    },
-    {
-      title: 'แคชเชียร์ Part-time',
-      companyId: company3.id,
-      category: 'Retail',
-      salaryMin: 300,
-      salaryMax: 360,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'เซ็นทรัลเวิลด์',
-    },
-    {
-      title: 'พนักงานคลังสินค้า Part-time',
-      companyId: company4.id,
-      category: 'Logistics',
-      salaryMin: 300,
-      salaryMax: 380,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'บางบัวทอง',
-    },
-    {
-      title: 'Delivery Rider',
-      companyId: company4.id,
-      category: 'Logistics',
-      salaryMin: 400,
-      salaryMax: 600,
-      jobType: 'Part-time',
-      workStyle: 'On-site',
-      location: 'กรุงเทพฯ',
-    },
-    {
-      title: 'Social Media Coordinator',
-      companyId: company2.id,
-      category: 'Marketing',
-      salaryMin: 350,
-      salaryMax: 500,
-      jobType: 'Part-time',
-      workStyle: 'Hybrid',
-      location: 'สยาม',
     },
   ];
 

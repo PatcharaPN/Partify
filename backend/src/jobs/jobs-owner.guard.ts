@@ -31,7 +31,7 @@ export class JobOwnerGuard implements CanActivate {
       throw new NotFoundException();
     }
 
-    if (job.company.userId !== user.sub) {
+    if (job.company.createdBy !== user.sub) {
       throw new ForbiddenException();
     }
     return true;

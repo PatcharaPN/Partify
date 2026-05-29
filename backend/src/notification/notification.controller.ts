@@ -1,4 +1,12 @@
-import { Controller, Get, Patch, Param, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  UseGuards,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtPayload } from '../types/jwt-payload.interface';
@@ -10,6 +18,7 @@ export class NotificationController {
   @UseGuards(AuthGuard)
   @Get()
   async getUserNotification(@Req() req: { user: JwtPayload }) {
+    if (!req.user) throw new UnauthorizedException();
     return this.notificationService.getUserNotification(req.user.sub);
   }
 

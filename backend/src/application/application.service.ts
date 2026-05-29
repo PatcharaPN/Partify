@@ -53,7 +53,7 @@ export class ApplicationService {
     await this.notificationService.pushNotification(
       `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} กรุณาตรวจสอบรายละเอียด`,
       'PENDING',
-      application.job.company.userId,
+      application.job.company.createdBy,
       application.jobId,
     );
     return application;
@@ -141,7 +141,7 @@ export class ApplicationService {
       throw new NotFoundException('Job not found');
     }
 
-    if (job.company.userId !== userId) {
+    if (job.company.createdBy !== userId) {
       throw new ForbiddenException('You are not the owner');
     }
 
@@ -166,7 +166,7 @@ export class ApplicationService {
       where: {
         job: {
           company: {
-            userId: ownerId,
+            createdBy: ownerId,
           },
         },
       },
@@ -185,44 +185,58 @@ export class ApplicationService {
     });
   }
 
-  async searchApplicant(
-    page: number = 1,
-    search?: string,
-    status?: string,
-    position?: string,
-    sortBy?: 'latest' | 'oldest',
-  ) {
-    const take = 10;
-    const skip = (Number(page) - 1) * take;
-    return this.prisma.application.findMany({
-      where: {
-        ...(search && {
-          OR: [
-            {
-              user: {
-                profile: {
-                  firstName: {
-                    contains: search,
-                    mode: 'insensitive',
-                  },
-                },
-              },
-            },
-            {
-              user: {
-                profile: {
-                  lastName: {
-                    contains: search,
-                    mode: 'insensitive',
-                  },
-                },
-              },
-            },
-          ],
-        }),
-      },
-    });
-  }
+  // async searchApplicant(
+  //   page: number = 1,
+  //   search?: string,
+  //   status?: string,
+  //   position?: string,
+  //   sortBy?: 'latest' | 'oldest',
+  // ) {
+  //   const take = 10;
+  //   const skip = (Number(page) - 1) * take;
+  //   return this.prisma.application.findMany({
+  //     where: {
+  //       ...(search && {
+  //         OR: [
+  //           {
+  //             user: {
+  //               profile: {
+  //                 firstName: {
+  //                   contains: search,
+  //                   mode: 'insensitive',
+  //                 },
+  //               },
+  //             },
+  //           },
+  //           {
+  //             user: {
+  //               profile: {
+  //                 lastName: {
+  //                   contains: search,
+  //                   mode: 'insensitive',
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         ],
+  //       }),
+  //       ...(status && {
+  //         AND: [
+  //           {
+  //             status: status,
+  //           },
+  //         ],
+  //       }),
+  //       // ...(position &&{
+  //       //   OR:[
+  //       //     {
+  //       //       job.
+  //       //     }
+  //       //   ]
+  //       // })
+  //     },
+  //   });
+  // }
 
   private async processInterview(applicationId: string, application: any) {
     const updatedApplication = await this.prisma.application.update({
