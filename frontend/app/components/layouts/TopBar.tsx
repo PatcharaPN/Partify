@@ -26,8 +26,6 @@ export default function TopBar() {
   const isEmployerOrMember =
     user?.role === "EMPLOYER" || Boolean(user?.companyMembers);
 
-  console.log(isEmployerOrMember);
-
   const [openMenu, setOpenMenu] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 

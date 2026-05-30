@@ -51,7 +51,6 @@ export const usePostJobForm = ({
     }
   }, [JSON.stringify(defaultValues)]);
   const onSubmit = form.handleSubmit(async (data) => {
-    console.log("skills at submit →", data.skills);
     const payload = {
       title: data.title,
       description: data.description,

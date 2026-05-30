@@ -31,8 +31,6 @@ const CompanySectionPage = () => {
     dispatch(getCompany());
   }, [dispatch]);
 
-  console.log(company?.members);
-
   useEffect(() => {
     if (company?.companyName && !initialized.current) {
       setCompanyState({

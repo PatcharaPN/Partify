@@ -16,9 +16,7 @@ const ResumeSection = () => {
   useEffect(() => {
     setResume(currentUser?.resume?.[0] ?? null);
   }, [currentUser]);
-  useEffect(() => {
-    console.log("resume data:", currentUser?.resume);
-  }, [currentUser]);
+
   const handleUploadResume = async (file: File) => {
     try {
       setLoading(true);

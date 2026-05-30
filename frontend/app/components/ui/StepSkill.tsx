@@ -90,7 +90,6 @@ const StepSkill = ({
                 const currentSkills = field.value ?? [];
                 const addSkill = (skill: string) => {
                   const next = [...(field.value ?? []), skill];
-                  console.log("addSkill →", next);
                   field.onChange(next);
                   setInput("");
                   setSuggestions([]);
