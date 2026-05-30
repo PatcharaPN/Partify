@@ -8,6 +8,8 @@ import { formatDate } from "@/app/lib/formatDate";
 import { CompanyRole } from "@/app/types/job.type";
 import { useCompany } from "@/app/hooks/useCompany";
 import InviteMemberModal from "@/app/components/ui/InviteMemberModal";
+import PopupContainer from "@/app/components/ui/PopupContainer";
+import { usePopup } from "@/app/hooks/usePopup";
 
 const ROLE_CONFIG: Record<CompanyRole, { label: string; className: string }> = {
   OWNER: { label: "นายจ้าง", className: "bg-purple-50 text-purple-600" },
@@ -29,6 +31,8 @@ const ROLE_PERMISSIONS: Record<CompanyRole, string[]> = {
 };
 
 const CompanyMember = () => {
+  const { popupState, message, showLoading, showSuccess, showError } =
+    usePopup();
   const [showFilter, setShowFilter] = useState(false);
   const [inviteModal, setInviteModal] = useState(false);
   const { members, handleInviteMember, pendingInvites } = useCompany();
@@ -37,11 +41,14 @@ const CompanyMember = () => {
   const handleInvite = async (email: string, role: CompanyRole) => {
     setInviteLoading(true);
     setInviteError(null);
+    showLoading("กำลังส่งคำขอ...");
     try {
       await handleInviteMember(email, role);
       setInviteModal(false);
+      showSuccess("ส่งคำเชิญเข้าร่วมทีมสำเร็จ!");
     } catch (error: any) {
       setInviteError(error?.message ?? "เกิดข้อผิดพลาด");
+      showError();
     } finally {
       setInviteLoading(false);
     }
@@ -217,6 +224,7 @@ const CompanyMember = () => {
             error={inviteError}
           />
         )}
+        <PopupContainer message={message} state={popupState} />
       </main>
     </div>
   );

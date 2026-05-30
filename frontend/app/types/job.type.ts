@@ -92,6 +92,7 @@ export interface User {
   company?: Company;
   profile: Profile | null;
   resume: Resume[];
+  companyMembers: CompanyMember[];
 }
 
 export type Resume = {
@@ -185,6 +186,7 @@ export interface Notification {
   type: NotificationStatus;
 
   jobId?: string | null;
+  inviteId: string | null;
   job?: Job | null;
 
   isRead: boolean;

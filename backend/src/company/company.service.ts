@@ -31,7 +31,7 @@ export class CompanyService {
 
       return await this.prisma.company.upsert({
         where: {
-          id: userId,
+          createdBy: userId,
         },
         create: {
           ...dto,
@@ -113,49 +113,83 @@ export class CompanyService {
     );
     return invite;
   }
-
-  async getCompany(userId: string) {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-        select: {
-          role: true,
-        },
-      });
-
-      if (!user) {
-        throw new NotFoundException('User was not found');
-      }
-
-      if (user.role !== 'EMPLOYER') {
-        throw new ForbiddenException('Only employer can access company');
-      }
-
-      const company = await this.prisma.company.findFirst({
-        where: {
-          createdBy: userId,
-        },
-        select: {
-          id: true,
-          category: true,
-          companyBio: true,
-          companyImageURL: true,
-          companyName: true,
-          companySize: true,
-        },
-      });
-
-      return company;
-    } catch (error) {
-      console.error(error);
-
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      throw new InternalServerErrorException('Failed to get company');
+  async acceptInvite(email: string, userId: string, inviteId: string) {
+    const exist = await this.prisma.companyInvite.findFirst({
+      where: {
+        email: email,
+        status: 'PENDING',
+      },
+    });
+    if (!exist) {
+      throw new NotFoundException('Invite not found');
     }
+
+    await this.prisma.$transaction([
+      this.prisma.companyInvite.update({
+        where: {
+          id: exist.id,
+        },
+        data: {
+          status: 'ACCEPTED',
+        },
+      }),
+      this.prisma.companyMember.create({
+        data: {
+          userId: userId,
+          companyId: exist.companyId,
+          role: exist.role,
+        },
+      }),
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { role: 'EMPLOYER' },
+      }),
+    ]);
+    await this.prisma.notification.updateMany({
+      where: { inviteId, userId },
+      data: { isRead: true },
+    });
+    return { message: 'Accepted successfully' };
+  }
+
+  async rejectInvite(email: string, userId: string, inviteId: string) {
+    const exist = await this.prisma.companyInvite.findFirst({
+      where: {
+        email: email,
+        status: 'PENDING',
+      },
+    });
+    if (!exist) {
+      throw new NotFoundException('Invite not found');
+    }
+
+    await this.prisma.companyInvite.update({
+      where: {
+        id: exist.id,
+      },
+      data: {
+        status: 'DECLINED',
+      },
+    });
+    await this.prisma.notification.updateMany({
+      where: { inviteId, userId },
+      data: { isRead: true },
+    });
+    return { message: 'Invite declined' };
+  }
+  async getCompany(userId: string) {
+    const company = await this.prisma.company.findFirst({
+      where: {
+        OR: [{ createdBy: userId }, { members: { some: { userId } } }],
+      },
+      include: {
+        members: {
+          include: { company: true },
+        },
+      },
+    });
+
+    if (!company) throw new NotFoundException('Company not found');
+    return company;
   }
 }

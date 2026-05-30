@@ -128,7 +128,7 @@ export const fetchOwnerRelatedJobs = createAsyncThunk(
   "jobs/fetchOwner",
   async (ownerId: string, thunkAPI) => {
     try {
-      const res = await axiosInstance.get(`/jobs/owner/${ownerId}`);
+      const res = await axiosInstance.get(`/jobs/owner`);
 
       return res.data as Job[];
     } catch (error: any) {

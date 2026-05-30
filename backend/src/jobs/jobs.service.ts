@@ -117,28 +117,31 @@ export class JobsService {
     };
   }
   async getJobsByOwnerId(ownerId: string) {
-    const jobs = await this.prisma.job.findMany({
+    const company = await this.prisma.company.findFirst({
       where: {
-        company: {
-          createdBy: ownerId,
-        },
+        OR: [
+          { createdBy: ownerId },
+          { members: { some: { userId: ownerId } } },
+        ],
       },
+    });
+
+    if (!company) throw new NotFoundException('Company not found');
+
+    return this.prisma.job.findMany({
+      where: { companyId: company.id },
       include: {
         company: true,
         applications: {
           include: {
             user: {
-              include: {
-                profile: true,
-              },
+              include: { profile: true },
             },
           },
         },
       },
     });
-    return jobs;
   }
-
   async upsertJobById(jobId: string, dto: UpdateJobDto) {
     const { skills, ...jobData } = dto;
 
@@ -221,7 +224,7 @@ export class JobsService {
     const parsedJob = jobType?.split(',') as JobType[];
     const where = {
       AND: [
-        { status: 'active' },
+        { isActive: true },
         keyword.length > 0 ? { skills: { hasSome: keyword } } : {},
 
         search

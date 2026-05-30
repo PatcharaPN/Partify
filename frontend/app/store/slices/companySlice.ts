@@ -85,6 +85,37 @@ export const inviteMember = createAsyncThunk(
     }
   },
 );
+export const acceptInvite = createAsyncThunk(
+  "company/acceptInvite",
+  async (inviteId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post(
+        `/company/invite/${inviteId}/accept`,
+      );
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to accept invite",
+      );
+    }
+  },
+);
+
+export const declineInvite = createAsyncThunk(
+  "company/declineInvite",
+  async (inviteId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post(
+        `/company/invite/${inviteId}/decline`,
+      );
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to decline invite",
+      );
+    }
+  },
+);
 const companySlice = createSlice({
   name: "company",
   initialState,
@@ -150,6 +181,29 @@ const companySlice = createSlice({
         state.isLoading = false;
       })
       .addCase(inviteMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(acceptInvite.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(acceptInvite.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(acceptInvite.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(declineInvite.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(declineInvite.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(declineInvite.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

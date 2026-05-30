@@ -23,6 +23,11 @@ export default function TopBar() {
   );
   const dispatch = useAppDispatch();
 
+  const isEmployerOrMember =
+    user?.role === "EMPLOYER" || Boolean(user?.companyMembers);
+
+  console.log(isEmployerOrMember);
+
   const [openMenu, setOpenMenu] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +64,7 @@ export default function TopBar() {
           >
             ค้นหางาน
           </Link>
-          {user?.role === "EMPLOYER" ? (
+          {isEmployerOrMember ? (
             <Link
               className={`${
                 isActive("/dashboard")

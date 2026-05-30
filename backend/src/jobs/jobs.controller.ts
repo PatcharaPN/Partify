@@ -51,9 +51,9 @@ export class JobsController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/owner/:id')
-  getRelatedJobs(@Param('id') ownerId: string) {
-    return this.jobsService.getJobsByOwnerId(ownerId);
+  @Get('/owner')
+  getJobsByOwner(@Req() req) {
+    return this.jobsService.getJobsByOwnerId(req.user.sub);
   }
 
   @UseGuards(AuthGuard)

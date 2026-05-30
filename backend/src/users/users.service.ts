@@ -15,6 +15,7 @@ export class UsersService {
         password: true,
       },
       include: {
+        companyMembers: true,
         profile: true,
         company: {
           include: {

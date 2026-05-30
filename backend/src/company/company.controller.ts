@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Param,
+} from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -30,5 +38,25 @@ export class CompanyController {
   @Get()
   getCompany(@Req() req) {
     return this.companyService.getCompany(req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('invite/:inviteId/accept')
+  acceptInvite(@Req() req, @Param('inviteId') inviteId: string) {
+    return this.companyService.acceptInvite(
+      req.user.email,
+      req.user.sub,
+      inviteId,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('invite/:inviteId/decline')
+  rejectInvite(@Req() req, @Param('inviteId') inviteId: string) {
+    return this.companyService.rejectInvite(
+      req.user.email,
+      req.user.sub,
+      inviteId,
+    );
   }
 }

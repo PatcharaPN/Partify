@@ -16,6 +16,8 @@ import EmptyState from "@/app/components/ui/EmptyStateTab";
 import { useNotification } from "@/app/hooks/useNotification";
 import NotificationList from "@/app/components/ui/NotificationList";
 import SkeletonCandidateDashboard from "./SkeletonActivity";
+import { useCompany } from "@/app/hooks/useCompany";
+import { useInvite } from "@/app/components/ui/useInvite";
 
 const STATUS_LABEL: Record<ApplicationStatus, string> = {
   PENDING: "รอดำเนินการ",
@@ -45,7 +47,7 @@ function getMissingFields(profile: Profile): string[] {
 export default function CandidateDashboard() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const { handleAcceptInvite, handleDeclineInvite } = useInvite();
   const { currentUser, isAuthenticated, isLoading } = useCurrentUser();
   const { candidateApplication, loading: appLoading } = useAppSelector(
     (s) => s.ApplicationReducer,
@@ -339,7 +341,14 @@ export default function CandidateDashboard() {
                         {label}
                       </label>
                       {notis.map((noti) => (
-                        <NotificationList key={noti.id} notification={noti} />
+                        <NotificationList
+                          key={noti.id}
+                          notification={noti}
+                          onAccept={(inviteId) => handleAcceptInvite(inviteId)}
+                          onDecline={(inviteId) =>
+                            handleDeclineInvite(inviteId)
+                          }
+                        />
                       ))}
                     </div>
                   ),

@@ -9,6 +9,8 @@ type Props = {
   onClose: () => void;
   onReadAll: () => void;
   onReadOne: (id: string) => void;
+  onAccept?: (inviteId: string) => void;
+  onDecline?: (inviteId: string) => void;
 };
 
 const NotificationContainer = ({
@@ -16,6 +18,8 @@ const NotificationContainer = ({
   onReadAll,
   notifications = [],
   onClose,
+  onAccept,
+  onDecline,
 }: Props) => {
   return (
     <motion.div
@@ -47,6 +51,8 @@ const NotificationContainer = ({
             notification={noti}
             onClose={onClose}
             onReadOne={onReadOne}
+            onAccept={onAccept}
+            onDecline={onDecline}
           />
         ))}
       </div>

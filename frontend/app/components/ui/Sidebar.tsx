@@ -43,7 +43,7 @@ const Sidebar = () => {
   const [_, setActiveNav] = useState("แดชบอร์ด");
   const pathName = usePathname();
 
-  const currentRole = currentUser?.company?.members?.find(
+  const currentRole = currentUser?.companyMembers?.find(
     (m) => m.userId === currentUser.id,
   );
   const navItems = getNavItems(totalApplicants).filter((item) =>

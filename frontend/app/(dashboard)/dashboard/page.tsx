@@ -22,11 +22,7 @@ export default function DashboardPage() {
       return;
     }
 
-    if (user.role === "CANDIDATE") {
-      router.replace("/dashboard/candidate");
-    } else if (user.role === "EMPLOYER") {
-      router.replace("/dashboard/employer/overviews");
-    }
+    router.replace("/dashboard/employer/overviews");
   }, [user, isAuthenticated, isLoading, router]);
 
   return null;
