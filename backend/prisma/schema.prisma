@@ -166,7 +166,7 @@ model Bookmark {
 model JobSkill {
   id      String  @id @default(uuid())
   jobId   String
-  // job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+ 
   name    String  
 
   @@map("job_skills")
