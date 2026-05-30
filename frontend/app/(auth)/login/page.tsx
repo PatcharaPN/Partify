@@ -87,6 +87,7 @@ export default function LoginPage() {
           <div className="py-5 flex flex-col gap-5">
             <InputField
               label="อีเมล"
+              placeholder="example@partify.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
