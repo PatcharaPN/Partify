@@ -1,13 +1,12 @@
 "use client";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { jwtDecode } from "jwt-decode";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { setUser } from "@/app/store/slices/authSlice";
 import { axiosInstance } from "@/app/lib/axiosInstance";
 
-export default function CallbackPage() {
+function CallbackContent() {
   const router = useRouter();
   const params = useSearchParams();
   const dispatch = useAppDispatch();
@@ -36,4 +35,11 @@ export default function CallbackPage() {
   }, []);
 
   return <p>กำลังเข้าสู่ระบบ...</p>;
+}
+export default function CallbackPage() {
+  return (
+    <Suspense fallback={<p>กำลังเข้าสู่ระบบ...</p>}>
+      <CallbackContent />
+    </Suspense>
+  );
 }
