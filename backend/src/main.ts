@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'https://partify-b4hu.onrender.com',
+    origin: 'https://partify-nine.vercel.app',
     credentials: true,
   });
   app.useGlobalPipes(
