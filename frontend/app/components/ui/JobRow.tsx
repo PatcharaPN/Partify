@@ -3,7 +3,6 @@ import Link from "next/link";
 import AvatarStack from "./AvatarStack";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import PostJobForm from "./PostJobForm";
 
 type JobRowProps = {
   job: Job;

@@ -1,16 +1,13 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { useAppDispatch } from "@/app/lib/hooks";
 import { fetchJobs } from "@/app/store/slices/jobSlice";
 import { Icon } from "@iconify/react";
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import JobListSkeleton from "./JobListSkeleton";
-import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import JobList from "@/app/components/ui/JobList";
 import { useSearch } from "@/app/hooks/useSearch";
 import Button from "@/app/components/ui/Button";
-import { useParams, useSearchParams } from "next/navigation";
-import { label } from "framer-motion/client";
+import { useSearchParams } from "next/navigation";
 
 const CATEGORY = {
   FULLTIME: {
@@ -31,7 +28,7 @@ const CATEGORY = {
   },
 };
 
-export default function JobPage() {
+function JobPageContent() {
   type Jobtype = keyof typeof CATEGORY;
 
   const searchParams = useSearchParams();
@@ -248,5 +245,12 @@ export default function JobPage() {
         </div>
       </main>
     </div>
+  );
+}
+export default function JobPage() {
+  return (
+    <Suspense fallback={<JobListSkeleton />}>
+      <JobPageContent />
+    </Suspense>
   );
 }

@@ -1,7 +1,6 @@
 import TopBar from "../components/layouts/TopBar";
 import PostJobForm from "../components/ui/PostJobForm";
-import Sidebar from "../components/ui/Sidebar";
-
+import { Suspense } from "react";
 export default function DashboardLayout({
   children,
 }: {
@@ -10,7 +9,9 @@ export default function DashboardLayout({
   return (
     <div>
       <TopBar />
-      <PostJobForm />
+      <Suspense fallback={null}>
+        <PostJobForm />
+      </Suspense>
       {children}
     </div>
   );

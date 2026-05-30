@@ -1,10 +1,3 @@
-import { Icon } from "@iconify/react";
-import React, { useState } from "react";
-import PostJobForm from "./PostJobForm";
-import { useRouter } from "next/navigation";
-import AlertModal from "./AlertModal";
-import { useCurrentUser } from "@/app/hooks/useCurrentUser";
-
 type DashboardHeaderProps = {
   title: string;
   name: string | undefined;
