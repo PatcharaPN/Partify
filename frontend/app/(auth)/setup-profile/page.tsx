@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import SetupProfileSkeleton from "./skeletonProfileSetup";
-import BuildProfilePage from "@/app/components/ui/BuildProfileContainer";
+import BuildProfilePage from "@/app/components/ui/BuildProfileContainer.tsx-";
 import { useEffect } from "react";
 import { fetchCurrentUser } from "@/app/store/slices/authSlice";
 
