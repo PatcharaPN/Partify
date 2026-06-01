@@ -5,7 +5,7 @@ import { fetchProfile } from "@/app/store/slices/profileSlice";
 import { fetchCandidateApplication } from "@/app/store/slices/applicationSlice";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { formatDate } from "@/app/lib/formatDate";
@@ -45,7 +45,7 @@ function getMissingFields(profile: Profile): string[] {
   return missing;
 }
 
-export default function CandidateDashboard() {
+function CandidateDashboardContent() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -362,5 +362,12 @@ export default function CandidateDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+export default function ActivityProfilePage() {
+  return (
+    <Suspense fallback={<SkeletonCandidateDashboard />}>
+      <CandidateDashboardContent />
+    </Suspense>
   );
 }
