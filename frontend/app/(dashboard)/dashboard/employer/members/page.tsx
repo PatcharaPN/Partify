@@ -1,9 +1,11 @@
 "use client";
 import Button from "@/app/components/ui/Button";
-import MemberFilterContainer from "@/app/components/ui/MemberFilterContainer";
+import MemberFilterContainer, {
+  FilterValues,
+} from "@/app/components/ui/MemberFilterContainer";
 import { Icon } from "@iconify/react";
 import { AnimatePresence } from "framer-motion";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { formatDate } from "@/app/lib/formatDate";
 import { CompanyRole } from "@/app/types/job.type";
 import { useCompany } from "@/app/hooks/useCompany";
@@ -22,6 +24,14 @@ const ROLE_CONFIG: Record<CompanyRole, { label: string; className: string }> = {
   VIEWER: { label: "ผู้ชม", className: "bg-gray-50 text-gray-500" },
 };
 
+const ROLE_ORDER: Record<CompanyRole, number> = {
+  OWNER: 0,
+  ADMIN: 1,
+  HR: 2,
+  RECRUITER: 3,
+  VIEWER: 4,
+};
+
 const ROLE_PERMISSIONS: Record<CompanyRole, string[]> = {
   OWNER: ["ลงประกาศ", "จัดการผู้สมัคร", "จัดการสมาชิก"],
   ADMIN: ["ลงประกาศ", "จัดการผู้สมัคร", "จัดการสมาชิก"],
@@ -34,6 +44,10 @@ const CompanyMember = () => {
   const { popupState, message, showLoading, showSuccess, showError } =
     usePopup();
   const [showFilter, setShowFilter] = useState(false);
+  const [filters, setFilters] = useState<FilterValues>({
+    sortBy: "newest",
+    role: "",
+  });
   const [inviteModal, setInviteModal] = useState(false);
   const { members, handleInviteMember, pendingInvites } = useCompany();
   const [inviteLoading, setInviteLoading] = useState(false);
@@ -53,6 +67,25 @@ const CompanyMember = () => {
       setInviteLoading(false);
     }
   };
+
+  const filteredMembers = useMemo(() => {
+    let result = [...members];
+
+    if (filters.role) {
+      result = result.filter((m) => m.role === filters.role);
+    }
+
+    result.sort((a, b) => {
+      const roleDiff = ROLE_ORDER[a.role] - ROLE_ORDER[b.role];
+      if (roleDiff !== 0) return roleDiff;
+      const diff =
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+
+      return filters.sortBy === "newest" ? -diff : diff;
+    });
+    return result;
+  }, [filters, members]);
+
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       <main className="flex-1 overflow-auto">
@@ -71,7 +104,15 @@ const CompanyMember = () => {
                     <Icon icon="mdi:tune-vertical" className="w-4 h-4" />
                   </button>
                   <AnimatePresence>
-                    {showFilter && <MemberFilterContainer />}
+                    {showFilter && (
+                      <MemberFilterContainer
+                        onClose={() => setShowFilter(false)}
+                        onApply={(f) => {
+                          setFilters(f);
+                          setShowFilter(false);
+                        }}
+                      />
+                    )}
                   </AnimatePresence>
                 </div>
                 <Button
@@ -103,7 +144,7 @@ const CompanyMember = () => {
             </div>
 
             <div className="flex flex-col divide-y divide-gray-50">
-              {members.map((member) => {
+              {filteredMembers.map((member) => {
                 const role = ROLE_CONFIG[member.role];
                 const permissions = ROLE_PERMISSIONS[member.role];
                 return (

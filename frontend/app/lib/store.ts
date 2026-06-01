@@ -5,6 +5,7 @@ import profileReducer from "../store/slices/profileSlice";
 import ApplicationReducer from "../store/slices/applicationSlice";
 import CompanyReducer from "../store/slices/companySlice";
 import NotificationReducer from "../store/slices/notificationSlice";
+import bookmarksReducer from "../store/slices/bookmarkSlice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const makeStore = () => {
       CompanyReducer,
       ApplicationReducer,
       NotificationReducer,
+      bookmarks: bookmarksReducer,
     },
   });
 };

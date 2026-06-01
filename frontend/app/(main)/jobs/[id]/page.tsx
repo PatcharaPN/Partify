@@ -17,11 +17,15 @@ import JobRow from "@/app/components/ui/JobRow";
 import RelatedJobCard from "@/app/components/ui/RelatedJobCard";
 import PopupContainer from "@/app/components/ui/PopupContainer";
 import { PopupState } from "@/app/types/ui.type";
+import { useCompany } from "@/app/hooks/useCompany";
+import { useBookmarkToggle } from "@/app/hooks/useBookmark";
+import { fetchBookmarks } from "@/app/store/slices/bookmarkSlice";
 
 export default function JobDetail() {
   const router = useRouter();
   const { isAuthenticated } = useCurrentUser();
   const { currentUser } = useCurrentUser();
+  const { members } = useCompany();
 
   const summary = currentUser?.profile?.summary;
   const [message, setMessage] = useState("");
@@ -36,6 +40,21 @@ export default function JobDetail() {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const {
+    isBookmarked,
+    toggle,
+    loading: bookmarkLoading,
+  } = useBookmarkToggle(id as string);
+  const isCompanyMember = members.some((c) => c.userId === currentUser?.id);
+  const isProfileValid =
+    !!currentUser?.profile?.firstName &&
+    !!currentUser?.profile?.lastName &&
+    !!currentUser?.profile?.phone &&
+    !!currentUser?.profile?.avatarUrl &&
+    !!currentUser?.profile?.summary &&
+    (currentUser?.profile?.skills?.length ?? 0) > 0 &&
+    (currentUser?.profile?.preferredJobTypes?.length ?? 0) > 0 &&
+    (currentUser?.profile?.availability?.length ?? 0) > 0;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -51,6 +70,7 @@ export default function JobDetail() {
     if (id) {
       dispatch(fetchJobById(id as string));
       dispatch(fetchRelatedJob(id as string));
+      dispatch(fetchBookmarks());
     }
     dispatch(fetchCurrentUser()).unwrap();
   }, [id]);
@@ -102,13 +122,37 @@ export default function JobDetail() {
         })
       : null;
 
-  // const handleApply = () => {
-
-  // };
-
   const handleApply = async () => {
     if (!isAuthenticated) {
       router.push("/login");
+      return;
+    }
+
+    const missingFields = [];
+    if (!currentUser?.profile?.firstName) missingFields.push("ชื่อ");
+    if (!currentUser?.profile?.lastName) missingFields.push("นามสกุล");
+    if (!currentUser?.profile?.phone) missingFields.push("เบอร์โทร");
+    if (!currentUser?.profile?.avatarUrl) missingFields.push("รูปโปรไฟล์");
+    if (!currentUser?.profile?.summary) missingFields.push("Bio");
+    if (!currentUser?.profile?.skills?.length) missingFields.push("ทักษะ");
+    if (!currentUser?.profile?.preferredJobTypes?.length)
+      missingFields.push("ประเภทงานที่สนใจ");
+    if (!currentUser?.profile?.availability?.length)
+      missingFields.push("ความพร้อมทำงาน");
+
+    if (missingFields.length > 0) {
+      setMessage(`โปรไฟล์ยังไม่ครบ: ${missingFields.join(", ")}`);
+      setPopupState("error");
+      setTimeout(() => setPopupState(null), 2000);
+      return;
+    }
+
+    if (isCompanyMember) {
+      setMessage("สมาชิกในองค์กรไม่สามารถยื่นสมัครได้ !");
+      setPopupState("error");
+      setTimeout(() => {
+        setPopupState(null);
+      }, 2000);
       return;
     }
     setIsModalOpen(false);
@@ -154,12 +198,12 @@ export default function JobDetail() {
             {selectedJob.urgency === "urgent" && (
               <span className="text-xs font-semibold text-orange-600 bg-orange-50 border border-orange-200 px-3 py-1 rounded-full uppercase tracking-wide flex items-center gap-1">
                 <Icon icon="mdi:fire" width="13" height="13" />
-                New Position
+                ตำแหน่งงานใหม่
               </span>
             )}
             {selectedJob.isActive === true ? (
               <span className="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full uppercase tracking-wide">
-                active
+                เปิดรับสมัคร
               </span>
             ) : (
               <div></div>
@@ -220,18 +264,21 @@ export default function JobDetail() {
                   className="text-gray-500"
                 />
               </button>
-              <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-100 transition">
-                {selectedJob.isBookmarked ? (
+              <button
+                onClick={toggle}
+                disabled={bookmarkLoading}
+                className="p-2 rounded-full border border-gray-200 hover:bg-gray-100 transition disabled:opacity-50"
+              >
+                {isBookmarked ? (
                   <Icon
-                    icon="mdi:bookmark-outline"
+                    icon="mdi:bookmark"
+                    color="#004AC6"
                     width="20"
                     height="20"
-                    className="text-gray-500"
                   />
                 ) : (
                   <Icon
-                    color="004AC6"
-                    icon="mdi:bookmark"
+                    icon="mdi:bookmark-outline"
                     width="20"
                     height="20"
                     className="text-gray-500"
@@ -277,7 +324,9 @@ export default function JobDetail() {
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-blue-600 rounded-full" />
-                <h2 className="text-lg font-bold text-gray-900">The Role</h2>
+                <h2 className="text-lg font-bold text-gray-900">
+                  รายละเอียดงาน
+                </h2>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                 {selectedJob.description}
@@ -285,7 +334,7 @@ export default function JobDetail() {
               {selectedJob.responsibilities && (
                 <div className="mt-4">
                   <h3 className="font-semibold text-gray-800 mb-2">
-                    Responsibilities
+                    หน้าที่และความรับผิดชอบ
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                     {selectedJob.responsibilities}
@@ -298,7 +347,7 @@ export default function JobDetail() {
               {/* Requirements */}
               <section className="bg-white rounded-2xl p-6 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">
-                  Requirements
+                  คุณสมบัติที่ต้องการ
                 </h2>
                 <ul className="flex flex-col gap-3">
                   {selectedJob.qualifications
@@ -351,7 +400,7 @@ export default function JobDetail() {
               {/* Benefits */}
               <section className="bg-blue-50 rounded-2xl p-6 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">
-                  Benefits
+                  สวัสดิการ
                 </h2>
                 <ul className="flex flex-col gap-3">
                   {selectedJob.benefits.map((benefit, i) => (
@@ -374,12 +423,12 @@ export default function JobDetail() {
             {/* Job Details */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h2 className="text-base font-bold text-gray-900 mb-4">
-                Job Details
+                รายละเอียดงาน
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                 {selectedJob.workStyle && (
                   <div>
-                    <p className="text-gray-400 text-xs mb-1">Work Style</p>
+                    <p className="text-gray-400 text-xs mb-1">รูปแบบการทำงาน</p>
                     <p className="font-medium text-gray-800">
                       {selectedJob.workStyle}
                     </p>
@@ -387,7 +436,7 @@ export default function JobDetail() {
                 )}
                 {selectedJob.workingDays && (
                   <div>
-                    <p className="text-gray-400 text-xs mb-1">Working Days</p>
+                    <p className="text-gray-400 text-xs mb-1">วันทำงาน</p>
                     <p className="font-medium text-gray-800">
                       {selectedJob.workingDays}
                     </p>
@@ -395,7 +444,9 @@ export default function JobDetail() {
                 )}
                 {selectedJob?.positions && selectedJob.positions > 0 && (
                   <div>
-                    <p className="text-gray-400 text-xs mb-1">Open Positions</p>
+                    <p className="text-gray-400 text-xs mb-1">
+                      จำนวนที่เปิดรับ
+                    </p>
                     <p className="font-medium text-gray-800">
                       {selectedJob.positions}
                     </p>
@@ -403,7 +454,7 @@ export default function JobDetail() {
                 )}
                 {formatDate(selectedJob.startDate) && (
                   <div>
-                    <p className="text-gray-400 text-xs mb-1">Start Date</p>
+                    <p className="text-gray-400 text-xs mb-1">วันที่เริ่มงาน</p>
                     <p className="font-medium text-gray-800">
                       {formatDate(selectedJob.startDate)}
                     </p>
@@ -411,14 +462,14 @@ export default function JobDetail() {
                 )}
                 {formatDate(selectedJob.closingDate) && (
                   <div>
-                    <p className="text-gray-400 text-xs mb-1">Closing Date</p>
+                    <p className="text-gray-400 text-xs mb-1">วันปิดรับสมัคร</p>
                     <p className="font-medium text-gray-800">
                       {formatDate(selectedJob.closingDate)}
                     </p>
                   </div>
                 )}
                 <div>
-                  <p className="text-gray-400 text-xs mb-1">Posted</p>
+                  <p className="text-gray-400 text-xs mb-1">วันที่ประกาศ</p>
                   <p className="font-medium text-gray-800">
                     {formatDate(selectedJob.createdAt)}
                   </p>
@@ -429,7 +480,7 @@ export default function JobDetail() {
             {selectedJob.skills && selectedJob.skills.length > 0 && (
               <section className="bg-white rounded-2xl p-6 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">
-                  Required Skills
+                  ทักษะที่ต้องการ
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {selectedJob.skills.map((skill, i) => (
@@ -548,14 +599,14 @@ export default function JobDetail() {
                       disabled
                       className="w-full bg-yellow-400/40 text-yellow-800 py-2.5 rounded-xl"
                     >
-                      รอการตอบรับ
+                      รอการพิจารณา
                     </button>
                   ) : appliedStatus === "ACCEPTED" ? (
                     <button
                       disabled
                       className="w-full bg-green-600/40 text-green-800 py-2.5 rounded-xl"
                     >
-                      ตอบรับแล้ว
+                      ได้รับการตอบรับ
                     </button>
                   ) : appliedStatus === "REJECTED" ? (
                     <button

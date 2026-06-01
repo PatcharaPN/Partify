@@ -18,7 +18,8 @@ import NotificationList from "@/app/components/ui/NotificationList";
 import SkeletonCandidateDashboard from "./SkeletonActivity";
 import { useCompany } from "@/app/hooks/useCompany";
 import { useInvite } from "@/app/components/ui/useInvite";
-
+import { useBookmarks } from "@/app/hooks/useBookmark";
+import { useSearchParams } from "next/navigation";
 const STATUS_LABEL: Record<ApplicationStatus, string> = {
   PENDING: "รอดำเนินการ",
   ACCEPTED: "ผ่านการคัดเลือก",
@@ -47,13 +48,16 @@ function getMissingFields(profile: Profile): string[] {
 export default function CandidateDashboard() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { handleAcceptInvite, handleDeclineInvite } = useInvite();
+  const { bookmarks, loading: bookmarkLoading } = useBookmarks();
   const { currentUser, isAuthenticated, isLoading } = useCurrentUser();
   const { candidateApplication, loading: appLoading } = useAppSelector(
     (s) => s.ApplicationReducer,
   );
+  const tab = (searchParams.get("tab") as Tab) ?? "notification";
 
-  const [activeTab, setActiveTab] = useState<Tab>("notification");
+  const [activeTab, setActiveTab] = useState<Tab>(tab);
 
   const { notification } = useNotification(true);
   useEffect(() => {
@@ -70,7 +74,7 @@ export default function CandidateDashboard() {
   const interviewApps = candidateApplication.filter(
     (a) => a.status === "INTERVIEW",
   );
-  const savedJobs = candidateApplication.filter((a) => a.job?.isBookmarked);
+  const savedJobs = bookmarks;
   const pendingCount = candidateApplication.filter(
     (a) => a.status === "PENDING",
   ).length;
@@ -113,8 +117,8 @@ export default function CandidateDashboard() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-[calc(100vh-70px)] p-6 flex flex-col gap-4">
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4">
+    <div className="bg-gray-50 min-h-[calc(100vh-70px)] p-6 flex flex-col gap-4 ">
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 ">
         <div className="max-w-3xl mx-auto px-4 py-10 space-y-5">
           {interviewApps.length > 0 && (
             <div className="bg-white border border-blue-200 rounded-2xl px-5 py-4">
@@ -124,7 +128,7 @@ export default function CandidateDashboard() {
                   นัดสัมภาษณ์ที่รอดำเนินการ ({interviewApps.length})
                 </p>
               </div>
-              <ul className="space-y-2">
+              <ul className="space-y-2 ">
                 {interviewApps.map((app) => (
                   <li key={app.id}>
                     <Link
@@ -211,8 +215,8 @@ export default function CandidateDashboard() {
             </div>
           )}
 
-          <div className="w-full flex justify-center items-center">
-            <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-full ">
+          <div className="w-full flex justify-center items-center min-w-lg">
+            <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit justify-between">
               <TabButton
                 active={activeTab === "notification"}
                 onClick={() => setActiveTab("notification")}
@@ -231,16 +235,15 @@ export default function CandidateDashboard() {
                   countColor="bg-blue-100 text-blue-600"
                 />
               )}
-              {currentUser?.role !== "EMPLOYER" && (
-                <TabButton
-                  active={activeTab === "saved"}
-                  onClick={() => setActiveTab("saved")}
-                  icon="material-symbols:bookmark-outline"
-                  label="งานที่บันทึกไว้"
-                  count={savedJobs.length}
-                  countColor="bg-orange-100 text-orange-600"
-                />
-              )}
+
+              <TabButton
+                active={activeTab === "saved"}
+                onClick={() => setActiveTab("saved")}
+                icon="material-symbols:bookmark-outline"
+                label="งานที่บันทึกไว้"
+                count={bookmarks.length}
+                countColor="bg-orange-100 text-orange-600"
+              />
             </div>
           </div>
 
@@ -292,7 +295,7 @@ export default function CandidateDashboard() {
 
           {activeTab === "saved" && (
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden max-h-[60vh] overflow-y-auto">
-              {savedJobs.length === 0 ? (
+              {bookmarks.length === 0 ? (
                 <EmptyState
                   icon="material-symbols:bookmark-outline"
                   title="ยังไม่มีงานที่บันทึกไว้"
@@ -301,8 +304,8 @@ export default function CandidateDashboard() {
                   cta="ค้นหางาน"
                 />
               ) : (
-                <ul className="divide-y divide-gray-50">
-                  {savedJobs.map((app) => (
+                <ul className="divide-y divide-gray-50 ">
+                  {bookmarks.map((app) => (
                     <li key={app.id}>
                       <Link
                         href={`/jobs/${app.job?.id}`}
@@ -332,7 +335,7 @@ export default function CandidateDashboard() {
           )}
 
           {activeTab === "notification" && (
-            <div className="bg-white rounded-2xl border border-gray-100 max-h-[66vh] overflow-y-auto w-full max-w-lg">
+            <div className="bg-white rounded-2xl border border-gray-100 max-h-[66vh] overflow-y-auto w-full ">
               <div className="p-2">
                 {Object.entries(groupedNotification(notification)).map(
                   ([label, notis]) => (

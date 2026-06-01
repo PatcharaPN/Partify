@@ -3,7 +3,9 @@ import ApplicantDetailModal from "@/app/components/ui/ApplicantDetailModal";
 import ApplicantList from "@/app/components/ui/ApplicantList";
 import ApplicantRow from "@/app/components/ui/ApplicantRow";
 import AvatarStack from "@/app/components/ui/AvatarStack";
-import FilterContainer from "@/app/components/ui/FilterContainer";
+import FilterContainer, {
+  ApplicantFilterValues,
+} from "@/app/components/ui/FilterContainer";
 import JobRow from "@/app/components/ui/JobRow";
 import PopupContainer from "@/app/components/ui/PopupContainer";
 import SearchInput from "@/app/components/ui/Searchbar";
@@ -20,7 +22,10 @@ import SkeletonApplicantPage from "./SkeletonApplicantPage";
 export default function ApplicantPage() {
   const filterRef = useRef<HTMLDivElement>(null);
   const [showFilter, setShowFilter] = useState(false);
-
+  const [filters, setFilters] = useState<ApplicantFilterValues>({
+    sortBy: "newest",
+    status: "",
+  });
   useEffect(() => {
     const handleClicOutside = (e: MouseEvent) => {
       if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
@@ -73,18 +78,34 @@ export default function ApplicantPage() {
     }
   };
   const filteredApplicants = useMemo(() => {
-    const keyword = search.toLowerCase();
-    return ownerApplications.filter((app) => {
-      const firstName = app.user?.profile?.firstName?.toLowerCase() ?? "";
-      const lastName = app.user?.profile?.lastName?.toLowerCase() ?? "";
-      const jobTitle = app.job?.title?.toLowerCase() ?? "";
-      return (
-        firstName.includes(keyword) ||
-        lastName.includes(keyword) ||
-        jobTitle.includes(keyword)
-      );
+    let result = [...ownerApplications];
+
+    if (filters.status) {
+      result = result.filter((a) => a.status === filters.status);
+    }
+
+    result.sort((a, b) => {
+      const diff =
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return filters.sortBy === "newest" ? -diff : diff;
     });
-  }, [ownerApplications, search]);
+
+    if (search.trim()) {
+      const keyword = search.toLowerCase();
+      result = result.filter((app) => {
+        const firstName = app.user?.profile?.firstName?.toLowerCase() ?? "";
+        const lastName = app.user?.profile?.lastName?.toLowerCase() ?? "";
+        const jobTitle = app.job?.title?.toLowerCase() ?? "";
+        return (
+          firstName.includes(keyword) ||
+          lastName.includes(keyword) ||
+          jobTitle.includes(keyword)
+        );
+      });
+    }
+
+    return result;
+  }, [ownerApplications, filters, search]);
 
   if (loading) {
     return <SkeletonApplicantPage />;
@@ -103,7 +124,15 @@ export default function ApplicantPage() {
               <Icon icon="mdi:tune-vertical" className="w-4 h-4" />
             </button>{" "}
             <AnimatePresence>
-              {showFilter && <FilterContainer />}
+              {showFilter && (
+                <FilterContainer
+                  onClose={() => setShowFilter(false)}
+                  onApply={(f) => {
+                    setFilters(f);
+                    setShowFilter(false);
+                  }}
+                />
+              )}
             </AnimatePresence>
           </div>
         </div>

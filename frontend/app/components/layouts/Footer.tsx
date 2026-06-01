@@ -5,17 +5,15 @@ const footerSections = [
     title: "บริษัท",
     links: [
       { label: "เกี่ยวกับเรา", href: "/about" },
-      { label: "ร่วมงานกับเรา", href: "/careers" },
-      { label: "บทความ", href: "/blogs" },
       { label: "ติดต่อเรา", href: "/contact" },
+      // ตัด careers, blogs ออก
     ],
   },
   {
     title: "แหล่งข้อมูล",
     links: [
       { label: "ค้นหางาน", href: "/jobs" },
-      { label: "เคล็ดลับการทำงาน", href: "/tips" },
-      { label: "คู่มือการจ้างงาน", href: "/hiring-guide" },
+      // ตัด tips, hiring-guide ออก
     ],
   },
   {
@@ -23,7 +21,7 @@ const footerSections = [
     links: [
       { label: "นโยบายความเป็นส่วนตัว", href: "/privacy" },
       { label: "ข้อกำหนดการใช้งาน", href: "/terms" },
-      { label: "นโยบายคุกกี้", href: "/cookies" },
+      // ตัด cookies ออก
     ],
   },
 ];

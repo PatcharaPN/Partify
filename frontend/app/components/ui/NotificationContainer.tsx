@@ -57,12 +57,15 @@ const NotificationContainer = ({
         ))}
       </div>
 
-      <Link
-        href={"/"}
-        className="text-center text-sm py-2 border-t border-black/10 hover:bg-gray-50 cursor-pointer"
-      >
-        ดูทั้งหมด
-      </Link>
+      <div className="w-full flex justify-center items-center px-5  border-t border-black/10">
+        {" "}
+        <Link
+          href={`/profile/activity?tab=notification`}
+          className="text-primary text-sm py-2 hover:bg-gray-50 cursor-pointer"
+        >
+          ดูทั้งหมด
+        </Link>
+      </div>
     </motion.div>
   );
 };

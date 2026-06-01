@@ -107,7 +107,7 @@ export default function EmployerDashboard() {
                 )}
                 <div className="flex p-2 justify-end w-full border-t border-gray-100">
                   <Link
-                    href={"/dashboard/employer/job"}
+                    href={"/dashboard/employer/jobs"}
                     className="text-primary"
                   >
                     ดูทั้งหมด
