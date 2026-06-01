@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { Profile, User } from "@/app/types/job.type";
+import { Profile, Resume, User } from "@/app/types/job.type";
 
 interface AuthState {
   user: User | null;
@@ -89,6 +89,12 @@ const authSlice = createSlice({
       state.isLoading = false;
       localStorage.removeItem("access_token");
     },
+    updateResume(state, action: PayloadAction<Resume>) {
+      if (state.user) state.user.resume = [action.payload];
+    },
+    removeResume(state) {
+      if (state.user) state.user.resume = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -138,5 +144,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, logout, removeResume, updateResume } =
+  authSlice.actions;
 export default authSlice.reducer;

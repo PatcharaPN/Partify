@@ -76,6 +76,17 @@ const bookmarksSlice = createSlice({
     clearError(state) {
       state.error = null;
     },
+    addBookmarkOptimistic(state, action: PayloadAction<string>) {
+      state.items.push({
+        id: "temp",
+        userId: "",
+        jobId: action.payload,
+        job: { id: action.payload },
+      });
+    },
+    removeBookmarkOptimistic(state, action: PayloadAction<string>) {
+      state.items = state.items.filter((s) => s.jobId !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -131,8 +142,8 @@ const bookmarksSlice = createSlice({
   },
 });
 
-export const { clearError } = bookmarksSlice.actions;
-
+export const { clearError, addBookmarkOptimistic, removeBookmarkOptimistic } =
+  bookmarksSlice.actions;
 export const selectBookmarks = (state: { bookmarks: BookmarksState }) =>
   state.bookmarks.items;
 export const selectBookmarksLoading = (state: { bookmarks: BookmarksState }) =>

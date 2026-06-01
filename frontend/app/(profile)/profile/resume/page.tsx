@@ -2,11 +2,14 @@
 
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 import { axiosInstance } from "@/app/lib/axiosInstance";
+import { useAppDispatch } from "@/app/lib/hooks";
+import { updateResume } from "@/app/store/slices/authSlice";
 import { Resume } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
 const ResumeSection = () => {
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const { currentUser } = useCurrentUser();
 
@@ -26,6 +29,7 @@ const ResumeSection = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setResume(res.data);
+      dispatch(updateResume(res.data));
     } catch (error) {
       console.error(error);
     } finally {

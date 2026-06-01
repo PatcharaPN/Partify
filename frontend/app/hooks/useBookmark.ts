@@ -2,9 +2,11 @@ import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addBookmark,
+  addBookmarkOptimistic,
   clearError,
   fetchBookmarks,
   removeBookmark,
+  removeBookmarkOptimistic,
   selectBookmarks,
   selectBookmarksError,
   selectBookmarksLoading,
@@ -36,19 +38,28 @@ export const useBookmarks = () => {
 export const useBookmarkToggle = (jobId: string) => {
   const dispatch = useDispatch<AppDispatch>();
   const isBookmarked = useSelector(selectIsBookmarked(jobId));
-  const [loading, setLoading] = useState(false); // ← local loading แทน
+  const [loading, setLoading] = useState(false);
   const error = useSelector(selectBookmarksError);
 
   const toggle = useCallback(async () => {
-    setLoading(true);
+    const prev = isBookmarked;
+
+    dispatch(
+      isBookmarked
+        ? removeBookmarkOptimistic(jobId)
+        : addBookmarkOptimistic(jobId),
+    );
+
     try {
-      if (isBookmarked) {
+      if (prev) {
         await dispatch(removeBookmark(jobId)).unwrap();
       } else {
         await dispatch(addBookmark(jobId)).unwrap();
       }
-    } finally {
-      setLoading(false);
+    } catch {
+      dispatch(
+        prev ? addBookmarkOptimistic(jobId) : removeBookmarkOptimistic(jobId),
+      );
     }
   }, [dispatch, isBookmarked, jobId]);
 

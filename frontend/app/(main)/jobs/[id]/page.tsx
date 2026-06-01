@@ -135,10 +135,6 @@ export default function JobDetail() {
     if (!currentUser?.profile?.avatarUrl) missingFields.push("รูปโปรไฟล์");
     if (!currentUser?.profile?.summary) missingFields.push("Bio");
     if (!currentUser?.profile?.skills?.length) missingFields.push("ทักษะ");
-    if (!currentUser?.profile?.preferredJobTypes?.length)
-      missingFields.push("ประเภทงานที่สนใจ");
-    if (!currentUser?.profile?.availability?.length)
-      missingFields.push("ความพร้อมทำงาน");
 
     if (missingFields.length > 0) {
       setMessage(`โปรไฟล์ยังไม่ครบ: ${missingFields.join(", ")}`);

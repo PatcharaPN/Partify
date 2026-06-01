@@ -24,7 +24,7 @@ export default function TopBar() {
   const dispatch = useAppDispatch();
 
   const isEmployerOrMember =
-    user?.role === "EMPLOYER" || Boolean(user?.companyMembers);
+    user?.role === "EMPLOYER" || (user?.companyMembers.length ?? 0) > 0;
 
   const [openMenu, setOpenMenu] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -74,6 +74,17 @@ export default function TopBar() {
               แดชบอร์ด
             </Link>
           ) : null}
+
+          <Link
+            className={`${
+              isActive("/about")
+                ? "decoration-primary underline underline-offset-2 text-primary"
+                : ""
+            } decoration-2 font-headline px-4 py-2`}
+            href="/about"
+          >
+            เกี่ยวกับเรา
+          </Link>
         </nav>
         <div className="flex items-center justify-end gap-5">
           {" "}
