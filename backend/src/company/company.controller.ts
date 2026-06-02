@@ -6,11 +6,14 @@ import {
   UseGuards,
   Req,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { InviteMemberDto } from './dto/invite-member.dto';
+import { CompanyRole } from '@prisma/client';
+import { Request } from 'express';
 
 @Controller('company')
 export class CompanyController {
@@ -38,6 +41,15 @@ export class CompanyController {
   @Get()
   getCompany(@Req() req) {
     return this.companyService.getCompany(req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('member/role')
+  async changeMemberRole(
+    @Req() req,
+    @Body() dto: { email: string; role: CompanyRole },
+  ) {
+    return this.companyService.changeUserRole(req.user.sub, dto);
   }
 
   @UseGuards(AuthGuard)

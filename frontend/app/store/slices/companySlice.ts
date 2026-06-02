@@ -5,7 +5,7 @@ import {
   CompanyMember,
   CompanyRole,
 } from "@/app/types/job.type";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CreateCompanyPayload {
   companyName: string;
@@ -43,7 +43,17 @@ export const getCompany = createAsyncThunk(
     }
   },
 );
-
+export const changeMemberRole = createAsyncThunk(
+  "company/changeMemberRole",
+  async (dto: { email: string; role: CompanyRole }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.patch("/company/member/role", dto);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message ?? "เกิดข้อผิดพลาด");
+    }
+  },
+);
 export const upsertCompany = createAsyncThunk(
   "company/create",
   async (formData: CreateCompanyPayload, { rejectWithValue }) => {
@@ -124,6 +134,17 @@ const companySlice = createSlice({
       state.company = null;
       state.error = null;
       state.isLoading = false;
+    },
+    updateMemberState: (
+      state,
+      action: PayloadAction<{ email: string; role: CompanyRole }>,
+    ) => {
+      const member = state.members.find(
+        (m) => m.user?.email === action.payload.email,
+      );
+      if (member) {
+        member.role = action.payload.role;
+      }
     },
   },
 
@@ -206,9 +227,20 @@ const companySlice = createSlice({
       .addCase(declineInvite.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(changeMemberRole.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(changeMemberRole.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(changeMemberRole.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { resetCompanyState } = companySlice.actions;
+export const { resetCompanyState, updateMemberState } = companySlice.actions;
 export default companySlice.reducer;

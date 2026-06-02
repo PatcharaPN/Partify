@@ -1,22 +1,24 @@
 "use client";
-import { useState } from "react";
+import { CompanyMember, CompanyRole } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CompanyRole } from "@/app/types/job.type";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import Button from "./Button";
 import { ROLES } from "@/app/constants/jobLabels";
 
-type InviteMemberModalProps = {
-  onClose: () => void;
+type ChangeRoleModalProps = {
+  member: CompanyMember;
   onConfirm: (email: string, role: CompanyRole) => void;
+  onClose: () => void;
   isLoading?: boolean;
-  error?: string | null;
 };
 
-const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState<CompanyRole>("HR");
-
+const ChangeRoleModal = ({
+  member,
+  onClose,
+  onConfirm,
+}: ChangeRoleModalProps) => {
+  const [selectedRole, setSelectedRole] = useState<CompanyRole>(member.role);
   return (
     <AnimatePresence>
       <motion.div
@@ -24,7 +26,6 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-        onClick={onClose}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -34,11 +35,10 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
           className="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 flex flex-col gap-5"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Icon icon="mdi:invite" className="text-blue-600" width={20} />
-              <h2 className="text-base font-bold text-gray-900">เชิญสมาชิก</h2>
+              <Icon icon="mdi:edit" className="text-blue-600" width={20} />
+              <h2 className="text-base font-bold text-gray-900">จัดการสถานะ</h2>
             </div>
             <button
               onClick={onClose}
@@ -51,21 +51,23 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
           {/* Email */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-gray-500">
-              อีเมล <span className="text-red-400">*</span>
+              ผู้ใช้ <span className="text-red-400">*</span>
             </label>
-            <div className="relative">
-              <Icon
-                icon="mdi:email-outline"
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                width={15}
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@email.com"
-                className="w-full pl-9 pr-4 py-2 text-sm text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
-              />
+            <div className="flex items-center gap-3 min-w-0">
+              {member.user?.profile?.avatarUrl ? (
+                <img
+                  src={member.user.profile.avatarUrl}
+                  className="w-9 h-9 rounded-full object-cover shrink-0"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-gray-500 text-sm font-semibold">
+                  {member.user?.profile?.firstName?.[0] ?? "?"}
+                </div>
+              )}
+              <p className="text-sm font-medium text-gray-800 truncate">
+                {member.user?.profile?.firstName}{" "}
+                {member.user?.profile?.lastName}
+              </p>
             </div>
           </div>
 
@@ -79,8 +81,8 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
                 width={15}
               />
               <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as CompanyRole)}
+                onChange={(e) => setSelectedRole(e.target.value as CompanyRole)}
+                value={selectedRole}
                 className="pl-9 w-full py-2 text-sm text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition bg-white appearance-none"
               >
                 {ROLES.map((r) => (
@@ -97,23 +99,21 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="grid grid-cols-2 gap-3 pt-1">
             <Button
-              variant="outlined"
               onClick={onClose}
+              variant="outlined"
               className="py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition"
             >
               ยกเลิก
             </Button>
-            <Button
-              variant="primary"
-              onClick={() => onConfirm(email, role)}
-              disabled={!email.trim()}
-              className="py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            <button
+              onClick={() => {
+                onConfirm(member.user?.email as string, selectedRole);
+              }}
             >
-              ส่งคำเชิญ
-            </Button>
+              เปลี่ยนสถานะ
+            </button>
           </div>
         </motion.div>
       </motion.div>
@@ -121,4 +121,4 @@ const InviteMemberModal = ({ onClose, onConfirm }: InviteMemberModalProps) => {
   );
 };
 
-export default InviteMemberModal;
+export default ChangeRoleModal;

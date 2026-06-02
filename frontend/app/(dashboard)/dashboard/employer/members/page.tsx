@@ -5,13 +5,17 @@ import MemberFilterContainer, {
 } from "@/app/components/ui/MemberFilterContainer";
 import { Icon } from "@iconify/react";
 import { AnimatePresence } from "framer-motion";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { formatDate } from "@/app/lib/formatDate";
 import { CompanyRole } from "@/app/types/job.type";
 import { useCompany } from "@/app/hooks/useCompany";
 import InviteMemberModal from "@/app/components/ui/InviteMemberModal";
 import PopupContainer from "@/app/components/ui/PopupContainer";
 import { usePopup } from "@/app/hooks/usePopup";
+import UserManagementPopover from "@/app/components/ui/UserManagementPopover";
+import { p } from "framer-motion/client";
+import ChangeRoleModal from "@/app/components/ui/ChangeRoleModal";
+import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 
 const ROLE_CONFIG: Record<CompanyRole, { label: string; className: string }> = {
   OWNER: { label: "นายจ้าง", className: "bg-purple-50 text-purple-600" },
@@ -41,6 +45,8 @@ const ROLE_PERMISSIONS: Record<CompanyRole, string[]> = {
 };
 
 const CompanyMember = () => {
+  const { currentUser } = useCurrentUser();
+
   const { popupState, message, showLoading, showSuccess, showError } =
     usePopup();
   const [showFilter, setShowFilter] = useState(false);
@@ -48,10 +54,23 @@ const CompanyMember = () => {
     sortBy: "newest",
     role: "",
   });
+  // เปลี่ยน state
+  const [selectedMember, setSelectedMember] = useState<
+    (typeof members)[0] | null
+  >(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [inviteModal, setInviteModal] = useState(false);
-  const { members, handleInviteMember, pendingInvites } = useCompany();
+  const {
+    members,
+    handleInviteMember,
+    pendingInvites,
+    handleChangeMemberRole,
+  } = useCompany();
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
+  const currentMember = members?.find(
+    (c) => c.user?.email === currentUser?.email,
+  );
   const handleInvite = async (email: string, role: CompanyRole) => {
     setInviteLoading(true);
     setInviteError(null);
@@ -86,8 +105,20 @@ const CompanyMember = () => {
     return result;
   }, [filters, members]);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (!target.closest("[data-popover]")) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
+    <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased">
       <main className="flex-1 overflow-auto">
         <div className="px-8 py-6 space-y-6">
           <div className="bg-white rounded-2xl border border-gray-100">
@@ -168,13 +199,11 @@ const CompanyMember = () => {
                         {member.user?.profile?.lastName}
                       </p>
                     </div>
-
                     <div className="flex items-center">
                       <p className="text-xs text-gray-500 truncate">
                         {member.user?.email}
                       </p>
                     </div>
-
                     <div className="flex items-center">
                       <span
                         className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${role.className}`}
@@ -182,7 +211,6 @@ const CompanyMember = () => {
                         {role.label}
                       </span>
                     </div>
-
                     <div className="flex items-center gap-1 flex-wrap">
                       {permissions.map((p) => (
                         <span
@@ -193,18 +221,51 @@ const CompanyMember = () => {
                         </span>
                       ))}
                     </div>
-
                     <div className="flex items-center">
                       <span className="text-xs text-gray-400">
                         {formatDate(member.createdAt)}
                       </span>
                     </div>
-
-                    <div className="flex items-center justify-center">
-                      <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                    <div
+                      data-popover
+                      className="relative flex items-center justify-center"
+                    >
+                      <button
+                        disabled={
+                          !currentMember ||
+                          ROLE_ORDER[currentMember.role] >=
+                            ROLE_ORDER[member.role] ||
+                          currentUser?.email === member.user?.email
+                        }
+                        onClick={() =>
+                          setOpenMenuId(
+                            openMenuId === member.id ? null : member.id,
+                          )
+                        }
+                        className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
                         <Icon icon="mdi:dots-horizontal" width={16} />
                       </button>
-                    </div>
+                      {openMenuId === member.id && (
+                        <UserManagementPopover
+                          items={[
+                            {
+                              label: "เปลี่ยนบทบาท",
+                              onClick: () => {
+                                setSelectedMember(member);
+                              },
+                              icon: "material-symbols:edit-outline",
+                            },
+                            {
+                              label: "ลบสมาชิก",
+                              onClick: () => {},
+                              danger: true,
+                              icon: "material-symbols:delete-outline-rounded",
+                            },
+                          ]}
+                        />
+                      )}
+                    </div>{" "}
                   </div>
                 );
               })}
@@ -248,7 +309,7 @@ const CompanyMember = () => {
                 </div>
 
                 {/* การจัดการ */}
-                <div className="flex items-center justify-center">
+                <div className="relative flex items-center justify-center">
                   <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors">
                     <Icon icon="mdi:dots-horizontal" width={16} />
                   </button>
@@ -263,6 +324,18 @@ const CompanyMember = () => {
             onConfirm={handleInvite}
             isLoading={inviteLoading}
             error={inviteError}
+          />
+        )}
+        {selectedMember && (
+          <ChangeRoleModal
+            member={selectedMember}
+            onClose={() => {
+              setSelectedMember(null);
+            }}
+            onConfirm={async (email, role) => {
+              await handleChangeMemberRole(email, role);
+              setSelectedMember(null);
+            }}
           />
         )}
         <PopupContainer message={message} state={popupState} />

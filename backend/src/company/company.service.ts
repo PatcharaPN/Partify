@@ -177,6 +177,43 @@ export class CompanyService {
     });
     return { message: 'Invite declined' };
   }
+
+  async changeUserRole(
+    userId: string,
+    dto: { email: string; role: CompanyRole },
+  ) {
+    const canChange = await this.prisma.companyMember.findFirst({
+      where: {
+        userId: userId,
+        role: {
+          in: ['OWNER', 'ADMIN'],
+        },
+      },
+    });
+    if (!canChange) {
+      throw new ForbiddenException('access denied');
+    }
+    const targetMember = await this.prisma.companyMember.findFirst({
+      where: {
+        companyId: canChange.companyId,
+        user: {
+          email: dto.email,
+        },
+      },
+    });
+    if (!targetMember) {
+      throw new NotFoundException('ไม่พบสมาชิกในบริษัท');
+    }
+    const updated = this.prisma.companyMember.update({
+      where: {
+        id: targetMember.id,
+      },
+      data: {
+        role: dto.role,
+      },
+    });
+    return updated;
+  }
   async getCompany(userId: string) {
     const company = await this.prisma.company.findFirst({
       where: {

@@ -1,4 +1,4 @@
-import { Company } from "../types/job.type";
+import { Company, CompanyRole } from "../types/job.type";
 
 export const JOB_TYPE_LABELS: Record<string, { label: string; color: string }> =
   {
@@ -261,4 +261,11 @@ export const PROVINCES_DISTRICTS: Record<string, string[]> = {
     "พุนพิน",
   ],
 };
-const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+export const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+export const ROLES: { value: CompanyRole; label: string }[] = [
+  { value: "ADMIN", label: "แอดมิน" },
+  { value: "HR", label: "HR" },
+  { value: "RECRUITER", label: "รีครูตเตอร์" },
+  { value: "VIEWER", label: "ผู้ชม" },
+];

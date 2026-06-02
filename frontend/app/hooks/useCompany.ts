@@ -2,9 +2,11 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import {
+  changeMemberRole,
   getAllMember,
   getCompany,
   inviteMember,
+  updateMemberState,
 } from "../store/slices/companySlice";
 import { CompanyRole } from "../types/job.type";
 
@@ -19,6 +21,14 @@ export const useCompany = () => {
     dispatch(getAllMember());
   }, [dispatch]);
 
+  const handleChangeMemberRole = async (email: string, role: CompanyRole) => {
+    dispatch(updateMemberState({ email, role }));
+    try {
+      await dispatch(changeMemberRole({ email, role })).unwrap();
+    } catch (err) {
+      dispatch(getAllMember());
+    }
+  };
   const handleInviteMember = async (email: string, role: CompanyRole) => {
     await dispatch(inviteMember({ email, role })).unwrap();
     dispatch(getAllMember());
@@ -31,5 +41,6 @@ export const useCompany = () => {
     error,
     handleInviteMember,
     pendingInvites,
+    handleChangeMemberRole,
   };
 };
