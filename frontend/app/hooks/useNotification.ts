@@ -10,10 +10,12 @@ import {
 
 export const useNotification = (enabled: boolean) => {
   const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.AuthReducer);
   const { notification, isLoading, error } = useAppSelector(
     (state) => state.NotificationReducer,
   );
   useEffect(() => {
+    if (!isAuthenticated) return;
     dispatch(fetchNotifications());
   }, [dispatch]);
 

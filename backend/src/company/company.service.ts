@@ -214,6 +214,37 @@ export class CompanyService {
     });
     return updated;
   }
+
+  async removeMember(userId: string, email: string) {
+    const canChange = await this.prisma.companyMember.findFirst({
+      where: {
+        userId: userId,
+        role: {
+          in: ['OWNER', 'ADMIN'],
+        },
+      },
+    });
+    if (!canChange) {
+      throw new ForbiddenException('access denied');
+    }
+    const targetMember = await this.prisma.companyMember.findFirst({
+      where: {
+        companyId: canChange.companyId,
+        user: {
+          email: email,
+        },
+      },
+    });
+    if (!targetMember) {
+      throw new NotFoundException('ไม่พบสมาชิกในบริษัท');
+    }
+    const deleted = this.prisma.companyMember.delete({
+      where: {
+        id: targetMember.id,
+      },
+    });
+    return deleted;
+  }
   async getCompany(userId: string) {
     const company = await this.prisma.company.findFirst({
       where: {

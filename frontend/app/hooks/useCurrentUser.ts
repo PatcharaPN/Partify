@@ -9,8 +9,11 @@ export const useCurrentUser = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchCurrentUser()).unwrap();
-  }, [dispatch]);
+    if (token) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch, token]);
+
   const currentUser = user;
   return { currentUser, isAuthenticated, isLoading, token, error };
 };

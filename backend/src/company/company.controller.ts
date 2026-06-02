@@ -7,6 +7,7 @@ import {
   Req,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -50,6 +51,12 @@ export class CompanyController {
     @Body() dto: { email: string; role: CompanyRole },
   ) {
     return this.companyService.changeUserRole(req.user.sub, dto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('member/delete')
+  deleteMember(@Req() req, @Body('email') email: string) {
+    return this.companyService.removeMember(req.user.sub, email);
   }
 
   @UseGuards(AuthGuard)

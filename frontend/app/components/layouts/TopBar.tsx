@@ -156,14 +156,18 @@ export default function TopBar() {
                     </Link>
                     <div className="h-px bg-gray-100 my-1" />
                     <button
-                      onClick={() => {
-                        localStorage.removeItem("access_token");
+                      onClick={async () => {
+                        setOpenMenu(false);
+
                         try {
-                          dispatch(logout());
+                          await dispatch(logout());
                           router.replace("/login");
-                          router.refresh();
-                        } catch (error) {
-                          console.error(error);
+
+                          setTimeout(() => {
+                            window.location.href = "/login";
+                          }, 150);
+                        } catch (err) {
+                          console.error("Logout failed", err);
                         }
                       }}
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50"

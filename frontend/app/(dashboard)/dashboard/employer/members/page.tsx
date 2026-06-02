@@ -54,7 +54,7 @@ const CompanyMember = () => {
     sortBy: "newest",
     role: "",
   });
-  // เปลี่ยน state
+
   const [selectedMember, setSelectedMember] = useState<
     (typeof members)[0] | null
   >(null);
@@ -65,6 +65,7 @@ const CompanyMember = () => {
     handleInviteMember,
     pendingInvites,
     handleChangeMemberRole,
+    handleRemoveMember,
   } = useCompany();
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
@@ -258,7 +259,11 @@ const CompanyMember = () => {
                             },
                             {
                               label: "ลบสมาชิก",
-                              onClick: () => {},
+                              onClick: () => {
+                                handleRemoveMember(
+                                  member.user?.email as string,
+                                );
+                              },
                               danger: true,
                               icon: "material-symbols:delete-outline-rounded",
                             },

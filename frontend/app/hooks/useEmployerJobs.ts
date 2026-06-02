@@ -13,9 +13,6 @@ export const useEmployerJobs = () => {
   const { user } = useAppSelector((state: RootState) => state.AuthReducer);
 
   useEffect(() => {
-    dispatch(fetchCurrentUser()).unwrap();
-  }, [dispatch]);
-  useEffect(() => {
     if (user?.id) {
       dispatch(fetchOwnerRelatedJobs(user.id));
     }

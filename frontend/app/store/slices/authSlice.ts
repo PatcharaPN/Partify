@@ -69,6 +69,15 @@ export const login = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    localStorage.removeItem("access_token");
+
+    dispatch(authSlice.actions.clearState());
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -82,12 +91,12 @@ const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    logout: (state) => {
+    clearState: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
       state.isLoading = false;
-      localStorage.removeItem("access_token");
+      state.error = null;
     },
     updateResume(state, action: PayloadAction<Resume>) {
       if (state.user) state.user.resume = [action.payload];
@@ -140,10 +149,16 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = action.error.message ?? "Fetch user failed";
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.isLoading = false;
+        state.error = null;
       });
   },
 });
 
-export const { setUser, logout, removeResume, updateResume } =
-  authSlice.actions;
+export const { setUser, removeResume, updateResume } = authSlice.actions;
 export default authSlice.reducer;

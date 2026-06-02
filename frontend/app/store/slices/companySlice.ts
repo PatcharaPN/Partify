@@ -111,6 +111,24 @@ export const acceptInvite = createAsyncThunk(
   },
 );
 
+export const removeMember = createAsyncThunk(
+  "/member/remove",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.delete(`company/member/delete`, {
+        data: {
+          email,
+        },
+      });
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to remove member",
+      );
+    }
+  },
+);
+
 export const declineInvite = createAsyncThunk(
   "company/declineInvite",
   async (inviteId: string, { rejectWithValue }) => {
@@ -145,6 +163,11 @@ const companySlice = createSlice({
       if (member) {
         member.role = action.payload.role;
       }
+    },
+    removeMemberOptimistic: (state, action: PayloadAction<string>) => {
+      state.members = state.members.filter(
+        (m) => m.user?.email !== action.payload,
+      );
     },
   },
 
@@ -238,9 +261,21 @@ const companySlice = createSlice({
       .addCase(changeMemberRole.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(removeMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(removeMember.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(removeMember.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       });
   },
 });
 
-export const { resetCompanyState, updateMemberState } = companySlice.actions;
+export const { resetCompanyState, updateMemberState, removeMemberOptimistic } =
+  companySlice.actions;
 export default companySlice.reducer;

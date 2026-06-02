@@ -6,6 +6,8 @@ import {
   getAllMember,
   getCompany,
   inviteMember,
+  removeMember,
+  removeMemberOptimistic,
   updateMemberState,
 } from "../store/slices/companySlice";
 import { CompanyRole } from "../types/job.type";
@@ -29,6 +31,14 @@ export const useCompany = () => {
       dispatch(getAllMember());
     }
   };
+  const handleRemoveMember = async (email: string) => {
+    dispatch(removeMemberOptimistic(email));
+    try {
+      await dispatch(removeMember(email)).unwrap();
+    } catch (err) {
+      dispatch(getAllMember());
+    }
+  };
   const handleInviteMember = async (email: string, role: CompanyRole) => {
     await dispatch(inviteMember({ email, role })).unwrap();
     dispatch(getAllMember());
@@ -42,5 +52,6 @@ export const useCompany = () => {
     handleInviteMember,
     pendingInvites,
     handleChangeMemberRole,
+    handleRemoveMember,
   };
 };
