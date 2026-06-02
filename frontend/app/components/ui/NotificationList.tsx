@@ -20,6 +20,8 @@ const NotificationList = ({
   onAccept,
   onDecline,
 }: NotificationListProps) => {
+  console.log(notification);
+
   return (
     <Link
       key={notification.id}
@@ -65,7 +67,7 @@ const NotificationList = ({
               <span className="w-2 h-2 bg-blue-500 rounded-full" />
             )}
           </div>
-          {notification.inviteId && (
+          {notification.type === "PENDING" && notification.inviteId && (
             <div className="flex gap-2 mt-2">
               <button
                 onClick={(e) => {

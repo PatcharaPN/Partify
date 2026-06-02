@@ -74,7 +74,6 @@ function CandidateDashboardContent() {
   const interviewApps = candidateApplication.filter(
     (a) => a.status === "INTERVIEW",
   );
-  const savedJobs = bookmarks;
   const pendingCount = candidateApplication.filter(
     (a) => a.status === "PENDING",
   ).length;

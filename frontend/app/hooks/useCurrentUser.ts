@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import { fetchCurrentUser } from "../store/slices/authSlice";
+import { clearState, fetchCurrentUser } from "../store/slices/authSlice";
 
 export const useCurrentUser = () => {
   const dispatch = useAppDispatch();
@@ -9,11 +9,23 @@ export const useCurrentUser = () => {
   );
 
   useEffect(() => {
-    if (token) {
+    const localToken = localStorage.getItem("access_token");
+
+    if (!localToken && isAuthenticated) {
+      dispatch(clearState());
+      return;
+    }
+
+    if (localToken && !user && !isLoading) {
       dispatch(fetchCurrentUser());
     }
-  }, [dispatch, token]);
+  }, [dispatch, user?.id, isAuthenticated, isLoading]);
 
-  const currentUser = user;
-  return { currentUser, isAuthenticated, isLoading, token, error };
+  return {
+    currentUser: user,
+    isAuthenticated,
+    isLoading,
+    token,
+    error,
+  };
 };

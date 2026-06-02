@@ -160,5 +160,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, removeResume, updateResume } = authSlice.actions;
+export const { setUser, removeResume, clearState, updateResume } =
+  authSlice.actions;
 export default authSlice.reducer;

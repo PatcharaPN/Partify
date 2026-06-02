@@ -114,10 +114,25 @@ export class CompanyService {
     return invite;
   }
   async acceptInvite(email: string, userId: string, inviteId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        profile: true,
+      },
+    });
+
     const exist = await this.prisma.companyInvite.findFirst({
       where: {
         email: email,
         status: 'PENDING',
+      },
+    });
+    const owner = await this.prisma.companyMember.findFirst({
+      where: {
+        companyId: exist?.companyId,
+        role: 'OWNER',
       },
     });
     if (!exist) {
@@ -140,15 +155,34 @@ export class CompanyService {
           role: exist.role,
         },
       }),
+      this.prisma.notification.updateMany({
+        where: {
+          inviteId,
+          userId,
+        },
+        data: {
+          type: 'ACCEPTED',
+          isRead: true,
+        },
+      }),
+
       this.prisma.user.update({
         where: { id: userId },
         data: { role: 'EMPLOYER' },
       }),
     ]);
-    await this.prisma.notification.updateMany({
-      where: { inviteId, userId },
-      data: { isRead: true },
+    if (!owner) {
+      throw new NotFoundException('Company owner not found');
+    }
+    await this.prisma.notification.create({
+      data: {
+        userId: owner?.userId,
+        senderId: userId,
+        type: 'ACCEPTED',
+        message: `${user?.profile?.firstName} ได้ตอบรับคำเชิญเข้าร่วมทีมแล้ว`,
+      },
     });
+
     return { message: 'Accepted successfully' };
   }
 
