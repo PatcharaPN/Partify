@@ -110,6 +110,7 @@ export class CompanyService {
       targetUser.id,
       undefined,
       invite.id,
+      'TEAM',
     );
     return invite;
   }
@@ -161,14 +162,10 @@ export class CompanyService {
           userId,
         },
         data: {
-          type: 'ACCEPTED',
+          type: 'TEAM_INVITE_ACCEPTED',
+          category: 'TEAM',
           isRead: true,
         },
-      }),
-
-      this.prisma.user.update({
-        where: { id: userId },
-        data: { role: 'EMPLOYER' },
       }),
     ]);
     if (!owner) {
@@ -178,7 +175,7 @@ export class CompanyService {
       data: {
         userId: owner?.userId,
         senderId: userId,
-        type: 'ACCEPTED',
+        type: 'TEAM_INVITE_ACCEPTED',
         message: `${user?.profile?.firstName} ได้ตอบรับคำเชิญเข้าร่วมทีมแล้ว`,
       },
     });

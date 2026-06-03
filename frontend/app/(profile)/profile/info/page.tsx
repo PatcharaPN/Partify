@@ -109,7 +109,18 @@ const PersonalInfoPage = () => {
         <div className="h-px bg-gray-100" />
 
         <div className="flex flex-col gap-4">
-          {/* ชื่อ - นามสกุล */}
+          {/* ชื่อ - นามสกุล */}{" "}
+          <label className="text-xs font-semibold text-gray-500">
+            อีเมล <span className="text-red-400">*</span>
+          </label>{" "}
+          <input
+            type="text"
+            disabled
+            value={currentUser?.email as string}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="เช่น สมชาย"
+            className="w-full text-black/40 px-4 py-2 text-sm placeholder-gray-300 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+          />
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-gray-500">
@@ -136,7 +147,6 @@ const PersonalInfoPage = () => {
               />
             </div>
           </div>
-
           {/* เบอร์โทร - วันเกิด */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
@@ -163,7 +173,6 @@ const PersonalInfoPage = () => {
               />
             </div>
           </div>
-
           {/* เพศ - สัญชาติ */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">

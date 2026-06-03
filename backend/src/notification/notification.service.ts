@@ -1,6 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ApplicationStatus } from '@prisma/client';
+import {
+  ApplicationStatus,
+  NotificationCategory,
+  NotificationType,
+} from '@prisma/client';
 
 @Injectable()
 export class NotificationService {
@@ -11,6 +15,7 @@ export class NotificationService {
     userId: string,
     jobId?: string,
     inviteId?: string,
+    category?: NotificationCategory,
   ) {
     await this.validateReceiverAndThrowError(userId);
     return this.addNotification(
@@ -19,6 +24,7 @@ export class NotificationService {
       userId,
       jobId,
       inviteId,
+      category,
     );
   }
 
@@ -90,18 +96,20 @@ export class NotificationService {
   }
   private async addNotification(
     msgContext: string,
-    applicationType: ApplicationStatus,
+    notificationType: NotificationType,
     userId: string,
     jobId?: string,
     inviteId?: string,
+    category?: NotificationCategory,
   ) {
     const notification = await this.prisma.notification.create({
       data: {
         message: msgContext,
-        type: applicationType,
+        type: notificationType,
         userId: userId,
         jobId: jobId,
         inviteId,
+        category: category,
       },
     });
     return notification;

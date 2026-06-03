@@ -55,6 +55,8 @@ export class ApplicationService {
       'PENDING',
       application.job.company.createdBy,
       application.jobId,
+      undefined,
+      'RECRUITMENT',
     );
     return application;
   }
@@ -250,6 +252,8 @@ export class ApplicationService {
       'INTERVIEW',
       application.userId,
       application.jobId,
+      undefined,
+      'RECRUITMENT',
     );
     return updatedApplication;
   }
@@ -266,6 +270,8 @@ export class ApplicationService {
       'REJECTED',
       application.userId,
       application.jobId,
+      undefined,
+      'JOB',
     );
     return updatedApplication;
   }
@@ -295,6 +301,8 @@ export class ApplicationService {
       'ACCEPTED',
       application.userId,
       application.jobId,
+      undefined,
+      'JOB',
     );
     return { application: updatedApplication, employee: createdEmployee };
   }

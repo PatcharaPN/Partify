@@ -28,11 +28,21 @@ enum ApplicationStatus {
   INVITE
 }
 enum NotificationType {
-  PENDING
-  ACCEPTED
-  REJECTED
-  INTERVIEW
-  INVITE
+  TEAM_INVITE_RECEIVED
+  TEAM_INVITE_ACCEPTED
+  TEAM_INVITE_DECLINED
+
+  JOB_APPLICATION_RECEIVED
+  JOB_APPLICATION_ACCEPTED
+  JOB_APPLICATION_REJECTED
+
+  INTERVIEW_SCHEDULED
+
+  MEMBER_ADDED
+  MEMBER_REMOVED
+  MEMBER_ROLE_CHANGED
+
+  SYSTEM
 }
 model User {
   id          String   @id @default(uuid())
@@ -217,12 +227,20 @@ model Notification {
   message    String
   type       NotificationType
 
+  category  NotificationCategory?
   inviteId  String?
   invite    CompanyInvite? @relation(fields: [inviteId], references: [id])
   jobId String?
   job   Job? @relation(fields: [jobId], references: [id])
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+
+enum NotificationCategory {
+  TEAM
+  RECRUITMENT
+  JOB
+  SYSTEM
 }
 
 model Resume {

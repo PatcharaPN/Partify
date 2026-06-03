@@ -139,11 +139,13 @@ async function main() {
       role: Role.EMPLOYER,
       profile: {
         create: {
-          firstName: 'Ethan',
-          lastName: 'Walker',
+          firstName: 'Michael',
+          lastName: 'Anderson',
+          gender: 'MALE',
+          nationality: 'ไทย',
           phone: '081-234-5678',
           avatarUrl:
-            'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'https://images.unsplash.com/photo-1740252117013-4fb21771e7ca?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         },
       },
     },
@@ -156,14 +158,15 @@ async function main() {
       role: Role.CANDIDATE,
       profile: {
         create: {
-          firstName: 'สมชาย',
-          lastName: 'ใจดี',
+          firstName: 'Emily',
+          lastName: 'Carter',
           phone: '083-456-7890',
           summary: 'นักศึกษาปี 3 สาขาวิทยาการคอมพิวเตอร์',
           province: 'กรุงเทพมหานคร',
           district: 'บางรัก',
           skills: ['JavaScript', 'React', 'Node.js'],
-          avatarUrl: 'https://i.pravatar.cc/150?img=4',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1740252117012-bb53ad05e370?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         },
       },
     },
@@ -244,6 +247,21 @@ async function main() {
         salaryNegotiable: true,
         currency: 'THB',
         experienceLevel: 'Entry',
+        overviewPictureURL: [
+          'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        ],
+        benefits: [
+          'ประกันสังคม',
+          'ค่าล่วงเวลา OT',
+          'อาหารกลางวัน',
+          'ยูนิฟอร์มฟรี',
+          'โบนัสประจำปี',
+          'วันหยุดพักร้อน',
+          'ค่าเดินทาง',
+          'ประกันสุขภาพ',
+        ],
         positions: Math.floor(Math.random() * 3) + 1,
         workingHours: '4-8 ชั่วโมง/วัน',
         skills,

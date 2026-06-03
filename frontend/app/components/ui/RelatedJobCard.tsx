@@ -1,21 +1,18 @@
+import { useMatchScore } from "@/app/hooks/useMatchScore";
+import { useProfile } from "@/app/hooks/useProfile";
+import { Job } from "@/app/types/job.type";
 import Link from "next/link";
 import React from "react";
 
 type RelatedJobCardProps = {
-  job: {
-    id: string;
-    title: string;
-    overviewPictureURL?: string[];
-    company?: {
-      companyName?: string;
-    };
-    location?: string;
-  };
+  job: Job;
+
   match?: number;
   rate?: number;
 };
 
-const RelatedJobCard = ({ job, match = 90, rate = 5 }: RelatedJobCardProps) => {
+const RelatedJobCard = ({ job, rate = 5 }: RelatedJobCardProps) => {
+  const match = useMatchScore(job);
   return (
     <div className="bg-white w-70 rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
       <div className="h-24  relative">
