@@ -164,7 +164,8 @@ async function main() {
           summary: 'นักศึกษาปี 3 สาขาวิทยาการคอมพิวเตอร์',
           province: 'กรุงเทพมหานคร',
           district: 'บางรัก',
-          skills: ['JavaScript', 'React', 'Node.js'],
+          workingDays: 'จันทร์–ศุกร์',
+          skills: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'],
           avatarUrl:
             'https://images.unsplash.com/photo-1740252117012-bb53ad05e370?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         },
@@ -194,33 +195,68 @@ async function main() {
   const jobsData = [
     {
       title: 'Frontend Developer (Part-time)',
-      companyId: company1.id,
-      category: 'IT',
+      category: 'IT & เทคโนโลยี',
       salaryMin: 40,
       salaryMax: 60,
-      jobType: 'PARTTIME',
-      workStyle: 'Hybrid',
+      jobType: JobType.PARTTIME,
+      workStyle: 'Onsite',
       location: 'สีลม',
+      province: 'กรุงเทพมหานคร',
+      district: 'บางรัก',
+      workingDays: 'จันทร์–ศุกร์',
+      workingHours: '7-8 ชั่วโมง/วัน',
+      experienceLevel: 'JUNIOR',
+      experienceYears: 1,
+      positions: 2,
+      skills: [
+        'HTML',
+        'CSS',
+        'JavaScript',
+        'TypeScript',
+        'React',
+        'Tailwind CSS',
+      ],
     },
     {
       title: 'Backend Developer (Part-time)',
-      companyId: company1.id,
-      category: 'IT',
+      category: 'IT & เทคโนโลยี',
       salaryMin: 45,
       salaryMax: 65,
-      jobType: 'PARTTIME',
+      jobType: JobType.PARTTIME,
       workStyle: 'Remote',
       location: 'Remote',
+      province: 'กรุงเทพมหานคร',
+      district: 'จตุจักร',
+      workingDays: 'จันทร์–ศุกร์',
+      workingHours: '4-8 ชั่วโมง/วัน',
+      experienceLevel: 'JUNIOR',
+      experienceYears: 1,
+      positions: 1,
+      skills: ['NestJS', 'Node.js', 'PostgreSQL', 'Docker', 'REST API'],
     },
     {
       title: 'Fullstack Developer',
-      companyId: company1.id,
-      category: 'IT',
+      category: 'IT & เทคโนโลยี',
       salaryMin: 60,
       salaryMax: 90,
-      jobType: 'FULLTIME',
+      jobType: JobType.FULLTIME,
       workStyle: 'Remote',
       location: 'Remote',
+      province: 'กรุงเทพมหานคร',
+      district: 'จตุจักร',
+      workingDays: 'จันทร์–ศุกร์',
+      workingHours: '8 ชั่วโมง/วัน',
+      experienceLevel: 'MID',
+      experienceYears: 2,
+      positions: 2,
+      skills: [
+        'React',
+        'Next.js',
+        'Node.js',
+        'TypeScript',
+        'PostgreSQL',
+        'Docker',
+      ],
     },
   ];
 
@@ -235,39 +271,58 @@ async function main() {
   }
 
   for (const job of jobsData) {
-    const skills = getRandomSkills(job.title);
-    const { jobType, ...rest } = job;
     await prisma.job.create({
       data: {
-        ...rest,
+        companyId: company1.id,
+
+        title: job.title,
         description: `รับสมัครตำแหน่ง ${job.title}`,
-        responsibilities: 'ปฏิบัติงานตามที่บริษัทกำหนด',
-        qualifications: 'มีความรับผิดชอบ เรียนรู้เร็ว',
-        status: 'OPEN',
+        responsibilities:
+          'พัฒนาและดูแลระบบตามความต้องการของบริษัท ทำงานร่วมกับทีม Product และ Design',
+
+        qualifications:
+          'มีความรับผิดชอบ ทำงานเป็นทีมได้ และพร้อมเรียนรู้เทคโนโลยีใหม่',
+
+        category: job.category,
+
+        salaryMin: job.salaryMin,
+        salaryMax: job.salaryMax,
         salaryNegotiable: true,
         currency: 'THB',
-        experienceLevel: 'Entry',
-        overviewPictureURL: [
-          'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          'https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        ],
+
+        status: 'OPEN',
+        isActive: true,
+
+        jobType: job.jobType,
+        workStyle: job.workStyle,
+
+        experienceLevel: job.experienceLevel,
+        experienceYears: job.experienceYears,
+
+        positions: job.positions,
+
+        workingDays: job.workingDays,
+        workingHours: job.workingHours,
+
+        location: job.location,
+        province: job.province,
+        district: job.district,
+
+        skills: job.skills,
+
         benefits: [
           'ประกันสังคม',
-          'ค่าล่วงเวลา OT',
-          'อาหารกลางวัน',
-          'ยูนิฟอร์มฟรี',
+          'ประกันสุขภาพ',
           'โบนัสประจำปี',
           'วันหยุดพักร้อน',
           'ค่าเดินทาง',
-          'ประกันสุขภาพ',
         ],
-        positions: Math.floor(Math.random() * 3) + 1,
-        workingHours: '4-8 ชั่วโมง/วัน',
-        skills,
-        jobType: toJobType(jobType),
-        isActive: true,
-        province: 'กรุงเทพมหานคร',
+
+        overviewPictureURL: [
+          'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
+          'https://images.unsplash.com/photo-1542744173-8e7e53415bb0',
+          'https://images.unsplash.com/photo-1629904853716-f0bc54eea481',
+        ],
       },
     });
   }

@@ -106,7 +106,7 @@ export class CompanyService {
 
     await this.notificationService.pushNotification(
       `คุณได้รับคำเชิญเข้าร่วมทีม ${company.companyName}`,
-      'PENDING',
+      'TEAM_INVITE_RECEIVED',
       targetUser.id,
       undefined,
       invite.id,

@@ -11,7 +11,7 @@ export class NotificationService {
   constructor(private prisma: PrismaService) {}
   async pushNotification(
     msgContext: string,
-    applicationType: any,
+    notificationType: NotificationType,
     userId: string,
     jobId?: string,
     inviteId?: string,
@@ -20,7 +20,7 @@ export class NotificationService {
     await this.validateReceiverAndThrowError(userId);
     return this.addNotification(
       msgContext,
-      applicationType,
+      notificationType,
       userId,
       jobId,
       inviteId,
@@ -109,7 +109,7 @@ export class NotificationService {
         userId: userId,
         jobId: jobId,
         inviteId,
-        category: category,
+        category,
       },
     });
     return notification;

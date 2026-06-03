@@ -52,7 +52,7 @@ export class ApplicationService {
 
     await this.notificationService.pushNotification(
       `มีผู้สมัครใหม่สำหรับตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} กรุณาตรวจสอบรายละเอียด`,
-      'PENDING',
+      'JOB_APPLICATION_RECEIVED',
       application.job.company.createdBy,
       application.jobId,
       undefined,
@@ -249,7 +249,7 @@ export class ApplicationService {
     });
     await this.notificationService.pushNotification(
       `ยินดีด้วย! คุณผ่านการคัดเลือกเบื้องต้นตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} ทางบริษัทจะติดต่อกลับเพื่อนัดสัมภาษณ์เร็วๆ นี้`,
-      'INTERVIEW',
+      'INTERVIEW_SCHEDULED',
       application.userId,
       application.jobId,
       undefined,
@@ -267,7 +267,7 @@ export class ApplicationService {
     });
     await this.notificationService.pushNotification(
       `ขออภัย คุณไม่ผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName}`,
-      'REJECTED',
+      'JOB_APPLICATION_REJECTED',
       application.userId,
       application.jobId,
       undefined,
@@ -298,7 +298,7 @@ export class ApplicationService {
       ]);
     await this.notificationService.pushNotification(
       `คุณผ่านการคัดเลือกตำแหน่ง ${application.job.title} ที่ ${application.job.company.companyName} กรุณาตรวจสอบรายละเอียดเพิ่มเติม`,
-      'ACCEPTED',
+      'JOB_APPLICATION_ACCEPTED',
       application.userId,
       application.jobId,
       undefined,
