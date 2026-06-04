@@ -29,7 +29,11 @@ const NotificationList = ({
         onReadOne?.(notification.id);
         onClose;
       }}
-      href={`/jobs/${notification.job?.id}`}
+      href={
+        notification.companyId
+          ? `/company/${notification.companyId}`
+          : `/jobs/${notification.job?.id}`
+      }
     >
       <div
         className={`my-2 rounded-lg flex gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer ${

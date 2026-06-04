@@ -17,6 +17,18 @@ export class CompanyService {
     readonly prisma: PrismaService,
     private notificationService: NotificationService,
   ) {}
+
+  async getCompanyById(companyId: string) {
+    return await this.prisma.company.findUnique({
+      where: {
+        id: companyId,
+      },
+      include: {
+        jobs: true,
+      },
+    });
+  }
+
   async upsertCompany(userId: string, dto: CreateCompanyDto) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -111,6 +123,7 @@ export class CompanyService {
       undefined,
       invite.id,
       'TEAM',
+      company.id,
     );
     return invite;
   }

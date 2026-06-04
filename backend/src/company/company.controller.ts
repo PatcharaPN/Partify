@@ -25,6 +25,11 @@ export class CompanyController {
   create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
     return this.companyService.upsertCompany(req.user.sub, createCompanyDto);
   }
+  @UseGuards(AuthGuard)
+  @Get('/:companyId')
+  GetCompanyById(@Param('companyId') companyId: string) {
+    return this.companyService.getCompanyById(companyId);
+  }
 
   @UseGuards(AuthGuard)
   @Get('/members')

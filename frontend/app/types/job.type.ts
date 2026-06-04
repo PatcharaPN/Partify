@@ -181,10 +181,11 @@ export interface Notification {
 
   senderId?: string | null;
   sender?: User | null;
-
+  category: string;
   message: string;
   type: NotificationStatus;
 
+  companyId: string;
   jobId?: string | null;
   inviteId: string | null;
   job?: Job | null;

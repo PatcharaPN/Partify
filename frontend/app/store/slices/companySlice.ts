@@ -144,6 +144,20 @@ export const declineInvite = createAsyncThunk(
     }
   },
 );
+
+export const getCompanyById = createAsyncThunk(
+  "company/getCompanyById",
+  async (companyId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(`/company/${companyId}`);
+      return res.data as Company;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get company by id",
+      );
+    }
+  },
+);
 const companySlice = createSlice({
   name: "company",
   initialState,
@@ -272,6 +286,21 @@ const companySlice = createSlice({
       .addCase(removeMember.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+      })
+      .addCase(getCompanyById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getCompanyById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.company = action.payload;
+      })
+      .addCase(getCompanyById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Failed to get company by id";
       });
   },
 });

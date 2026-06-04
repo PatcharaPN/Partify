@@ -9,6 +9,7 @@ import {
   removeMember,
   removeMemberOptimistic,
   updateMemberState,
+  getCompanyById,
 } from "../store/slices/companySlice";
 import { CompanyRole } from "../types/job.type";
 
@@ -17,7 +18,9 @@ export const useCompany = () => {
   const { company, members, isLoading, error, pendingInvites } = useAppSelector(
     (state) => state.CompanyReducer,
   );
-
+  const fetchCompanyById = async (companyId: string) => {
+    return await dispatch(getCompanyById(companyId)).unwrap();
+  };
   useEffect(() => {
     dispatch(getCompany());
     dispatch(getAllMember());
@@ -53,5 +56,6 @@ export const useCompany = () => {
     pendingInvites,
     handleChangeMemberRole,
     handleRemoveMember,
+    fetchCompanyById,
   };
 };

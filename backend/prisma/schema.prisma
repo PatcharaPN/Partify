@@ -226,12 +226,13 @@ model Notification {
 
   message    String
   type       NotificationType
-
+  
   category  NotificationCategory?
   inviteId  String?
   invite    CompanyInvite? @relation(fields: [inviteId], references: [id])
   jobId String?
   job   Job? @relation(fields: [jobId], references: [id])
+  companyId String?
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
 }

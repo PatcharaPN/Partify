@@ -16,6 +16,7 @@ export class NotificationService {
     jobId?: string,
     inviteId?: string,
     category?: NotificationCategory,
+    companyId?: string,
   ) {
     await this.validateReceiverAndThrowError(userId);
     return this.addNotification(
@@ -25,6 +26,7 @@ export class NotificationService {
       jobId,
       inviteId,
       category,
+      companyId,
     );
   }
 
@@ -68,6 +70,7 @@ export class NotificationService {
         isRead: true,
         createdAt: true,
         jobId: true,
+        companyId: true,
         inviteId: true,
         type: true,
         job: {
@@ -101,6 +104,7 @@ export class NotificationService {
     jobId?: string,
     inviteId?: string,
     category?: NotificationCategory,
+    companyId?: string,
   ) {
     const notification = await this.prisma.notification.create({
       data: {
@@ -110,6 +114,7 @@ export class NotificationService {
         jobId: jobId,
         inviteId,
         category,
+        companyId,
       },
     });
     return notification;
