@@ -49,7 +49,10 @@ export class JobsController {
   fetchRelatedJobs(@Param('id') jobId: string) {
     return this.jobsService.fetchRelatedJobs(jobId);
   }
-
+  @Get('/company/:id')
+  fetchJobsByCompany(@Param('id') companyId: string) {
+    return this.jobsService.fetchJobByCompany(companyId);
+  }
   @UseGuards(AuthGuard)
   @Get('/owner')
   getJobsByOwner(@Req() req) {

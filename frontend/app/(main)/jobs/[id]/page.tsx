@@ -45,7 +45,9 @@ export default function JobDetail() {
     toggle,
     loading: bookmarkLoading,
   } = useBookmarkToggle(id as string);
-  const isCompanyMember = members.some((c) => c.userId === currentUser?.id);
+  const isCompanyMember = (members ?? []).some(
+    (c) => c.userId === currentUser?.id,
+  );
   const isProfileValid =
     !!currentUser?.profile?.firstName &&
     !!currentUser?.profile?.lastName &&

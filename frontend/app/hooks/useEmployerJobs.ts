@@ -2,11 +2,14 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import { RootState } from "../lib/store";
 import { fetchCurrentUser } from "../store/slices/authSlice";
-import { fetchOwnerRelatedJobs } from "../store/slices/jobSlice";
+import {
+  fetchOwnerRelatedJobs,
+  fetchRelatedJob,
+} from "../store/slices/jobSlice";
 
 export const useEmployerJobs = () => {
   const dispatch = useAppDispatch();
-  const { employeeJob, isLoading } = useAppSelector(
+  const { employeeJob, isLoading, relatedJobs } = useAppSelector(
     (state: RootState) => state.jobReducer,
   );
 
@@ -29,5 +32,6 @@ export const useEmployerJobs = () => {
     user,
     isLoading,
     totalApplicants,
+    relatedJobs,
   };
 };

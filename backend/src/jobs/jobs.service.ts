@@ -213,6 +213,17 @@ export class JobsService {
     });
     return jobs;
   }
+
+  async fetchJobByCompany(companyId: string) {
+    return await this.prisma.job.findMany({
+      where: {
+        companyId: companyId,
+      },
+      include: {
+        bookmarks: true,
+      },
+    });
+  }
   async searchJob(
     keyword: string[],
     page: number = 1,

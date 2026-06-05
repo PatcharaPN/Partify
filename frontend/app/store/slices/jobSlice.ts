@@ -67,6 +67,19 @@ export const fetchRelatedJob = createAsyncThunk(
     }
   },
 );
+export const fetchJobsByCompany = createAsyncThunk(
+  "jobs/fetchByCompany",
+  async (companyId: string, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(`/jobs/company/${companyId}`);
+      return res.data as Job[];
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch company jobs",
+      );
+    }
+  },
+);
 export const upsertJob = createAsyncThunk(
   "job/upsert",
   async (payload: { id?: string } & Partial<UpsertJobPayload>) => {
@@ -286,6 +299,9 @@ const jobSlice = createSlice({
       .addCase(searchJob.rejected, (state, action) => {
         state.isLoading = false;
         state.error = (action.payload as string) ?? "Failed to search jobs";
+      })
+      .addCase(fetchJobsByCompany.fulfilled, (state, action) => {
+        state.relatedJobs = action.payload;
       });
   },
 });
