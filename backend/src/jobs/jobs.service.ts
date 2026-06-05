@@ -97,6 +97,7 @@ export class JobsService {
       include: {
         company: {
           select: {
+            id: true,
             createdBy: true,
             category: true,
             companyBio: true,

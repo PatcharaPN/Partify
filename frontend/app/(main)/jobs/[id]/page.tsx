@@ -20,6 +20,7 @@ import { PopupState } from "@/app/types/ui.type";
 import { useCompany } from "@/app/hooks/useCompany";
 import { useBookmarkToggle } from "@/app/hooks/useBookmark";
 import { fetchBookmarks } from "@/app/store/slices/bookmarkSlice";
+import Link from "next/link";
 
 export default function JobDetail() {
   const router = useRouter();
@@ -621,6 +622,11 @@ export default function JobDetail() {
                       ยื่นสมัคร
                     </button>
                   )}
+                  <Link href={`/company/${selectedJob.company.id}`}>
+                    <button className="w-full bg-blue-600 text-white py-2.5 rounded-xl">
+                      ดูข้อมูลบริษัท
+                    </button>
+                  </Link>
                 </div>
               )}
             </section>

@@ -70,12 +70,10 @@ const CompanyPage = () => {
                 {company.companyBio || "ยังไม่มีคำอธิบาย"}
               </p>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <button className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition">
+            <div className="flex gap-2 shrink-0">
+              <button className="text-sm flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition">
+                <Icon icon={`mdi:bookmark-outline`} />
                 บันทึก
-              </button>
-              <button className="text-sm px-4 py-2 rounded-lg bg-[#0f3460] text-white hover:opacity-90 transition">
-                ติดต่อ
               </button>
             </div>
           </div>
