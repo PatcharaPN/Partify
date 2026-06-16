@@ -74,6 +74,7 @@ export const getAllMember = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/company/members");
+
       return res.data;
     } catch (error: any) {
       return rejectWithValue(

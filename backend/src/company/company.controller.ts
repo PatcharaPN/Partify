@@ -25,11 +25,6 @@ export class CompanyController {
   create(@Body() createCompanyDto: CreateCompanyDto, @Req() req) {
     return this.companyService.upsertCompany(req.user.sub, createCompanyDto);
   }
-  @UseGuards(AuthGuard)
-  @Get('/:companyId')
-  GetCompanyById(@Param('companyId') companyId: string) {
-    return this.companyService.getCompanyById(companyId);
-  }
 
   @UseGuards(AuthGuard)
   @Get('/members')
@@ -49,6 +44,11 @@ export class CompanyController {
     return this.companyService.getCompany(req.user.sub);
   }
 
+  @UseGuards(AuthGuard)
+  @Get('/:companyId')
+  GetCompanyById(@Param('companyId') companyId: string) {
+    return this.companyService.getCompanyById(companyId);
+  }
   @UseGuards(AuthGuard)
   @Patch('member/role')
   async changeMemberRole(

@@ -70,12 +70,12 @@ const CompanyPage = () => {
                 {company.companyBio || "ยังไม่มีคำอธิบาย"}
               </p>
             </div>
-            <div className="flex gap-2 shrink-0">
+            {/* <div className="flex gap-2 shrink-0">
               <button className="text-sm flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition">
                 <Icon icon={`mdi:bookmark-outline`} />
                 บันทึก
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Stats */}

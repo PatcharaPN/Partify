@@ -126,7 +126,7 @@ export default function Home() {
           </div>{" "}
           <div className="text-md flex items-end gap-2 ">
             {" "}
-            <Link className="text-primary font-bold" href={"/"}>
+            <Link className="text-primary font-bold" href={"/categories"}>
               ดูทุกหมวดหมู่
             </Link>
             <Icon color="004AC6" icon={"maki:arrow"} />

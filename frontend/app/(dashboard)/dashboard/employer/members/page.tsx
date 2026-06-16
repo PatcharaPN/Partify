@@ -89,7 +89,7 @@ const CompanyMember = () => {
   };
 
   const filteredMembers = useMemo(() => {
-    let result = [...members];
+    let result = [...(members ?? [])];
 
     if (filters.role) {
       result = result.filter((m) => m.role === filters.role);
@@ -117,6 +117,7 @@ const CompanyMember = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  console.log(pendingInvites);
 
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased">
@@ -275,7 +276,7 @@ const CompanyMember = () => {
                 );
               })}
             </div>
-            {pendingInvites.map((invite) => (
+            {(pendingInvites ?? []).map((invite) => (
               <div
                 key={invite.id}
                 className="grid grid-cols-[1.5fr_1fr_1fr_1.2fr_1fr_90px] gap-3 px-6 py-3 opacity-50"
