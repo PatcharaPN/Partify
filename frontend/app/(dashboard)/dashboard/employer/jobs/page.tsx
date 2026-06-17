@@ -26,9 +26,9 @@ const JobListPage = () => {
   }, [jobs, search]);
 
   const isProfileComplete =
-    !!currentUser?.company?.companyName &&
-    !!currentUser?.company?.companyImageURL &&
-    !!currentUser?.company?.companyBio;
+    !!currentUser?.companyMembers[0].company?.companyName &&
+    !!currentUser?.companyMembers[0].company?.companyImageURL &&
+    !!currentUser?.companyMembers[0].company?.companyBio;
 
   const handlePostJob = () => {
     if (!isProfileComplete) {
