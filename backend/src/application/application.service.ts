@@ -98,6 +98,7 @@ export class ApplicationService {
       },
     });
   }
+
   async application(jobId: string) {
     return this.prisma.application.findMany({
       where: {
@@ -117,6 +118,7 @@ export class ApplicationService {
       },
     });
   }
+
   async getJobWithApplications(jobId: string, userId: string) {
     const job = await this.prisma.job.findUnique({
       where: { id: jobId },
@@ -186,59 +188,6 @@ export class ApplicationService {
       },
     });
   }
-
-  // async searchApplicant(
-  //   page: number = 1,
-  //   search?: string,
-  //   status?: string,
-  //   position?: string,
-  //   sortBy?: 'latest' | 'oldest',
-  // ) {
-  //   const take = 10;
-  //   const skip = (Number(page) - 1) * take;
-  //   return this.prisma.application.findMany({
-  //     where: {
-  //       ...(search && {
-  //         OR: [
-  //           {
-  //             user: {
-  //               profile: {
-  //                 firstName: {
-  //                   contains: search,
-  //                   mode: 'insensitive',
-  //                 },
-  //               },
-  //             },
-  //           },
-  //           {
-  //             user: {
-  //               profile: {
-  //                 lastName: {
-  //                   contains: search,
-  //                   mode: 'insensitive',
-  //                 },
-  //               },
-  //             },
-  //           },
-  //         ],
-  //       }),
-  //       ...(status && {
-  //         AND: [
-  //           {
-  //             status: status,
-  //           },
-  //         ],
-  //       }),
-  //       // ...(position &&{
-  //       //   OR:[
-  //       //     {
-  //       //       job.
-  //       //     }
-  //       //   ]
-  //       // })
-  //     },
-  //   });
-  // }
 
   private async processInterview(applicationId: string, application: any) {
     const updatedApplication = await this.prisma.application.update({

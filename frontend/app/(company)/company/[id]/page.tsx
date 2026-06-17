@@ -14,7 +14,6 @@ const CompanyPage = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
 
-  // ดึงจาก jobReducer ตรงๆ เหมือน JobDetail
   const { relatedJobs } = useAppSelector((state) => state.jobReducer);
 
   const { fetchCompanyById, isLoading, company } = useCompany();
@@ -79,7 +78,7 @@ const CompanyPage = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-4 divide-x divide-gray-100 border border-gray-100 rounded-xl mb-6 overflow-hidden">
+          <div className="md:grid md:grid-cols-4 divide-x divide-gray-100 border border-gray-100 rounded-xl mb-6 overflow-hidden">
             {[
               { label: "พนักงาน", value: company.companySize ?? "-" },
               { label: "หมวดหมู่", value: company.category ?? "-" },
@@ -123,7 +122,7 @@ const CompanyPage = () => {
         {/* Open Positions */}
         {relatedJobs.length > 0 ? (
           <div className="border-t border-gray-100 p-6">
-            <div className="flex items-center gap-2 mb-4">
+            <div className=" flex items-center gap-2 mb-4">
               <div className="w-1 h-5 bg-blue-600 rounded-full" />
               <h2 className="text-base font-semibold text-gray-900">
                 ตำแหน่งงานที่เปิดรับ
@@ -132,7 +131,7 @@ const CompanyPage = () => {
                 {relatedJobs.length} ตำแหน่ง
               </span>
             </div>
-            <div className="flex gap-3 overflow-x-auto max-w-4xl">
+            <div className="flex flex-col items-center w-full gap-3 overflow-x-auto max-w-4xl">
               {relatedJobs.map((job, i) => (
                 <RelatedJobCard job={job} key={i} />
               ))}

@@ -89,7 +89,6 @@ export interface User {
   id: string;
   email: string | null;
   role: Role;
-  company?: Company;
   profile: Profile | null;
   resume: Resume[];
   companyMembers: CompanyMember[];

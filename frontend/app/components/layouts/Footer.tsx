@@ -27,7 +27,7 @@ const footerSections = [
 ];
 export default function Footer() {
   return (
-    <div className="flex justify-center flex-col items-center">
+    <div className="p-5 md:p-0 flex justify-center flex-col items-center">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full max-w-350 mx-auto px-2 py-20 gap-5">
         {footerSections.map((section) => (
           <div key={section.title}>

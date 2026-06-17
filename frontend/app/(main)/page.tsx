@@ -30,11 +30,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
-      <div className="grid grid-cols-2 gap-10 py-50">
+      <div className="md:grid md:grid-cols-2 gap-10 py-50">
         <div className="flex flex-col gap-5">
-          <h1 className="text-7xl font-bold">
+          <h1 className="text-5xl md:text-7xl font-bold ">
             <span className="py-4 block">ค้นหางาน</span>
-            <span className="text-primary font-bold">
+            <span className=" text-primary font-bold">
               พาร์ทไทม์
             </span> ที่ใช่ <br />
             สำหรับคุณ
@@ -80,13 +80,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative mt-15 md:mt-0">
           <img
             src="./images/bg/workingPic.webp"
             className="rounded-4xl w-2xl rotate-4"
             alt="working-part-time-pic"
           />
-          <div className="absolute bottom-[-20] shadow-xl bg-white/40 border-2 border-white/40 backdrop-blur-xl rounded-2xl w-70 h-40 p-5">
+          <div className="absolute bottom-[-70] md:bottom-[-20] shadow-xl bg-white/40 border-2 border-white/40 backdrop-blur-xl rounded-2xl w-70 h-40 p-5">
             <div>
               {" "}
               <div className="flex gap-5">

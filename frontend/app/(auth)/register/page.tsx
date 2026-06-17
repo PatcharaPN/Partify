@@ -85,7 +85,7 @@ export default function RegisterPage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -24 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="grid grid-cols-[0.5fr_0.8fr]"
+        className="md:grid md:grid-cols-[0.5fr_0.8fr]"
       >
         {/* ── Left Panel ── */}
         <div className="hidden md:flex w-full shrink-0 flex-col justify-between bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 px-8 py-10 overflow-hidden rounded-l-2xl">

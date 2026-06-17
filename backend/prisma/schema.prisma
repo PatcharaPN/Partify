@@ -57,7 +57,6 @@ model User {
   applications Application[]
   employed  Employee[] @relation("UserEmployment")
   resume    Resume[]  
-  company Company?
   companyMembers CompanyMember[]
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
@@ -173,14 +172,6 @@ model Bookmark {
   @@map("bookmarks")
 }
 
-model JobSkill {
-  id      String  @id @default(uuid())
-  jobId   String
- 
-  name    String  
-
-  @@map("job_skills")
-}
 
 model Employee {
   id        String   @id @default(uuid())
@@ -233,6 +224,7 @@ model Notification {
   jobId String?
   job   Job? @relation(fields: [jobId], references: [id])
   companyId String?
+  company   Company? @relation(fields: [companyId],references: [id])
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
 }
@@ -263,7 +255,7 @@ model Company {
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-
+  notifications Notification[]
   members         CompanyMember[]
   jobs            Job[]
   employees       Employee[]

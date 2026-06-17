@@ -50,10 +50,11 @@ export default function LoginPage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -24 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="z-10 bg-white shadow-xl grid grid-cols-2 w-full max-w-5xl min-h-100 rounded-2xl overflow-hidden"
+        className="z-10 bg-white shadow-xl md:grid md:grid-cols-2 w-full max-w-5xl min-h-100 rounded-2xl overflow-hidden"
       >
+        {" "}
         <div
-          className={`relative bg-cover p-10 bg-[url(/images/bg/office_BG.webp)]`}
+          className={`hidden md:block relative bg-cover p-10 bg-[url(/images/bg/office_BG.webp)]`}
         >
           {" "}
           <div className="absolute inset-0 bg-linear-to-r from-blue-700 to-blue-600/95" />
@@ -162,7 +163,7 @@ export default function LoginPage() {
                 สมัครสมาชิก
               </Link>
             </span>
-          </div>
+          </div>{" "}
         </div>
       </motion.main>
       <div className="left-25 bottom-10 z-0 opacity-20 absolute rounded-full bg-primary blur-3xl w-50 h-50"></div>

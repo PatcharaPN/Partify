@@ -78,13 +78,15 @@ function JobPageContent() {
   return (
     <div className="flex justify-center items-center pt-10">
       <main className="w-full max-w-290">
-        <h1 className="text-3xl font-bold">งานที่คัดสรรมาเพื่อคุณ</h1>
-        <p className="max-w-2xl pt-2 text-md text-neutral-500">
+        <h1 className="hidden md:block text-lg px-2 md:text-3xl font-bold">
+          งานที่คัดสรรมาเพื่อคุณ
+        </h1>
+        <p className="hidden md:block md:max-w-2xl pt-2 text-md text-neutral-500">
           ค้นหางานพาร์ทไทม์คุณภาพที่เหมาะกับไลฟ์สไตล์ของคุณ
           คัดสรรมาอย่างดีสำหรับคนที่อยากได้งานยืดหยุ่นโดยไม่ลดคุณภาพ
         </p>
         <div className="flex items-center shadow-md rounded-2xl bg-white p-2 gap-2 w-full mt-5">
-          <div className="flex items-center gap-2 flex-2 px-3">
+          <div className="px-5 flex items-center gap-2 flex-2 md:px-3">
             <span className="text-gray-400">
               <Icon icon={"mingcute:search-line"} />
             </span>
@@ -118,9 +120,9 @@ function JobPageContent() {
             </div>
           )}
         </div>
-        <div className="grid grid-cols-[0.5fr_2fr] gap-5 pt-10">
+        <div className="md:grid md:grid-cols-[0.5fr_2fr] gap-5 pt-10">
           <div className="w-full ">
-            <div className="flex justify-between bg-neutral">
+            <div className="hidden md:flex justify-between bg-neutral">
               <p className="font-bold">ฟิลเตอร์</p>
               <p
                 className="text-primary cursor-pointer"
@@ -131,7 +133,7 @@ function JobPageContent() {
                 Clear all
               </p>
             </div>
-            <div className="bg-neutral-200/50 p-5 rounded-2xl mt-5">
+            <div className="hidden md:block bg-neutral-200/50 p-5 rounded-2xl mt-5">
               <div className="flex justify-between items-center">
                 <label
                   htmlFor="default-range"
@@ -149,15 +151,15 @@ function JobPageContent() {
                 max={600}
                 value={salary}
                 type="range"
-                className="w-full h-2 bg-neutral-quaternary rounded-full appearance-none cursor-pointer"
+                className="hidden md:block w-full h-2 bg-neutral-quaternary rounded-full appearance-none cursor-pointer"
               />
-              <div className="flex justify-between items-center">
+              <div className="hidden md:flex justify-between items-center">
                 <span className="text-sm">100/ชม.</span>
                 <span className="text-sm">600/ชม.</span>
               </div>
             </div>
             {/* JOB TYPE */}
-            <div className="mt-10">
+            <div className="mt-10 hidden md:block">
               {" "}
               <span className="font-bold">ลักษณะงาน</span>
               <ul className="mt-2 ">
@@ -190,7 +192,7 @@ function JobPageContent() {
                 ))}
               </ul>
             </div>
-            <div className="space-y-2 mt-5">
+            <div className="hidden md:block space-y-2 mt-5">
               <p className="text-sm text-zinc-700 font-bold">วันที่เปิดรับ</p>
               <select className="w-full p-2.5 rounded-lg bg-neutral-200/50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">ทั้งหมด</option>
@@ -228,17 +230,24 @@ function JobPageContent() {
                 })
               )}
             </div>
-            <div className="flex gap-2 justify-center mt-5">
-              <button onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                ก่อนหน้า
+            <div className="flex items-center justify-center gap-2 mt-5">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="flex items-center justify-center w-9 h-9 rounded-md border border-gray-200 hover:bg-gray-100 disabled:opacity-35 disabled:pointer-events-none transition-colors"
+              >
+                <Icon icon="mdi:chevron-left" className="w-5 h-5" />
               </button>
-              <span>
-                {page} / {totalPages}
+              <span className="text-sm text-gray-500 min-w-14 text-center">
+                <span className="font-medium text-gray-900">{page}</span> /{" "}
+                {totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+                className="flex items-center justify-center w-9 h-9 rounded-md border border-gray-200 hover:bg-gray-100 disabled:opacity-35 disabled:pointer-events-none transition-colors"
               >
-                ถัดไป
+                <Icon icon="mdi:chevron-right" className="w-5 h-5" />
               </button>
             </div>
           </div>

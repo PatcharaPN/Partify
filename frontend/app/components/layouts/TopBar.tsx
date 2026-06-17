@@ -45,7 +45,7 @@ export default function TopBar() {
   }, []);
   return (
     <header className="sticky top-0 z-20 w-full shadow-md bg-white px-2 py-3">
-      <div className="mx-auto grid grid-cols-3">
+      <div className="flex pr-3 justify-between mx-auto md:grid md:grid-cols-3">
         <Link
           className="inline-block text-primary text-xl font-bold font-headline px-4 py-2"
           href="/"
