@@ -57,7 +57,7 @@ model User {
   applications Application[]
   employed  Employee[] @relation("UserEmployment")
   resume    Resume[]
-  companyCreated Company? @relation(fields: [id], references: [createdBy])
+  companyCreated Company?
   companyMembers CompanyMember[]
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
