@@ -36,7 +36,27 @@ async function main() {
       },
     },
   });
-
+  const candidate1 = await prisma.user.create({
+    data: {
+      email: 'john@example.com',
+      password: hashedPassword,
+      role: Role.CANDIDATE,
+      profile: {
+        create: {
+          firstName: 'Emily',
+          lastName: 'Carter',
+          phone: '083-456-7890',
+          summary: 'นักศึกษาปี 3 สาขาวิทยาการคอมพิวเตอร์',
+          province: 'กรุงเทพมหานคร',
+          district: 'บางรัก',
+          workingDays: 'จันทร์–ศุกร์',
+          skills: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'],
+          avatarUrl:
+            'https://images.unsplash.com/photo-1740252117012-bb53ad05e370?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        },
+      },
+    },
+  });
   const company1 = await prisma.company.create({
     data: {
       id: '992c1b21-cf3d-48d9-8929-954afa7bf7f9',

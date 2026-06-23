@@ -14,6 +14,7 @@ import { EmployeeModule } from './employee/employee.module';
 import { NotificationModule } from './notification/notification.module';
 import { ResumeModule } from './resume/resume.module';
 import { CompanyModule } from './company/company.module';
+import { SeedService } from './seed/seed.service';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { CompanyModule } from './company/company.module';
     CompanyModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeedService],
 })
 export class AppModule {}
