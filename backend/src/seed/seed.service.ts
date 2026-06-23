@@ -7,7 +7,7 @@ const execAsync = promisify(exec);
 
 @Injectable()
 export class SeedService {
-  @Cron('*/5 * * * *') // ทุก 5 นาที
+  @Cron('0 * * * *') // ทุก 5 นาที
   async reseedDatabase() {
     console.log('🔄 Reseeding in 5 mins...');
     try {
