@@ -95,7 +95,6 @@ const PostJobForm = () => {
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl w-full max-w-lg flex flex-col max-h-[85vh] border border-neutral-200/60">
-        {/* Header */}
         <div className="flex items-start justify-between px-6 py-5 border-b border-neutral-100 shrink-0">
           <h2 className="text-lg font-semibold text-gray-900">
             ลงประกาศงานพาร์ทไทม์

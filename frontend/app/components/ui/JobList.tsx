@@ -1,7 +1,7 @@
 import { Job } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import JobTypeTag, { JobType } from "./JobTypeTag";
+import JobTypeTag, { JobType, UrgentType } from "./JobTypeTag";
 
 type JobListProps = {
   keywords: string[];
@@ -14,6 +14,7 @@ const JobList = ({ jobs, keywords }: JobListProps) => {
       keywords.length === 0 ||
       keywords.some((k) => skills.toLowerCase().includes(k.toLowerCase())),
   );
+
   return (
     <Link href={`/jobs/${jobs.id}`} className="block my-2">
       <div className="bg-white border border-neutral-200/70 rounded-2xl p-4 flex flex-col gap-3 hover:border-neutral-300 hover:bg-neutral-50/50 transition-all">
@@ -29,7 +30,7 @@ const JobList = ({ jobs, keywords }: JobListProps) => {
                 {jobs.title}
               </p>
 
-              <JobTypeTag jobType={jobs.jobType as JobType} />
+              <JobTypeTag urgency={jobs.urgency as UrgentType} />
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5">
               <span className="flex items-center gap-1 text-xs text-neutral-500">
