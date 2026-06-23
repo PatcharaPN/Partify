@@ -131,7 +131,7 @@ const CompanyPage = () => {
                 {relatedJobs.length} ตำแหน่ง
               </span>
             </div>
-            <div className="flex flex-col items-center w-full gap-3 overflow-x-auto max-w-4xl">
+            <div className="flex items-center w-full gap-3 overflow-x-auto max-w-4xl">
               {relatedJobs.map((job, i) => (
                 <RelatedJobCard job={job} key={i} />
               ))}
