@@ -1,7 +1,8 @@
-import { Job } from "@/app/types/job.type";
+import { Job, WorkModel } from "@/app/types/job.type";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import JobTypeTag, { JobType, UrgentType } from "./JobTypeTag";
+import WorkTypeTag from "./WorkTypeTag";
 
 type JobListProps = {
   keywords: string[];
@@ -31,6 +32,7 @@ const JobList = ({ jobs, keywords }: JobListProps) => {
               </p>
 
               <JobTypeTag urgency={jobs.urgency as UrgentType} />
+              <WorkTypeTag workType={jobs.workStyle as WorkModel} />
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5">
               <span className="flex items-center gap-1 text-xs text-neutral-500">
