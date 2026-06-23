@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center min-h-[calc(100vh-56px)] px-8">
-      <div className="md:grid md:grid-cols-2 gap-10 py-50">
+      <div className="md:grid md:grid-cols-2 gap-10 py-20 md:py-50">
         <div className="flex flex-col gap-5">
           <h1 className="text-5xl md:text-7xl font-bold ">
             <span className="py-4 block">ค้นหางาน</span>
@@ -115,11 +115,13 @@ export default function Home() {
       </div>
       {/* หมวดหมู่งานที่หาบ่อย */}
       <div className="pt-30 w-full max-w-350">
-        <div className="flex w-full justify-between">
+        <div className="flex flex-col md:flex w-full md:justify-between">
           {" "}
           <div className="flex items-start flex-col gap-4">
-            <h1 className="text-4xl font-bold">หมวดหมู่งานคัดสรร</h1>
-            <p className="w-md text-neutral-600">
+            <h1 className="text-2xl md:text-4xl font-bold">
+              หมวดหมู่งานคัดสรร
+            </h1>
+            <p className="w-fit md:w-md text-neutral-600">
               เราไม่ได้แค่ลิสต์งาน
               แต่คัดสรรงานพาร์ทไทม์คุณภาพสูงในหมวดหมู่เหล่านี้
             </p>
@@ -133,7 +135,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="pt-20 grid grid-cols-3 gap-4">
+        <div className="pt-20 flex flex-col md:grid md:grid-cols-3 gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.title}
@@ -177,7 +179,7 @@ export default function Home() {
       </div>
       {/* Explain Process ลูกจ้าง นายจ้าง CTA */}
       <div className="flex flex-col rounded-4xl w-full max-w-350 justify-center items-center bg-primary p-5 h-80">
-        <h1 className="text-white font-bold text-5xl w-160 text-center">
+        <h1 className="text-white font-bold text-2xl max-w-2xl md:text-5xl md:w-160 text-center">
           พร้อมหางานที่เหมาะกับคุณแล้วหรือยัง?
         </h1>
         <Link href={"/jobs"}>
