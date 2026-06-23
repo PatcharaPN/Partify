@@ -56,7 +56,8 @@ model User {
   bookmarks   Bookmark[]  
   applications Application[]
   employed  Employee[] @relation("UserEmployment")
-  resume    Resume[]  
+  resume    Resume[]
+  companyCreated Company? @relation(fields: [id], references: [createdBy])
   companyMembers CompanyMember[]
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("SenderNotifications")
