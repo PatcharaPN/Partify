@@ -17,11 +17,7 @@ export class UsersService {
       include: {
         companyMembers: true,
         profile: true,
-        company: {
-          include: {
-            members: true,
-          },
-        },
+        companyCreated: true,
         notifications: {
           select: {
             id: true,

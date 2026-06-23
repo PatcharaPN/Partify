@@ -110,7 +110,7 @@ export class ApplicationService {
             email: true,
             password: true,
           },
-          include: { profile: true, company: true },
+          include: { profile: true, companyCreated: true },
         },
       },
       orderBy: {
