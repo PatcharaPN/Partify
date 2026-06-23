@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { PrismaService } from './prisma/prisma.service';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { JobsModule } from './jobs/jobs.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -18,6 +18,7 @@ import { SeedService } from './seed/seed.service';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     AuthModule,
