@@ -30,8 +30,6 @@ const urgentStyle: Record<UrgentType, UrgentStyle> = {
 };
 
 const JobTypeTag = ({ urgency }: UrgentTypeTagProps) => {
-  console.log(urgency);
-
   return (
     <span
       className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${urgentStyle[urgency].class}`}

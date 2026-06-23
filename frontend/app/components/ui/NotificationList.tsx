@@ -20,8 +20,6 @@ const NotificationList = ({
   onAccept,
   onDecline,
 }: NotificationListProps) => {
-  console.log(notification);
-
   return (
     <Link
       key={notification.id}

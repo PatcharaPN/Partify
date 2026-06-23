@@ -117,7 +117,6 @@ const CompanyMember = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  console.log(pendingInvites);
 
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased">
