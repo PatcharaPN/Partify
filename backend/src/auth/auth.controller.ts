@@ -36,7 +36,7 @@ export class AuthController {
   async lineCallback(@Req() req, @Res() res) {
     const result = await this.authService.oauthLogin(req.user);
     res.redirect(
-      `http://localhost:3000/callback?token=${result.access_token}&isNew=${result.isNew}`,
+      `https://partify-nine.vercel.app/callback?token=${result.access_token}&isNew=${result.isNew}`,
     );
   }
 
@@ -50,7 +50,7 @@ export class AuthController {
     const result = await this.authService.oauthLogin(req.user);
 
     res.redirect(
-      `http://localhost:3000/callback?token=${result.access_token}&isNew=${result.isNew}`,
+      `https://partify-nine.vercel.app/callback?token=${result.access_token}&isNew=${result.isNew}`,
     );
   }
 }
