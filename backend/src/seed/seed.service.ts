@@ -9,7 +9,7 @@ const execAsync = promisify(exec);
 export class SeedService {
   @Cron('0 * * * *') // ทุก 1 ชม.
   async reseedDatabase() {
-    console.log('🔄 Reseeding in 5 mins...');
+    console.log('🔄 Reseeding in 1 hour...');
     try {
       await execAsync('cd /home/ubuntu/Partify/backend && npx prisma db seed');
       console.log('✅ Reseed success');
