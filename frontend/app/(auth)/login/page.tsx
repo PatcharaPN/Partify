@@ -41,7 +41,12 @@ export default function LoginPage() {
     }
   };
   const lineApiLogin = () => {
-    window.location.href = "http://localhost:3001/auth/line";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${apiUrl}/auth/line`;
+  };
+  const googleApiLogin = () => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${apiUrl}/auth/google/callback`;
   };
   return (
     <div className="relative flex items-center justify-center h-[calc(100vh-70px)]">
@@ -61,7 +66,7 @@ export default function LoginPage() {
           <div className="relative z-10 h-full">
             <div className="flex flex-col justify-between h-full gap-10">
               <p className="text-white font-bold text-2xl">Partify</p>
-              {/* {Persona Card} */}
+
               <div className="">
                 <span className="text-3xl font-bold text-blue-100">
                   งานดี,
@@ -74,7 +79,6 @@ export default function LoginPage() {
                 </p>
               </div>
               <div>
-                {/* {Persona Card} */}
                 <PersonaCard />
               </div>
             </div>
@@ -135,6 +139,7 @@ export default function LoginPage() {
             {" "}
             <SocialLoginButton
               className="w-full"
+              onClick={googleApiLogin}
               variant="grayed"
               icon={"devicon:google"}
             >

@@ -8,7 +8,7 @@ export class LineStrategy extends PassportStrategy(Strategy, 'line') {
     super({
       channelID: process.env.LINE_CLIENT_ID,
       channelSecret: process.env.LINE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3001/auth/line/callback',
+      callbackURL: 'https://api.partify.patchara.online/auth/line/callback',
       scope: ['profile', 'openid', 'email'],
     });
   }

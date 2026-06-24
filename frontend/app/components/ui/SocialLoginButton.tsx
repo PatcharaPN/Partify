@@ -35,7 +35,6 @@ export default function SocialLoginButton({
   return (
     <button
       onClick={onClick}
-      disabled
       className={`cursor-pointer flex items-center justify-center gap-3 min-w-10 px-4 py-2 rounded-md font-medium transition-colors ${variants[variant]} ${className}`}
     >
       {icon && <Icon icon={icon} />}

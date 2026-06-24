@@ -30,7 +30,7 @@ const NotificationList = ({
       href={
         notification.companyId
           ? `/company/${notification.companyId}`
-          : `/jobs/${notification.job?.id}`
+          : `/dashboard/employer/applicants`
       }
     >
       <div
