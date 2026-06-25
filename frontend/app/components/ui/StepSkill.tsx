@@ -77,7 +77,6 @@ const StepSkill = ({
             </div>
           </div>
         </div>
-        {/* TODO : Implement Search + ย้าย ปีที่ต้องการ ประสบการณ์ */}
         <div className="flex flex-col gap-2">
           <div className="flex flex-col relative">
             <label className="text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
