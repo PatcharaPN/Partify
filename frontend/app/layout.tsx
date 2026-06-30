@@ -5,6 +5,8 @@ import StoreProvider from "./StoreProvider";
 import Providers from "./provider";
 import { ToastProvider } from "./providers/ToastProvider";
 import { AlertModalProvider } from "./contexts/AlertModalContext";
+import { DndContext } from "@dnd-kit/core";
+import DndProvider from "./providers/DndProvider";
 
 const kanit = Kanit({
   weight: ["200", "400"],
@@ -41,9 +43,11 @@ export default function RootLayout({
     >
       <body className="min-h-screen">
         <Providers>
-          <AlertModalProvider>
-            <StoreProvider>{children}</StoreProvider>
-          </AlertModalProvider>
+          <DndProvider>
+            <AlertModalProvider>
+              <StoreProvider>{children}</StoreProvider>
+            </AlertModalProvider>
+          </DndProvider>
         </Providers>
       </body>
     </html>

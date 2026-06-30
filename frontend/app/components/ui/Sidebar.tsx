@@ -32,6 +32,13 @@ const getNavItems = (total: number) => [
     path: "/dashboard/employer/members",
     label: "จัดการสมาชิก",
     badge: total > 0 ? total : undefined,
+    icon: <Icon icon="ic:outline-people" className="w-4 h-4" />,
+    role: ["OWNER", "ADMIN"],
+  },
+  {
+    path: "/dashboard/employer/candidates",
+    label: "จัดการผู้สมัคร",
+    badge: total > 0 ? total : undefined,
     icon: <Icon icon="fluent-mdl2:group" className="w-4 h-4" />,
     role: ["OWNER", "ADMIN"],
   },
