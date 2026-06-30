@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateJobDto } from './create-job.dto';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
@@ -117,9 +118,9 @@ export class UpdateJobDto extends PartialType(CreateJobDto) {
   @IsString()
   companyImageURL?: string;
 
-  // Skills
-  @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true })
+  @IsString({ each: true })
+  @ArrayMinSize(0)
+  @IsOptional()
   skills?: string[];
 }

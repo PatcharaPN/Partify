@@ -36,9 +36,9 @@ const RelatedJobCard = ({ job, rate = 5 }: RelatedJobCardProps) => {
             {job.title}
           </span>
 
-          <span className="text-xs font-semibold text-green-600 shrink-0">
+          {/* <span className="text-xs font-semibold text-green-600 shrink-0">
             {rate}
-          </span>
+          </span> */}
         </div>
 
         <div className="text-xs text-gray-500 mt-0.5 line-clamp-1">

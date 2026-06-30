@@ -8,6 +8,7 @@ import {
   ValidateNested,
   Min,
   MaxLength,
+  ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -120,10 +121,11 @@ export class CreateJobDto {
   @IsArray()
   @IsString({ each: true })
   overviewPictureURL?: string[];
-  // Skills
-  @IsOptional()
+
   @IsArray()
-  @ValidateNested({ each: true })
+  @IsString({ each: true })
+  @ArrayMinSize(0)
+  @IsOptional()
   skills?: string[];
 
   @IsOptional()

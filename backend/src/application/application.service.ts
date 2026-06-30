@@ -276,7 +276,7 @@ export class ApplicationService {
   }
 
   private validateOwnerShip(employerId: any, application: any) {
-    if (employerId !== application?.job.company.userId) {
+    if (employerId !== application?.job.company.createdBy) {
       throw new ForbiddenException('Access denied');
     }
   }
