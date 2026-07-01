@@ -21,13 +21,13 @@ const getNavItems = (total: number) => [
     icon: <Icon icon="mdi:briefcase-outline" className="w-4 h-4" />,
     role: ["OWNER", "ADMIN", "HR"],
   },
-  {
-    path: "/dashboard/employer/applicants",
-    label: "ผู้สมัคร",
-    badge: total > 0 ? total : undefined,
-    icon: <Icon icon="mdi:account-group-outline" className="w-4 h-4" />,
-    role: ["OWNER", "ADMIN", "HR", "RECRUITER"],
-  },
+  // {
+  //   path: "/dashboard/employer/applicants",
+  //   label: "ผู้สมัคร",
+  //   badge: total > 0 ? total : undefined,
+  //   icon: <Icon icon="mdi:account-group-outline" className="w-4 h-4" />,
+  //   role: ["OWNER", "ADMIN", "HR", "RECRUITER"],
+  // },
   {
     path: "/dashboard/employer/members",
     label: "จัดการสมาชิก",
@@ -35,13 +35,13 @@ const getNavItems = (total: number) => [
     icon: <Icon icon="ic:outline-people" className="w-4 h-4" />,
     role: ["OWNER", "ADMIN"],
   },
-  {
-    path: "/dashboard/employer/candidates",
-    label: "จัดการผู้สมัคร",
-    badge: total > 0 ? total : undefined,
-    icon: <Icon icon="fluent-mdl2:group" className="w-4 h-4" />,
-    role: ["OWNER", "ADMIN"],
-  },
+  // {
+  //   path: "/dashboard/employer/candidates",
+  //   label: "จัดการผู้สมัคร",
+  //   badge: total > 0 ? total : undefined,
+  //   icon: <Icon icon="fluent-mdl2:group" className="w-4 h-4" />,
+  //   role: ["OWNER", "ADMIN"],
+  // },
 ];
 
 const Sidebar = () => {

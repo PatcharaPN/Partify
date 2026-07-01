@@ -1,4 +1,4 @@
-import { Company, CompanyRole } from "../types/job.type";
+import { ApplicationStatus, Company, CompanyRole } from "../types/job.type";
 
 export const JOB_TYPE_LABELS: Record<string, { label: string; color: string }> =
   {
@@ -20,22 +20,33 @@ export const JOB_TYPE_LABELS: Record<string, { label: string; color: string }> =
     },
   };
 
-export const STATUS_CONFIGS = {
-  PENDING: {
-    label: "รอพิจารณา",
-    className: "bg-yellow-50 text-yellow-600 border border-yellow-200",
+export const STATUS_CONFIGS: Record<
+  ApplicationStatus,
+  { label: string; className: string }
+> = {
+  [ApplicationStatus.PENDING]: {
+    label: "สมัครแล้ว",
+    className: "bg-gray-100 text-gray-600",
   },
-  ACCEPTED: {
-    label: "รับเข้าทำงาน",
-    className: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+  [ApplicationStatus.ACCEPTED]: {
+    label: "จ้างงาน",
+    className: "bg-green-100 text-green-700",
   },
-  REJECTED: {
-    label: "ไม่ผ่าน",
-    className: "bg-red-50 text-red-500 border border-red-200",
+  [ApplicationStatus.REJECTED]: {
+    label: "ปฏิเสธ",
+    className: "bg-red-100 text-red-700",
   },
-  INTERVIEW: {
-    label: "นัดสัมภาษณ์",
-    className: "bg-blue-50 text-blue-600 border border-blue-200",
+  [ApplicationStatus.INTERVIEW]: {
+    label: "สัมภาษณ์",
+    className: "bg-blue-100 text-blue-700",
+  },
+  [ApplicationStatus.INVITE]: {
+    label: "เชิญสัมภาษณ์รอบพิเศษ",
+    className: "bg-purple-100 text-purple-700",
+  },
+  [ApplicationStatus.OFFER]: {
+    label: "ยื่นข้อเสนอ",
+    className: "bg-amber-100 text-amber-700",
   },
 };
 

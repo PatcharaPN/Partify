@@ -55,6 +55,15 @@ export class ApplicationController {
     );
   }
 
+  @UseGuards(AuthGuard)
+  @Post(':id/offer')
+  offerApplication(@Param('id') applicationId: string, @Req() req: any) {
+    return this.applicationService.offerApplication(
+      applicationId,
+      req.user.sub,
+    );
+  }
+
   // ── GET static ────────────────────────────────────────────
 
   @UseGuards(AuthGuard)

@@ -12,11 +12,14 @@ export interface Company {
   members?: CompanyMember[];
 }
 export type WorkModel = "onsite" | "hybrid" | "remote";
-export type ApplicationStatus =
-  | "PENDING"
-  | "ACCEPTED"
-  | "REJECTED"
-  | "INTERVIEW";
+export enum ApplicationStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  INTERVIEW = "INTERVIEW",
+  INVITE = "INVITE",
+  OFFER = "OFFER",
+}
 export type NotificationStatus =
   | "PENDING"
   | "ACCEPTED"
@@ -76,6 +79,8 @@ export interface Job {
 export interface Application {
   id: string;
   jobId: string;
+  yearExperience: string;
+  expectedSalary: string;
   userId: string;
   status: ApplicationStatus;
   message?: string;
@@ -193,7 +198,13 @@ export interface Notification {
   createdAt: string;
 }
 export type CompanyRole = "OWNER" | "ADMIN" | "HR" | "RECRUITER" | "VIEWER";
-
+export const ApplicationStatusValue = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  REJECTED: "REJECTED",
+  INTERVIEW: "INTERVIEW",
+  OFFER: "INVITE",
+} as const;
 export interface CompanyMember {
   id: string;
   userId: string;

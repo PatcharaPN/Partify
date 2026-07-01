@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/app/lib/axiosInstance";
-import { Application, Job } from "@/app/types/job.type";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Application, ApplicationStatus, Job } from "@/app/types/job.type";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ApplicationState = {
   applications: Application[];
@@ -101,6 +101,28 @@ const applicationSlice = createSlice({
   name: "application",
   initialState,
   reducers: {
+    updateApplicationOptimistic: (
+      state,
+      action: PayloadAction<{ id: string; status: ApplicationStatus }>,
+    ) => {
+      const app = state.jobDetail?.applications.find(
+        (a) => a.id === action.payload.id,
+      );
+      if (app) {
+        app.status = action.payload.status;
+      }
+    },
+    revertApplicationOptimistic: (
+      state,
+      action: PayloadAction<{ id: string; prevStatus: ApplicationStatus }>,
+    ) => {
+      const app = state.jobDetail?.applications.find(
+        (a) => a.id === action.payload.id,
+      );
+      if (app) {
+        app.status = action.payload.prevStatus;
+      }
+    },
     setApplications: (state, action) => {
       state.applications = action.payload;
     },
@@ -174,5 +196,6 @@ const applicationSlice = createSlice({
       });
   },
 });
-
+export const { updateApplicationOptimistic, revertApplicationOptimistic } =
+  applicationSlice.actions;
 export default applicationSlice.reducer;

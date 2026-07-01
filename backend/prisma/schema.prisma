@@ -23,10 +23,12 @@ enum Role {
 enum ApplicationStatus {
   PENDING
   ACCEPTED
+  OFFER
   REJECTED
   INTERVIEW
   INVITE
 }
+
 enum NotificationType {
   TEAM_INVITE_RECEIVED
   TEAM_INVITE_ACCEPTED
@@ -199,6 +201,8 @@ model Application {
   jobId     String
   userId    String
   message   String?
+  yearExperience String?
+  expectedSalary String?
   status    ApplicationStatus  @default(PENDING)
   createdAt DateTime           @default(now())
   job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)

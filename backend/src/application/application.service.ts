@@ -69,6 +69,14 @@ export class ApplicationService {
     return await this.processApproval(applicationId, application);
   }
 
+  async offerApplication(applicationId: string, employerId: string) {
+    const application = await this.findApplicationOrThrow(applicationId);
+    this.validateOwnerShip(employerId, application);
+    this.validateStatus(application);
+    await this.findExistingEmployee(application);
+    return await this.processOffer(applicationId);
+  }
+
   async rejectApplication(applicationId: string, employerId: string) {
     const application = await this.findApplicationOrThrow(applicationId);
     this.validateOwnerShip(employerId, application);
@@ -189,6 +197,16 @@ export class ApplicationService {
     });
   }
 
+  private async processOffer(applicationId: string) {
+    const upDatedApplication = await this.prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: 'OFFER',
+      },
+    });
+    return upDatedApplication;
+  }
+
   private async processInterview(applicationId: string, application: any) {
     const updatedApplication = await this.prisma.application.update({
       where: { id: applicationId },
@@ -281,10 +299,7 @@ export class ApplicationService {
     }
   }
   private validateStatus(application: any) {
-    if (
-      application.status === 'ACCEPTED' ||
-      application.status === 'REJECTED'
-    ) {
+    if (application.status === 'ACCEPTED') {
       throw new BadRequestException('Application has already been processed');
     }
   }

@@ -1,16 +1,11 @@
 "use client";
 import ApplicantDetailModal from "@/app/components/ui/ApplicantDetailModal";
-import ApplicantList from "@/app/components/ui/ApplicantList";
 import ApplicantRow from "@/app/components/ui/ApplicantRow";
-import AvatarStack from "@/app/components/ui/AvatarStack";
 import FilterContainer, {
   ApplicantFilterValues,
 } from "@/app/components/ui/FilterContainer";
-import JobRow from "@/app/components/ui/JobRow";
 import PopupContainer from "@/app/components/ui/PopupContainer";
 import SearchInput from "@/app/components/ui/Searchbar";
-import TableHeader from "@/app/components/ui/TableHeader";
-import { useEmployerJobs } from "@/app/hooks/useEmployerJobs";
 import { useApplicant } from "@/app/hooks/useJobApplications";
 import { Application, ApplicationStatus } from "@/app/types/job.type";
 import { PopupState } from "@/app/types/ui.type";
