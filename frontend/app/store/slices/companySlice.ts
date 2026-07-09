@@ -113,7 +113,7 @@ export const acceptInvite = createAsyncThunk(
 );
 
 export const removeMember = createAsyncThunk(
-  "/member/remove",
+  "/member/removeMember",
   async (email: string, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.delete(`company/member/delete`, {
