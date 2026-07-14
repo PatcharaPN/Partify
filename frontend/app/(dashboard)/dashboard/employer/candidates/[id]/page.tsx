@@ -176,7 +176,12 @@ export default function OpenPositionList() {
               {selectedTab === "Overview" && <div>Overview content</div>}
               {selectedTab === "Schedule" && <div>Setting content</div>}
             </div>
-            <ApplicantDetailModal applicants={activeCandidate}  />
+            {activeCandidate && (
+              <ApplicantDetailModal
+                applicants={activeCandidate}
+                onClose={() => setActiveCandidate(null)}
+              />
+            )}
           </div>
         </div>
       </main>
