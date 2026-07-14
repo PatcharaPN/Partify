@@ -1,4 +1,5 @@
 "use client";
+import ApplicantDetailModal from "@/app/components/ui/ApplicantDetailModal";
 import CandidateCard from "@/app/components/ui/CandidateCard";
 import StageColumn from "@/app/components/ui/StageColumn";
 import { useApplicant } from "@/app/hooks/useJobApplications";
@@ -175,6 +176,7 @@ export default function OpenPositionList() {
               {selectedTab === "Overview" && <div>Overview content</div>}
               {selectedTab === "Schedule" && <div>Setting content</div>}
             </div>
+            <ApplicantDetailModal applicants={activeCandidate}  />
           </div>
         </div>
       </main>
