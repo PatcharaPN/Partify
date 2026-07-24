@@ -6,10 +6,15 @@ import React from "react";
 
 interface CandidateCardProps {
   candidate: Application;
+  onViewInfo: () => void;
   isOverlay?: boolean;
 }
 
-const CandidateCard = ({ candidate, isOverlay }: CandidateCardProps) => {
+const CandidateCard = ({
+  candidate,
+  isOverlay,
+  onViewInfo,
+}: CandidateCardProps) => {
   const { setNodeRef, transform, isDragging, attributes, listeners } =
     useDraggable({
       id: candidate.id,
@@ -33,7 +38,6 @@ const CandidateCard = ({ candidate, isOverlay }: CandidateCardProps) => {
     <div
       ref={isOverlay ? undefined : setNodeRef}
       {...(isOverlay ? {} : attributes)}
-      {...(isOverlay ? {} : listeners)}
       style={style}
       className={`
         bg-white shadow-sm hover:shadow-md border border-gray-200 
@@ -56,9 +60,21 @@ const CandidateCard = ({ candidate, isOverlay }: CandidateCardProps) => {
         )}
 
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-sm text-gray-900 truncate">
-            {fullName || "ไม่ระบุชื่อ"}
-          </p>
+          <div className="flex justify-between items-center text-gray-500">
+            {" "}
+            <p className="font-semibold text-sm text-gray-900 truncate">
+              {fullName || "ไม่ระบุชื่อ"}
+            </p>
+            <div className="flex">
+              <Icon
+                onClick={onViewInfo}
+                className="cursor-pointer"
+                icon={"mdi:eye-outline"}
+              />
+              <Icon {...(isOverlay ? {} : listeners)} icon={"mdi:drag"} />
+            </div>
+          </div>
+
           <span className="text-black text-[12px] font-medium flex items-center gap-2 opacity-45">
             <Icon icon={"ph:bag-simple"} />
             ประสบการณ์ {candidate.yearExperience} ปี

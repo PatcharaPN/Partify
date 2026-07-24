@@ -1,7 +1,6 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { formatDate } from "@/app/lib/formatDate";
 import { useCurrentUser } from "@/app/hooks/useCurrentUser";
 

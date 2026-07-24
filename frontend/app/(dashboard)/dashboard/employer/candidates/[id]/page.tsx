@@ -12,7 +12,6 @@ import {
   DragOverlay,
   DragStartEvent,
 } from "@dnd-kit/core";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { Icon } from "@iconify/react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -44,8 +43,6 @@ export default function OpenPositionList() {
   const { id } = useParams();
   const {
     jobDetail,
-    ownerApplications,
-    loading,
     interviewApplication,
     approveApplication,
     rejectApplication,
@@ -54,6 +51,8 @@ export default function OpenPositionList() {
   const [activeCandidate, setActiveCandidate] = useState<Application | null>(
     null,
   );
+  const [selectedCandidate, setSelectedCandidate] =
+    useState<Application | null>();
   const [selectedTab, setSelectedTab] = useState<TabMenuType>("Application");
   function handleDragStart(event: DragStartEvent) {
     const candidate = jobDetail?.applications.find(
@@ -90,6 +89,9 @@ export default function OpenPositionList() {
       console.error("อัปเดตสถานะไม่สำเร็จ", err);
     }
   }
+  const handleMouseOver = (candidate: Application) => {
+    setSelectedCandidate(candidate);
+  };
   return (
     <div className="flex h-[calc(100vh-70px)] bg-gray-50 font-sans text-gray-900 antialiased overflow-hidden">
       <main className="flex-1 overflow-auto">
@@ -154,6 +156,9 @@ export default function OpenPositionList() {
                       {stages.map((stage) => (
                         <div key={stage} className="shrink-0 w-72">
                           <StageColumn
+                            onViewInfo={(candidate) =>
+                              setSelectedCandidate(candidate)
+                            }
                             label={stageConfig[stage].label}
                             stageId={stage}
                             color={stageConfig[stage].color}
@@ -166,7 +171,11 @@ export default function OpenPositionList() {
                     </div>{" "}
                     <DragOverlay>
                       {activeCandidate ? (
-                        <CandidateCard candidate={activeCandidate} isOverlay />
+                        <CandidateCard
+                          onViewInfo={() => console.log("Hello")}
+                          candidate={activeCandidate}
+                          isOverlay
+                        />
                       ) : null}
                     </DragOverlay>
                   </div>{" "}
@@ -176,10 +185,10 @@ export default function OpenPositionList() {
               {selectedTab === "Overview" && <div>Overview content</div>}
               {selectedTab === "Schedule" && <div>Setting content</div>}
             </div>
-            {activeCandidate && (
+            {selectedCandidate && (
               <ApplicantDetailModal
-                applicants={activeCandidate}
-                onClose={() => setActiveCandidate(null)}
+                applicants={selectedCandidate}
+                onClose={() => setSelectedCandidate(null)}
               />
             )}
           </div>

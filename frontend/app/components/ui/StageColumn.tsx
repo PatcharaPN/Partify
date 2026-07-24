@@ -7,6 +7,7 @@ interface StageColumnProp {
   label: string;
   color: string;
   candidates: Application[] | undefined;
+  onViewInfo: (candidate: Application) => void;
 }
 
 const StageColumn = ({
@@ -14,6 +15,7 @@ const StageColumn = ({
   candidates,
   stageId,
   label,
+  onViewInfo,
 }: StageColumnProp) => {
   const { setNodeRef, isOver } = useDroppable({ id: stageId });
 
@@ -35,7 +37,11 @@ const StageColumn = ({
 
       <div className="mt-2 space-y-2">
         {candidates?.map((c) => (
-          <CandidateCard key={c.id} candidate={c} />
+          <CandidateCard
+            key={c.id}
+            candidate={c}
+            onViewInfo={() => onViewInfo(c)}
+          />
         ))}
       </div>
     </div>
